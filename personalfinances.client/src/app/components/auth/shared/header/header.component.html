@@ -1,0 +1,22 @@
+<header class="navbar">
+  <nav class="nav-links">
+    <a routerLink="/home">{{ 'COMPONENTS.HEADER.HOME' | translate }}</a>
+    <a routerLink="/about">{{ 'COMPONENTS.HEADER.ABOUT' | translate }}</a>
+    <a routerLink="/blog">{{ 'COMPONENTS.HEADER.BLOG' | translate }}</a>
+    <a routerLink="/pages">{{ 'COMPONENTS.HEADER.PAGES' | translate }}</a>
+    <a routerLink="/contact">{{ 'COMPONENTS.HEADER.CONTACT' | translate }}</a>
+  </nav>
+
+  <div class="nav-right">
+    <div class="language-selector">
+      <div class="custom-select">
+        <select id="lang-select" (change)="switchLanguage($event)">
+          <option value="en" [selected]="currentLang === 'en'">English</option>
+          <option value="pt" [selected]="currentLang === 'pt'">Português</option>
+        </select>
+      </div>
+    </div>
+    <a routerLink="/signin" class="signin">{{ 'COMPONENTS.HEADER.SIGNIN' | translate }}</a>
+    <a routerLink="/signup" class="register">{{ 'COMPONENTS.HEADER.REGISTER' | translate }}</a>
+  </div>
+</header>

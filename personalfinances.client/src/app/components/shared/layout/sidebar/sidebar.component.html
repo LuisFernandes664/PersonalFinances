@@ -1,0 +1,84 @@
+<nav class="sidebar" [class.close]="isSidebarClosed">
+  <header>
+    <div class="image-text">
+      <span class="image">
+        <!-- Imagem do utilizador (coloca em assets/img/) -->
+        <img src="https://d2vi0z68k5oxnr.cloudfront.net/08b88f26-4221-41b9-9962-8985ceb6578c/original.png?d=sm-cover" alt="Utilizador">
+      </span>
+      <div class="text logo-text">
+        <span class="name">Luis Fernandes</span>
+        <span class="profession">Web developer</span>
+      </div>
+    </div>
+    <!-- Chama toggleSidebar() quando clicado -->
+    <i class='bx bx-chevron-right toggle' (click)="toggleSidebar()"></i>
+  </header>
+
+  <div class="menu-bar">
+    <div class="menu">
+      <li class="search-box">
+        <i class='bx bx-search icon'></i>
+        <input type="text" placeholder="Pesquisa...">
+      </li>
+      <ul class="menu-links">
+        <li class="nav-link">
+          <a routerLink="/dashboard">
+            <i class='bx bx-home-alt icon'></i>
+            <span class="text nav-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-link">
+          <a routerLink="/graficos">
+            <i class='bx bx-bar-chart-alt-2 icon'></i>
+            <span class="text nav-text">Gráficos</span>
+          </a>
+        </li>
+        <li class="nav-link">
+          <a routerLink="/notificacoes">
+            <i class='bx bx-bell icon'></i>
+            <span class="text nav-text">Notificações</span>
+          </a>
+        </li>
+        <li class="nav-link">
+          <a routerLink="/analises">
+            <i class='bx bx-pie-chart-alt icon'></i>
+            <span class="text nav-text">Análises</span>
+          </a>
+        </li>
+        <li class="nav-link">
+          <a routerLink="/likes">
+            <i class='bx bx-heart icon'></i>
+            <span class="text nav-text">Likes</span>
+          </a>
+        </li>
+        <li class="nav-link">
+          <a routerLink="/wallets">
+            <i class='bx bx-wallet icon'></i>
+            <span class="text nav-text">Wallets</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="bottom-content">
+      <li>
+        <a (click)="logout()">
+          <i class='bx bx-log-out icon'></i>
+          <span class="text nav-text">Logout</span>
+        </a>
+      </li>
+      <li class="mode">
+        <div *ngIf="!isDarkMode" class="sun-moon">
+          <i  class="bx bx-moon icon moon"></i>
+        </div>
+        <div *ngIf="isDarkMode" class="sun-moon">
+          <i class="bx bx-sun icon sun"></i>
+        </div>
+        <span class="mode-text text">{{ isDarkMode ? "Light mode" : "Dark mode" }}</span>
+        <div class="toggle-switch" (click)="toggleDarkMode()">
+          <span class="switch" [class.active]="isDarkMode"></span>
+        </div>
+      </li>
+
+    </div>
+  </div>
+</nav>

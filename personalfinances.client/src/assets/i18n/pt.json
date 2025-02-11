@@ -1,0 +1,42 @@
+{
+  "COMPONENTS": {
+    "AUTH": {
+      "REQUIRED_FIELD": "O campo \"{{field}}\" é obrigatório.",
+      "INVALID_FORMAT": "O campo \"{{field}}\" tem um formato inválido.",
+      "FIX_ERRORS": "Por favor, corrija os erros antes de continuar.",
+      "PASSWORD": "Palavra-Passe",
+      "SLFORM": {
+        "SLOGAN": "Tome o controlo da sua vida financeira com confiança",
+        "RECOVER_PASSWORD": "Recuperar Palavra-Passe?",
+        "OR_CONTINUE": "Ou continue"
+      },
+      "SIGNIN": "Entrar",
+      "REGISTER": "Registrar"
+    },
+    "HEADER": {
+      "HOME": "Início",
+      "ABOUT": "Sobre",
+      "BLOG": "Blog",
+      "PAGES": "Páginas",
+      "CONTACT": "Contato",
+      "LANGUAGE": "Idioma",
+      "SIGNIN": "Entrar",
+      "REGISTER": "Registrar"
+    }
+  },
+  "OTHERINFO": {
+    "SOCIAL_MEDIA": {
+      "APPLE_SUCCESS": "Sucesso: Login com Apple efetuado com sucesso.",
+      "APPLE_ERROR": "Erro: Problema ao efetuar o login com Apple.",
+      "APPLE_EXCEPTION": "Erro: Não foi possível autenticar com Apple.",
+      "GOOGLE_SUCCESS": "Sucesso: Login com Google efetuado com sucesso.",
+      "GOOGLE_ERROR": "Erro: Problema ao efetuar o login com Google.",
+      "FACEBOOK_SUCCESS": "Sucesso: Login com Facebook efetuado com sucesso.",
+      "FACEBOOK_ERROR": "Erro: Problema ao efetuar o login com Facebook."
+    },
+    "INTRODUCTION_TEXT": {
+      "WELCOME": "Bem-vindo ao Personal Finances Client!",
+      "DESCRIPTION": "Tome o controlo da sua vida financeira com confiança."
+    }
+  }
+}

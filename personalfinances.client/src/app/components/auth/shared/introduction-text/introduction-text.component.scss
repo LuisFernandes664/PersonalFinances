@@ -1,0 +1,32 @@
+.introduction-text {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  animation: slide-down 1s ease-in-out;
+  background: #fff;
+}
+
+.svg-icon {
+  width: 100%;
+  height: 640px;
+}
+
+/* Estilos dark mode */
+.dark {
+  .introduction-text {
+    background: var(--body-color);
+  }
+  .svg-icon {
+    /* reduzir um pouco o brilho ou inverter cores, se necessário */
+    filter: brightness(0.8);
+  }
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}

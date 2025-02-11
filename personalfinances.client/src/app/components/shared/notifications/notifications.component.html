@@ -1,0 +1,14 @@
+<ul class="notifications">
+  <li *ngFor="let toast of notifications" [ngClass]="'toast ' + toast.type">
+    <div class="column">
+      <i class="fa-solid"
+         [ngClass]="{
+           'fa-circle-check': toast.type === 'success',
+           'fa-circle-xmark': toast.type === 'error' || toast.type === 'warning',
+           'fa-circle-info': toast.type === 'info'
+         }"></i>
+      <span>{{ toast.message }}</span>
+    </div>
+    <i class="fa-solid fa-xmark" (click)="removeNotification(toast.id)"></i>
+  </li>
+</ul>

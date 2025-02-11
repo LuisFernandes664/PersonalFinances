@@ -1,0 +1,23 @@
+@PersonalFinances.Server_HostAddress = http://localhost:5201
+
+###
+# Registar um novo utilizador
+POST {{PersonalFinances.Server_HostAddress}}/api/auths/registeruser
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Secret123!",
+  "name": "Test User"
+}
+
+###
+
+# Efetuar o login do utilizador
+POST {{PersonalFinances.Server_HostAddress}}/api/auths/signin
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Secret123!"
+}

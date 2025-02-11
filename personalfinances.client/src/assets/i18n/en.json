@@ -1,0 +1,42 @@
+{
+  "COMPONENTS": {
+    "AUTH": {
+      "REQUIRED_FIELD": "The field \"{{field}}\" is required.",
+      "INVALID_FORMAT": "The field \"{{field}}\" has an invalid format.",
+      "FIX_ERRORS": "Please fix the errors before continuing.",
+      "PASSWORD": "Password",
+      "SLFORM": {
+        "SLOGAN": "Take control of your financial life with confidence",
+        "RECOVER_PASSWORD": "Recover Password?",
+        "OR_CONTINUE": "Or continue"
+      },
+      "SIGNIN": "Sign in",
+      "REGISTER": "Register"
+    },
+    "HEADER": {
+      "HOME": "Home",
+      "ABOUT": "About",
+      "BLOG": "Blog",
+      "PAGES": "Pages",
+      "CONTACT": "Contact",
+      "LANGUAGE": "Language",
+      "SIGNIN": "Sign in",
+      "REGISTER": "Register"
+    },
+    "OTHERINFO": {
+      "SOCIAL_MEDIA": {
+        "APPLE_SUCCESS": "Success: Sign in with Apple was successful.",
+        "APPLE_ERROR": "Error: Problem signing in with Apple.",
+        "APPLE_EXCEPTION": "Error: Could not authenticate with Apple.",
+        "GOOGLE_SUCCESS": "Success: Sign in with Google was successful.",
+        "GOOGLE_ERROR": "Error: Problem signing in with Google.",
+        "FACEBOOK_SUCCESS": "Success: Sign in with Facebook was successful.",
+        "FACEBOOK_ERROR": "Error: Problem signing in with Facebook."
+      },
+      "INTRODUCTION_TEXT": {
+        "WELCOME": "Welcome to Personal Finances Client!",
+        "DESCRIPTION": "Manage your personal finances efficiently."
+      }
+    }
+  }
+}

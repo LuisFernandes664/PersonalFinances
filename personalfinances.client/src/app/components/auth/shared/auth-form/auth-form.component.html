@@ -1,0 +1,38 @@
+<form #form="ngForm" (ngSubmit)="onSubmit()" class="sign-in-form">
+  <h1>{{ title }}</h1>
+  <br>
+  <p class="slogan">{{ 'COMPONENTS.AUTH.SLFORM.SLOGAN' | translate }}</p>
+
+  <div *ngFor="let field of fields">
+    <div class="input-field">
+      <i class="fas"
+         [ngClass]="{
+           'fa-user': field.type === 'text',
+           'fa-envelope': field.type === 'email',
+           'fa-lock': field.type === 'password'
+         }">
+      </i>
+      <input
+        [type]="field.type"
+        [(ngModel)]="field.value"
+        [name]="field.name"
+        [placeholder]="field.placeholder"
+        [required]="field.required"
+        [pattern]="field.pattern || ''"
+        (blur)="onFieldTouch(field)"
+        (input)="validateField(field)"
+      />
+    </div>
+    <div class="error-message" *ngIf="field.touched && field.errorMessage">
+      <p>{{ field.errorMessage }}</p>
+    </div>
+  </div>
+
+  <a href="#" class="recover-password" *ngIf="title === 'Entrar'">
+    {{ 'COMPONENTS.AUTH.SLFORM.RECOVER_PASSWORD' | translate }}
+  </a>
+  <button type="submit" class="btn-submit">{{ buttonText }}</button>
+
+  <div class="or"><span>{{ 'COMPONENTS.AUTH.SLFORM.OR_CONTINUE' | translate }}</span></div>
+  <app-social-media></app-social-media>
+</form>

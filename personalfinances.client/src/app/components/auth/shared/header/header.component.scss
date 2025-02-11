@@ -1,0 +1,158 @@
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 70px;
+  padding: 0 30px;
+  font-family: 'Poppins', sans-serif;
+  margin: 50px 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 100px;
+
+
+  a {
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    color: #333;
+    position: relative;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #007BFF;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: #007BFF;
+      transition: width 0.3s ease;
+    }
+
+    &:hover:after {
+      width: 100%;
+    }
+  }
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+
+  .language-selector {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: var(--text-color);
+
+    label {
+      margin-right: 5px;
+    }
+
+    .custom-select {
+      position: relative;
+      display: inline-block;
+
+      select {
+        background: transparent;
+        padding: 5px 35px 5px 10px;
+        border-radius: 4px;
+        color: var(--text-color);
+        border: none;
+        font-size: 16px;
+        outline: none;
+        appearance: none;
+        cursor: pointer;
+      }
+
+      // Custom arrow using a pseudo-element
+      &::after {
+        content: '▼';
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        font-size: 12px;
+        color: var(--text-color);
+      }
+    }
+  }
+
+  a.signin,
+  a.register {
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    color: #007BFF;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: rgba(0, 123, 255, 0.1);
+    }
+  }
+}
+
+/* Ajuste para o modo escuro */
+
+.dark .nav-links a {
+  color: var(--text-color);
+}
+
+.dark .nav-right .language-selector {
+  color: var(--text-color);
+
+  .custom-select select {
+    color: var(--text-color);
+  }
+
+  .custom-select::after {
+    color: var(--text-color);
+  }
+}
+
+.dark .signin,
+.dark .register {
+  color: var(--text-color);
+
+  &:hover {
+    color: var(--primary-color);
+  }
+}
+
+
+
+
+.dark {
+
+  .nav-links a {
+    color: #fff;
+  }
+
+  .nav-right a.signin,
+  .nav-right a.register {
+    color: #fff;
+  }
+
+  .language-selector {
+    /* Estilo dos selects em dark mode */
+    .custom-select select {
+      color: #fff;
+    }
+    .custom-select select option {
+      background: #444;
+      color: #fff;
+    }
+  }
+}
+
