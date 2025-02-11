@@ -21,6 +21,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { AuthInterceptor } from './interceptors/auth-interceptor.service';
 import { HomeComponent } from './components/home/home/home.component';
 import { PreferencesService } from './services/preferences.service';
+import { RouterModule } from '@angular/router';
 
 export const CUSTOM_DATE_FORMATS = {
   parse: {
@@ -56,6 +57,7 @@ export function loadPreferencesFactory(preferencesService: PreferencesService) {
   imports: [
     BrowserModule, HttpClientModule,
     AppRoutingModule,
+    RouterModule,
     FormsModule,
     AuthModule,
     TranslateModule.forRoot({

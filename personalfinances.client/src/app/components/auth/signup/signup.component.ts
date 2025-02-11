@@ -12,7 +12,7 @@ export class SignupComponent {
     {
       name: 'username',
       type: 'text',
-      placeholder: 'Nome de Utilizador',
+      placeholder: 'COMPONENTS.AUTH.SIGNUP.USERNAME',
       required: true,
       pattern: '',
       value: '',
@@ -21,16 +21,16 @@ export class SignupComponent {
     {
       name: 'email',
       type: 'email',
-      placeholder: 'Email',
+      placeholder: 'COMPONENTS.AUTH.SIGNUP.EMAIL',
       required: true,
-      pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
+      pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}',
       value: '',
       touched: false
     },
     {
       name: 'password',
       type: 'password',
-      placeholder: 'Palavra-Passe',
+      placeholder: 'COMPONENTS.AUTH.SIGNUP.PASSWORD',
       required: true,
       pattern: '',
       value: '',
@@ -39,7 +39,7 @@ export class SignupComponent {
     {
       name: 'confirmPassword',
       type: 'password',
-      placeholder: 'Confirmar Palavra-Passe',
+      placeholder: 'COMPONENTS.AUTH.SIGNUP.CONFIRM_PASSWORD',
       required: true,
       pattern: '',
       value: '',

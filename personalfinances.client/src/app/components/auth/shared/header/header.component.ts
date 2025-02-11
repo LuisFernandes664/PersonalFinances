@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationService } from '../../../../services/translation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,7 @@ import { TranslationService } from '../../../../services/translation.service';
 export class HeaderComponent {
   currentLang: string = localStorage.getItem('lang') || 'pt';
 
-  constructor(private translationService: TranslationService) {
+  constructor(private translationService: TranslationService, private router: Router) {
   }
 
   switchLanguage(event: Event) {
@@ -20,6 +21,10 @@ export class HeaderComponent {
       this.currentLang = target.value;
       this.translationService.switchLanguage(this.currentLang);
     }
+  }
+
+  goToSignup() {
+    this.router.navigate(['/signup']);
   }
 
 }

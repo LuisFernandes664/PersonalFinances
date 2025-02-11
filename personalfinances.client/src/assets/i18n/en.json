@@ -11,7 +11,16 @@
         "OR_CONTINUE": "Or continue"
       },
       "SIGNIN": "Sign in",
-      "REGISTER": "Register"
+      "REGISTER": "Register",
+      "CREATE_ACCOUNT": "Create Account",
+      "SIGNUP": {
+        "USERNAME": "Username",
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "CONFIRM_PASSWORD": "Confirm Password",
+        "CREATE_ACCOUNT": "Create Account",
+        "REGISTER": "Register"
+      }
     },
     "HEADER": {
       "HOME": "Home",

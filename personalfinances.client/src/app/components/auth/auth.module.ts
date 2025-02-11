@@ -11,6 +11,7 @@ import { HeaderComponent } from './shared/header/header.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpLoaderFactory } from '../../app.module';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -25,10 +26,16 @@ import { HttpLoaderFactory } from '../../app.module';
   imports: [
     CommonModule,
     FormsModule,
-    TranslateModule
+    TranslateModule,
+    RouterModule
   ],
   providers: [
     AuthService
+  ],
+  exports: [
+    SigninComponent,
+    SignupComponent,
+    RouterModule
   ]
 })
 export class AuthModule { }

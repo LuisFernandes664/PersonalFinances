@@ -16,7 +16,7 @@
         [type]="field.type"
         [(ngModel)]="field.value"
         [name]="field.name"
-        [placeholder]="field.placeholder"
+        [placeholder]="field.placeholder | translate"
         [required]="field.required"
         [pattern]="field.pattern || ''"
         (blur)="onFieldTouch(field)"

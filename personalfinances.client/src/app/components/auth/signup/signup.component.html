@@ -1,13 +1,16 @@
-<div class="auth-container">
-  <div class="auth-form">
-    <app-auth-form
-      [title]="'Criar Conta'"
-      [buttonText]="'Registar'"
-      [mode]="'signup'"
-      [fields]="fields"
-    ></app-auth-form>
-  </div>
-  <div class="auth-introduction">
-    <app-introduction-text></app-introduction-text>
+<div class="main-container">
+  <app-header></app-header>
+  <div class="auth-container">
+    <div class="auth-form">
+      <app-auth-form
+        [title]="'COMPONENTS.AUTH.CREATE_ACCOUNT' | translate"
+        [buttonText]="'COMPONENTS.AUTH.REGISTER' | translate"
+        [mode]="'signup'"
+        [fields]="fields"
+      ></app-auth-form>
+    </div>
+    <div class="auth-introduction">
+      <app-introduction-text></app-introduction-text>
+    </div>
   </div>
 </div>
