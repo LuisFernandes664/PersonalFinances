@@ -28,7 +28,7 @@
     </div>
   </div>
 
-  <a href="#" class="recover-password" *ngIf="title === 'Entrar'">
+  <a href="#" class="recover-password" *ngIf="title === ('COMPONENTS.AUTH.SIGNIN' | translate)">
     {{ 'COMPONENTS.AUTH.SLFORM.RECOVER_PASSWORD' | translate }}
   </a>
   <button type="submit" class="btn-submit">{{ buttonText }}</button>

@@ -7,13 +7,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthModule } from './components/auth/auth.module';
-import { NotificationsComponent } from './components/shared/notifications/notifications.component';
-import { LoaderComponent } from './components/shared/loader/loader.component';
 import { DashboardComponent } from './components/home/dashboard/dashboard.component';
-import { SidebarComponent } from './components/shared/layout/sidebar/sidebar.component';
-import { HeaderComponent } from './components/shared/layout/header/header.component';
-import { FooterComponent } from './components/shared/layout/footer/footer.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -22,6 +16,14 @@ import { AuthInterceptor } from './interceptors/auth-interceptor.service';
 import { HomeComponent } from './components/home/home/home.component';
 import { PreferencesService } from './services/preferences.service';
 import { RouterModule } from '@angular/router';
+import { NotificationsComponent } from './components/home/shared/notifications/notifications.component';
+import { LoaderComponent } from './components/home/shared/loader/loader.component';
+import { SidebarComponent } from './components/home/shared/layout/sidebar/sidebar.component';
+import { FooterComponent } from './components/home/shared/layout/footer/footer.component';
+import { AuthModule } from './components/public/auth/auth.module';
+import { PublicModule } from './components/public/public.module';
+import { HeaderPublicComponent } from './components/public/shared/header/header.component';
+import { HeaderComponent } from './components/home/shared/layout/header/header.component';
 
 export const CUSTOM_DATE_FORMATS = {
   parse: {
@@ -50,15 +52,17 @@ export function loadPreferencesFactory(preferencesService: PreferencesService) {
     LoaderComponent,
     HomeComponent,
     SidebarComponent,
-    HeaderComponent,
     DashboardComponent,
     FooterComponent,
+    HeaderComponent
   ],
   imports: [
-    BrowserModule, HttpClientModule,
+    BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     RouterModule,
     FormsModule,
+    PublicModule,
     AuthModule,
     TranslateModule.forRoot({
       loader: {
@@ -85,5 +89,4 @@ export function loadPreferencesFactory(preferencesService: PreferencesService) {
     },
   ],
   bootstrap: [AppComponent]
-})
-export class AppModule { }
+})export class AppModule { }

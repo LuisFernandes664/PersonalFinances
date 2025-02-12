@@ -7,11 +7,12 @@ import { SocialMediaComponent } from './shared/social-media/social-media.compone
 import { IntroductionTextComponent } from './shared/introduction-text/introduction-text.component';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './auth.service';
-import { HeaderComponent } from './shared/header/header.component';
+import { HeaderPublicComponent } from '../shared/header/header.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import { HttpLoaderFactory } from '../../app.module';
+import { HttpLoaderFactory } from '../../../app.module';
 import { RouterModule } from '@angular/router';
+import { ContactComponent } from './../contact/contact.component';
 
 
 @NgModule({
@@ -21,13 +22,14 @@ import { RouterModule } from '@angular/router';
     AuthFormComponent,
     SocialMediaComponent,
     IntroductionTextComponent,
-    HeaderComponent
+    HeaderPublicComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     TranslateModule,
-    RouterModule
+    RouterModule,
+
   ],
   providers: [
     AuthService
@@ -35,7 +37,8 @@ import { RouterModule } from '@angular/router';
   exports: [
     SigninComponent,
     SignupComponent,
-    RouterModule
+    RouterModule,
+    HeaderPublicComponent
   ]
 })
 export class AuthModule { }

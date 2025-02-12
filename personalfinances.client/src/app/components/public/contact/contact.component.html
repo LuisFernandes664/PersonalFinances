@@ -1,0 +1,38 @@
+<div class="main-container">
+  <app-header-public></app-header-public>
+
+  <section class="contact-container">
+    <h1>{{ 'PAGES.CONTACT.TITLE' | translate }}</h1>
+
+    <div class="contact-content">
+      <div class="contact-info">
+        <h2>{{ 'PAGES.CONTACT.INFO_TITLE' | translate }}</h2>
+        <p>{{ 'PAGES.CONTACT.ADDRESS' | translate }}</p>
+        <p>{{ 'PAGES.CONTACT.PHONE' | translate }}</p>
+        <p>{{ 'PAGES.CONTACT.EMAIL' | translate }}</p>
+      </div>
+
+      <div class="contact-form">
+        <h2>{{ 'PAGES.CONTACT.FORM_TITLE' | translate }}</h2>
+        <form>
+          <div class="input-field">
+            <i class="fa fa-user"></i>
+            <input type="text" [placeholder]="'PAGES.CONTACT.NAME_PLACEHOLDER' | translate">
+          </div>
+          <div class="input-field">
+            <i class="fa fa-envelope"></i>
+            <input type="email" [placeholder]="'PAGES.CONTACT.EMAIL_PLACEHOLDER' | translate">
+          </div>
+          <div class="input-field textarea-field">
+            <i class="fa fa-comment"></i>
+            <textarea rows="5" [placeholder]="'PAGES.CONTACT.MESSAGE_PLACEHOLDER' | translate"></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            {{ 'PAGES.CONTACT.SEND_BUTTON' | translate }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>

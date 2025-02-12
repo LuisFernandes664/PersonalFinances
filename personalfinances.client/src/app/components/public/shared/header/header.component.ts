@@ -1,15 +1,15 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslationService } from '../../../../services/translation.service';
 import { Router } from '@angular/router';
+import { TranslationService } from '../../../../services/translation.service';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-header-public',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class HeaderComponent {
+export class HeaderPublicComponent {
   currentLang: string = localStorage.getItem('lang') || 'pt';
 
   constructor(private translationService: TranslationService, private router: Router) {

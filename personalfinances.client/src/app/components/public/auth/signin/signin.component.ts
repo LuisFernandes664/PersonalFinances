@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { IFormField } from '../shared/form-field.interface';
-import { TranslationService } from '../../../services/translation.service';
+import { TranslationService } from '../../../../services/translation.service';
 
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.scss'] // Certifique-se de usar "styleUrls" corretamente
+  styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit {
   fields: IFormField[] = [
@@ -21,7 +21,7 @@ export class SigninComponent implements OnInit {
     {
       name: 'password',
       type: 'password',
-      placeholder: "Passsword",
+      placeholder: "Password",
       required: true,
       pattern: '',
       value: '',
@@ -39,9 +39,9 @@ export class SigninComponent implements OnInit {
     this.buttonText = this.translationService.instant('COMPONENTS.AUTH.SIGNIN');
 
     // Se desejar traduzir placeholders dinamicamente, pode usar:
-    // this.fields = this.fields.map(field => ({
-    //   ...field,
-    //   placeholder: this.translationService.instant(field.placeholder)
-    // }));
+    this.fields = this.fields.map(field => ({
+      ...field,
+      placeholder: this.translationService.instant(field.placeholder)
+    }));
   }
 }

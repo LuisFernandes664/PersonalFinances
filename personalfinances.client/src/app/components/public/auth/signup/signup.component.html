@@ -1,13 +1,13 @@
 <div class="main-container">
-  <app-header></app-header>
+  <app-header-public></app-header-public>
   <div class="auth-container">
     <div class="auth-form">
       <app-auth-form
-        [title]="'COMPONENTS.AUTH.SIGNIN' | translate"
-        [buttonText]="'COMPONENTS.AUTH.SIGNIN' | translate"
+        [title]="'COMPONENTS.AUTH.CREATE_ACCOUNT' | translate"
+        [buttonText]="'COMPONENTS.AUTH.REGISTER' | translate"
+        [mode]="'signup'"
         [fields]="fields"
-        [mode]="'login'">
-      </app-auth-form>
+      ></app-auth-form>
     </div>
     <div class="auth-introduction">
       <app-introduction-text></app-introduction-text>

@@ -1,11 +1,11 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
-import { NotificationService } from '../../../shared/notifications/notification.service';
 import { IFormField } from '../form-field.interface';
-import { IUser } from '../../../../models/user.model';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslationService } from '../../../../services/translation.service';
+import { NotificationService } from '../../../../home/shared/notifications/notification.service';
+import { TranslationService } from '../../../../../services/translation.service';
+import { IUser } from '../../../../../models/user.model';
 
 @Component({
   selector: 'app-auth-form',

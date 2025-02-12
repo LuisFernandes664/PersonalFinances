@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { AuthService } from '../../../auth/auth.service';
 import { Router } from '@angular/router';
-import { ThemeService } from '../../../../services/theme.service';
+import { AuthService } from '../../../../public/auth/auth.service';
+import { ThemeService } from '../../../../../services/theme.service';
 
 @Component({
   selector: 'app-sidebar',

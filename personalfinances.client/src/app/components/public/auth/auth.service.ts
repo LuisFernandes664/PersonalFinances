@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { APIResponse } from '../../models/api-response.model';
-import { DecodedToken } from '../../models/decodedToken.model';
 import { jwtDecode } from 'jwt-decode';
-import { NotificationService } from '../shared/notifications/notification.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
+import { NotificationService } from '../../home/shared/notifications/notification.service';
+import { APIResponse } from '../../../models/api-response.model';
+import { DecodedToken } from '../../../models/decodedToken.model';
 
 @Injectable({
   providedIn: 'root'

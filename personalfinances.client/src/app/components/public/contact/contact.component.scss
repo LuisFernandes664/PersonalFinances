@@ -1,0 +1,162 @@
+.main-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  margin: auto;
+  overflow: hidden;
+}
+.contact-container {
+  padding: 80px 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+
+  h1 {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+
+    .contact-info,
+    .contact-form {
+      background: var(--background-secondary);
+      padding: 30px;
+      border-radius: 10px;
+
+      h2 {
+        color: var(--text-color);
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+      }
+
+      p {
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+    }
+
+    .contact-form {
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .input-field {
+          width: 100%;
+          background: #EAF0F7;
+          margin: 10px 0;
+          border-radius: 10px;
+          display: grid;
+          grid-template-columns: 15% 85%;
+          padding: 0 0.4rem;
+          position: relative;
+
+          /* Define a altura fixa apenas para campos que não tenham a classe "textarea-field" */
+          &:not(.textarea-field) {
+            height: 55px;
+          }
+
+          .dark & {
+            background: var(--input-bg);
+          }
+
+          i {
+            text-align: center;
+            line-height: 55px;
+            color: #4F555A;
+            transition: 0.5s;
+            font-size: 1.1rem;
+
+            .dark & {
+              color: var(--text-color);
+            }
+          }
+
+          input {
+            background: none;
+            outline: none;
+            border: none;
+            line-height: 1;
+            font-weight: 400;
+            font-size: 1.1rem;
+            color: #8C8C8C;
+
+            .dark & {
+              color: var(--text-color);
+            }
+
+            &::placeholder {
+              color: #aaa;
+              font-weight: 400;
+              font-family: 'Poppins', sans-serif;
+
+              .dark & {
+                color: var(--toggle-color);
+              }
+            }
+          }
+
+          .input-field.textarea-field, textarea {
+            background: none;
+            outline: none;
+            border: none;
+            line-height: 1;
+            font-weight: 400;
+            font-size: 1.1rem;
+            color: #8C8C8C;
+            grid-template-columns: 100%;
+            height: auto;
+            padding: 0.4rem;
+            padding: 12px;
+            height: auto !important;
+            min-height: 100px;
+            resize: none !important;
+
+            .dark & {
+              color: var(--text-color);
+            }
+
+            &::placeholder {
+              color: #aaa;
+              font-weight: 400;
+              font-family: 'Poppins', sans-serif;
+
+              .dark & {
+                color: var(--toggle-color);
+              }
+            }
+          }
+        }
+
+        .btn-submit {
+          width: 100%;
+          height: 62px;
+          margin-top: 50px;
+          background: #4461F2;
+          box-shadow: 0px 12px 21px 4px rgba(68, 97, 242, 0.15);
+          border-radius: 10px;
+          color: #FFFFFF;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 19px;
+          letter-spacing: 0.09em;
+          border: none;
+          cursor: pointer;
+
+          .dark & {
+            background: var(--primary-color);
+            color: var(--text-color);
+          }
+        }
+      }
+    }
+  }
+}
+

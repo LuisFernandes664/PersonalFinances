@@ -47,5 +47,27 @@
       "WELCOME": "Bem-vindo ao Personal Finances Client!",
       "DESCRIPTION": "Tome o controlo da sua vida financeira com confiança."
     }
+  },
+
+  "PAGES": {
+    "CONTACT": {
+      "TITLE": "Contacte-nos",
+      "INFO_TITLE": "Informações de Contacto",
+      "ADDRESS": "Rua XPTO 123, Cidade",
+      "PHONE": "+351 234 567 890",
+      "EMAIL": "contacto@personalfinances.com",
+      "FORM_TITLE": "Envie-nos uma Mensagem",
+      "NAME_PLACEHOLDER": "Seu Nome",
+      "EMAIL_PLACEHOLDER": "Seu Email",
+      "MESSAGE_PLACEHOLDER": "Sua Mensagem",
+      "SEND_BUTTON": "Enviar Mensagem"
+    },
+    "BLOG": {
+      "TITLE": "Nosso Blog",
+      "POST_TITLE": "Título do Post",
+      "POST_EXCERPT": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      "READ_MORE": "Ler Mais"
+    }
   }
+
 }

@@ -47,5 +47,25 @@
         "DESCRIPTION": "Manage your personal finances efficiently."
       }
     }
+  },
+  "PAGES": {
+    "CONTACT": {
+      "TITLE": "Get in Touch",
+      "INFO_TITLE": "Contact Information",
+      "ADDRESS": "123 XPTO Street, City",
+      "PHONE": "+1 234 567 890",
+      "EMAIL": "contact@personalfinances.com",
+      "FORM_TITLE": "Send us a Message",
+      "NAME_PLACEHOLDER": "Your Name",
+      "EMAIL_PLACEHOLDER": "Your Email",
+      "MESSAGE_PLACEHOLDER": "Your Message",
+      "SEND_BUTTON": "Send Message"
+    },
+    "BLOG": {
+      "TITLE": "Our Blog",
+      "POST_TITLE": "Blog Post Title",
+      "POST_EXCERPT": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      "READ_MORE": "Read More"
+    }
   }
 }
