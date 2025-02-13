@@ -1,0 +1,114 @@
+// Variáveis para cores e espaçamentos
+$primary-color: #3498db;
+$text-color: #333;
+$background-color: #fff;
+$shadow-color: rgba(0, 0, 0, 0.1);
+
+// Estilo global da página do Blog
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
+  min-height: 100vh;
+}
+
+// Container principal do conteúdo
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.blog-content {
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px $shadow-color;
+  width: 100%;
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: $text-color;
+    text-align: center;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: lighten($text-color, 20%);
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  // Estilos para a secção de posts
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .post {
+      padding: 1.5rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: var(--input-bg);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px $shadow-color;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: text-color;
+      }
+
+      p {
+        font-size: 1rem;
+        color: text-color;
+        margin-bottom: 1rem;
+      }
+
+      .read-more {
+        font-size: 1rem;
+        color: $primary-color;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: darken($primary-color, 10%);
+        }
+      }
+    }
+  }
+}
+
+// Media queries para dispositivos móveis
+@media (max-width: 768px) {
+  .blog-content {
+    padding: 1rem;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+
+    .posts {
+      .post {
+        padding: 1rem;
+
+        h2 {
+          font-size: 1.6rem;
+        }
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { IFormField } from '../form-field.interface';
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationService } from '../../../../home/shared/notifications/notification.service';
+import { NotificationService } from '../../../../shared/notifications/notification.service';
 import { TranslationService } from '../../../../../services/translation.service';
 import { IUser } from '../../../../../models/user.model';
 

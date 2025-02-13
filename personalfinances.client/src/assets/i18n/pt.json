@@ -1,5 +1,8 @@
 {
   "COMPONENTS": {
+    "BLOG": {
+      "TITLE": "Blog"
+    },
     "AUTH": {
       "REQUIRED_FIELD": "O campo \"{{field}}\" é obrigatório.",
       "INVALID_FORMAT": "O campo \"{{field}}\" tem um formato inválido.",

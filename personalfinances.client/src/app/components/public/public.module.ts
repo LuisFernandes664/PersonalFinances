@@ -7,11 +7,13 @@ import { AuthModule } from './auth/auth.module';
 import { ContactComponent } from './contact/contact.component';
 import { HeaderPublicComponent } from './shared/header/header.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { BlogComponent } from './blog/blog.component';
 
 
 @NgModule({
   declarations: [
     ContactComponent,
+    BlogComponent
   ],
   imports: [
     CommonModule,
@@ -22,6 +24,10 @@ import { BrowserModule } from '@angular/platform-browser';
     BrowserModule
   ],
   providers: [],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  exports: [
+    ContactComponent,
+    BlogComponent
+  ]
 })
 export class PublicModule { }

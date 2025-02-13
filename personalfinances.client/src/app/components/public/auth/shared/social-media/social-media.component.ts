@@ -4,7 +4,7 @@ import { AppleAuthService } from '../../services/apple-auth.service';
 import { GoogleAuthService } from '../../services/google-auth.service';
 import { FacebookAuthService } from '../../services/facebook-auth.service';
 import { AuthService } from '../../auth.service';
-import { NotificationService } from '../../../../home/shared/notifications/notification.service';
+import { NotificationService } from '../../../../shared/notifications/notification.service';
 
 @Component({
   selector: 'app-social-media',

@@ -17,6 +17,7 @@
   --text-color: #707070;
   --card-bg: #ffffff;
   --input-bg: #f9f9f9;
+  --pop-bg: #f9f9f9;
 
   --success: #0ABF30;
   --error: #E24D4C;
@@ -46,6 +47,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --toggle-color: #888;
   --card-bg: #252525;
   --input-bg: #303030;
+  --pop-bg: #303030;
 
   background-color: var(--body-color);
   color: var(--text-color);

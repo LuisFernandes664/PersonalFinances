@@ -5,12 +5,14 @@ import { AuthGuard } from './guards/auth.guard';
 import { ContactComponent } from './components/public/contact/contact.component';
 import { SigninComponent } from './components/public/auth/signin/signin.component';
 import { SignupComponent } from './components/public/auth/signup/signup.component';
+import { BlogComponent } from './components/public/blog/blog.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signin', pathMatch: 'full' },
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'blog', component: BlogComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'signin' },
 ];

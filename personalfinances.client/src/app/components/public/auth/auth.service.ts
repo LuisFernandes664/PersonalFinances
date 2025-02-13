@@ -4,7 +4,7 @@ import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { NotificationService } from '../../home/shared/notifications/notification.service';
+import { NotificationService } from '../../shared/notifications/notification.service';
 import { APIResponse } from '../../../models/api-response.model';
 import { DecodedToken } from '../../../models/decodedToken.model';
 
