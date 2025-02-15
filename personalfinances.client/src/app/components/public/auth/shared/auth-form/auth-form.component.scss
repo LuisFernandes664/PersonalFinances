@@ -13,11 +13,19 @@
   grid-template-columns: 15% 85%;
   padding: 0 0.4rem;
   position: relative;
-
+  color: #aaa;
   .dark & {
     background: var(--input-bg);
+    input:-webkit-autofill {
+      -webkit-text-fill-color: var(--text-color) !important;
+      transition: background-color 5000s ease-in-out 0s !important;
+    }
   }
+
 }
+
+
+
 
 .input-field i {
   text-align: center;
@@ -43,6 +51,7 @@
   .dark & {
     color: var(--text-color);
   }
+
 }
 
 .input-field input::placeholder {

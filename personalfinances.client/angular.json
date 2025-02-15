@@ -39,6 +39,7 @@
               }
             ],
             "styles": [
+              "src/assets/styles/_global.scss",
               "src/styles.scss"
             ],
             "stylePreprocessorOptions": {
@@ -113,6 +114,7 @@
               }
             ],
             "styles": [
+              "src/assets/styles/_global.scss",
               "src/styles.scss"
             ],
             "scripts": [],

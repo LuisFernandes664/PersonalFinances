@@ -1,0 +1,312 @@
+
+@import '../../../../../../assets/styles/_global';
+
+// @import '/src/assets/styles/global.scss';
+/* Estilos específicos para o Sidebar */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
+  padding: 10px 14px;
+  background: var(--sidebar-color);
+  transition: $transition-slow;
+  z-index: 100;
+}
+
+.sidebar.close {
+  width: 88px;
+}
+
+/* Itens da lista */
+.sidebar li {
+  height: 50px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Ícones e textos */
+.sidebar header .image,
+.sidebar .icon {
+  min-width: 60px;
+  border-radius: 6px;
+}
+
+.sidebar .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+/* Ajuste dos ícones dos menu-links */
+.sidebar .menu-links li a .icon {
+  font-size: 20px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.sidebar .text,
+.sidebar .icon {
+  color: var(--text-color);
+  transition: $transition-fast;
+}
+
+.sidebar .text {
+  font-size: 17px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 1;
+}
+
+.sidebar.close .text {
+  opacity: 0;
+}
+
+/* Cabeçalho do Sidebar */
+.sidebar header {
+  position: relative;
+}
+
+.sidebar header .image-text {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar header .logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar header .image-text .name {
+  margin-top: 2px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sidebar header .image-text .profession {
+  font-size: 16px;
+  margin-top: -2px;
+}
+
+.sidebar header .image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar header .image img {
+  width: 40px;
+  border-radius: 6px;
+}
+
+/* Botão Toggle */
+.sidebar header .toggle{
+  position: absolute;
+  top: 50%;
+  right: -25px;
+  transform: translateY(-50%) rotate(180deg);
+  height: 25px;
+  width: 25px;
+  background-color: var(--primary-color);
+  color: var(--sidebar-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  transition: var(--tran-05);
+}
+
+body.dark .sidebar header .toggle {
+  color: var(--text-color);
+}
+
+.sidebar.close .toggle {
+  transform: translateY(-50%) rotate(0deg);
+}
+
+/* Pesquisa e Links */
+.sidebar .menu {
+  margin-top: 40px;
+}
+
+.sidebar li.search-box {
+  border-radius: 6px;
+  background-color: var(--primary-light);
+  cursor: pointer;
+  transition: $transition-slow;
+}
+
+.sidebar li.search-box input {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border: none;
+  background-color: var(--primary-light);
+  color: var(--text-color);
+  border-radius: 6px;
+  font-size: 17px;
+  font-weight: 500;
+  transition: $transition-slow;
+}
+
+.sidebar li a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: $transition-fast;
+}
+
+.sidebar li a:hover {
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-color);
+}
+
+.sidebar li a:hover .icon,
+.sidebar li a:hover .text {
+  color: var(--sidebar-color);
+}
+
+body.dark .sidebar li a:hover .icon,
+body.dark .sidebar li a:hover .text {
+  color: var(--text-color);
+}
+
+/* Menu-Bar e Modo (Tema) */
+.sidebar .menu-bar {
+  height: calc(100% - 55px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+}
+
+.menu-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar .menu-bar .mode{
+  border-radius: 6px;
+  background-color: var(--primary-color-light);
+  position: relative;
+  transition: $transition-fast;
+  color: var(--text-color);
+}
+
+.dark .menu-bar .mode {
+  color: var(--body-color);
+}
+
+.menu-bar .mode .sun-moon{
+  display: flex;
+  align-items: center;
+  height: 50px;
+  width: 60px;
+}
+
+.mode .sun-moon i{
+  position: absolute;
+}
+.mode .sun-moon i.sun{
+  opacity: 0;
+}
+body.dark .mode .sun-moon i.sun{
+  opacity: 1;
+}
+body.dark .mode .sun-moon i.moon{
+  opacity: 0;
+}
+
+.menu-bar .bottom-content .toggle-switch {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  min-width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.toggle-switch .switch {
+  position: relative;
+  height: 22px;
+  width: 40px;
+  border-radius: 25px;
+  background-color: var(--toggle-color);
+  transition: $transition-fast;
+}
+
+.toggle-switch .switch::before {
+  content: '';
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  background-color: var(--sidebar-color);
+  transition: $transition-medium;
+}
+
+body.dark .toggle-switch .switch::before {
+  left: 20px;
+}
+
+// ======= Ícones no Modo Escuro =======
+.dark {
+  .sun { opacity: 1; }
+  .moon { opacity: 0; }
+}
+
+.dark .sidebar li a:hover .icon,
+.dark .sidebar li a:hover .text{
+  color: var(--text-color) !important;
+}
+
+// ======= Sidebar =======
+.dark .sidebar {
+  background: var(--sidebar-color);
+  color: var(--text-color);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ajuste nos links da sidebar */
+.dark .sidebar li a {
+  color: var(--text-color);
+}
+
+.dark .sidebar li a:hover {
+  background: var(--primary-color);
+}
+
+
+// ======= Cards =======
+.dark .card {
+  background: var(--card-bg);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+// ======= Switch de Modo Escuro =======
+.dark .toggle-switch {
+  background: var(--primary-color);
+}
+
+/* Ajuste na posição da bolinha no switch */
+.dark .switch::before {
+  left: 22px;
+  background: var(--text-color);
+}

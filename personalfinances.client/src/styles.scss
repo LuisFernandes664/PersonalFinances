@@ -1,92 +1,118 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import 'assets/styles/variables';
 
+// ======= Variáveis Gerais =======
+$font-family: 'Poppins', sans-serif;
+$font-secondary: Roboto, "Helvetica Neue", sans-serif;
+
+
+// ======= Cores Temáticas =======
+$light-theme: (
+  body-color: #E4E9F7,
+  // body-color: #ffffff,
+  sidebar-color: #FFF,
+  primary-color: #695CFE,
+  primary-light: #F6F5FF,
+  toggle-color: #DDD,
+  text-color: #707070,
+  card-bg: #ffffff,
+  input-bg: #f9f9f9,
+  pop-bg: #f9f9f9,
+  secondary-color: #ffffff,
+
+  success: #0ABF30,
+  error: #E24D4C,
+  warning: #E9BD0C,
+  info: #3498DB
+);
+
+$dark-theme: (
+  body-color: #181818,
+  sidebar-color: #202020,
+  primary-color: #3A3F58,
+  primary-light: #282C40,
+  toggle-color: #888,
+  text-color: #EAEAEA,
+  card-bg: #252525,
+  input-bg: #303030,
+  pop-bg: #303030,
+  secondary-color: #282828,
+
+  success: #0ABF30,
+  error: #E24D4C,
+  warning: #E9BD0C,
+  info: #3498DB
+);
+
+// ======= Mixin para aplicar os temas =======
+@mixin theme-styles($theme) {
+  --body-color: #{map-get($theme, body-color)};
+  --sidebar-color: #{map-get($theme, sidebar-color)};
+  --primary-color: #{map-get($theme, primary-color)};
+  --primary-color-light: #{map-get($theme, primary-light)};
+  --toggle-color: #{map-get($theme, toggle-color)};
+  --text-color: #{map-get($theme, text-color)};
+  --card-bg: #{map-get($theme, card-bg)};
+  --input-bg: #{map-get($theme, input-bg)};
+  --pop-bg: #{map-get($theme, pop-bg)};
+  --secondary-color: #{map-get($theme, secondary-color)};
+
+  --success: #{map-get($theme, success)};
+  --error: #{map-get($theme, error)};
+  --warning: #{map-get($theme, warning)};
+  --info: #{map-get($theme, info)};
+}
+
+// ======= Reset CSS =======
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
 
-:root {
-  /* ===== Cores (Modo Claro) ===== */
-  --dark-blue: #363f5f;
-  --body-color: #E4E9F7;
-  --sidebar-color: #FFF;
-  --primary-color: #695CFE;
-  --primary-color-light: #F6F5FF;
-  --toggle-color: #DDD;
-  --text-color: #707070;
-  --card-bg: #ffffff;
-  --input-bg: #f9f9f9;
-  --pop-bg: #f9f9f9;
-
-  --success: #0ABF30;
-  --error: #E24D4C;
-  --warning: #E9BD0C;
-  --info: #3498DB;
-
-  /* ===== Transições ===== */
-  --tran-03: all 0.3s ease-in-out;
-  --tran-04: all 0.4s ease-in-out;
-  --tran-05: all 0.5s ease-in-out;
+html, body {
+  height: 100%;
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: $font-family;
+  color: var(--text-color);
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+// ======= Tema Claro (Padrão) =======
+:root {
+  @include theme-styles($light-theme);
+  --card-bg-color: #ffffff;
+  --card-shadow-color: rgba(0, 0, 0, 0.05);
+}
 
-/* ======== 🌙 MODO ESCURO MELHORADO ========= */
+// ======= Tema Escuro =======
 .dark {
-  --body-color: #181818;
-  --sidebar-color: #202020;
-  --primary-color: #3A3F58;
-  --primary-color-light: #282C40;
-  --text-color: #EAEAEA;
-  --toggle-color: #888;
-  --card-bg: #252525;
-  --input-bg: #303030;
-  --pop-bg: #303030;
-
+  @include theme-styles($dark-theme);
   background-color: var(--body-color);
   color: var(--text-color);
+  --card-bg-color: #2a2a2a;
+  --card-shadow-color: rgba(255, 255, 255, 0.1);
+}
+:root {
+  --text-color: #333333;
+  --card-bg-color: #ffffff;
+  --card-shadow-color: rgba(0, 0, 0, 0.05);
+  --primary-color: #4a90e2;
+  --border-color: #f0f0f0;
 }
 
-/* Ajuste no sidebar */
-.dark .sidebar {
-  background: var(--sidebar-color);
-  color: var(--text-color);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+.dark {
+  --text-color: #f0f0f0;
+  --card-bg-color: #2a2a2a;
+  --card-shadow-color: rgba(255, 255, 255, 0.1);
+  --primary-color: #66a1ff;
+  --border-color: #555555;
 }
 
-/* Ajuste nos links da sidebar */
-.dark .sidebar li a {
-  color: var(--text-color);
-}
 
-.dark .sidebar li a:hover {
-  background: var(--primary-color);
-}
 
-/* Ajuste nos cards */
-.dark .card {
-  background: var(--card-bg);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-/* Ajuste no botão de alternância */
-.dark .toggle-switch {
-  background: var(--primary-color);
-}
-
-/* Ajuste na posição da bolinha no switch */
-.dark .switch::before {
-  left: 22px;
-  background: var(--text-color);
-}
-
-/* Ajuste para inputs no dark mode */
+// ======= Inputs e Selects =======
 .dark input,
 .dark textarea,
 .dark select {
@@ -95,31 +121,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: var(--text-color);
 }
 
-/* Ajuste para botões no dark mode */
+// ======= Botões =======
 .dark button {
   background: var(--primary-color);
   color: var(--text-color);
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  padding: $spacing-md $spacing-lg;
+  border-radius: $border-radius;
   cursor: pointer;
-  transition: var(--tran-03);
+  transition: $transition-fast;
+
+  &:hover {
+    background: var(--primary-color-light);
+  }
 }
 
-.dark button:hover {
-  background: var(--primary-color-light);
-}
 
-/* Ícones no modo escuro */
-.dark .sun {
-  opacity: 1;
-}
-
-.dark .moon {
-  opacity: 0;
-}
-
-.dark .sidebar li a:hover .icon,
-.dark .sidebar li a:hover .text{
-  color: var(--text-color) !important;
+// ======= Diálogo Personalizado =======
+.custom-dialog-container {
+  .mat-dialog-container {
+    padding: 0 !important;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: $box-shadow;
+  }
 }

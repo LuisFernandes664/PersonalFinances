@@ -2,20 +2,14 @@
 <div class="main-container">
   <div class="auth-container">
     <div class="blog-content">
-      <h1>{{ title }}</h1>
+      <h1>{{ 'COMPONENTS.BLOG.TITLE' | translate }}</h1>
       <p>Bem-vindo ao Blog!</p>
       <section class="posts">
-        <article class="post">
-          <h2>Título do Post 1</h2>
-          <p>Resumo do post 1. Este é um exemplo de conteúdo do blog, com uma breve descrição do que se trata o post.</p>
-          <a routerLink="/blog/1" class="read-more">Ler mais</a>
+        <article class="post" *ngFor="let post of posts">
+          <h2>{{ post.title }}</h2>
+          <p>{{ post.summary | truncate:150 }}</p>
+          <a (click)="openPostDialog(post)" class="read-more">Ler mais</a>
         </article>
-        <article class="post">
-          <h2>Título do Post 2</h2>
-          <p>Resumo do post 2. Este é outro exemplo de conteúdo do blog, com uma descrição resumida.</p>
-          <a routerLink="/blog/2" class="read-more">Ler mais</a>
-        </article>
-        <!-- Adicione mais posts conforme necessário -->
       </section>
     </div>
   </div>

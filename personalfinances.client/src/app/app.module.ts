@@ -7,23 +7,20 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DashboardComponent } from './components/home/dashboard/dashboard.component';
+import { DashboardComponent } from './components/core/home/dashboard/dashboard.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { AuthInterceptor } from './interceptors/auth-interceptor.service';
-import { HomeComponent } from './components/home/home/home.component';
 import { PreferencesService } from './services/preferences.service';
 import { RouterModule } from '@angular/router';
 import { NotificationsComponent } from './components/shared/notifications/notifications.component';
 import { LoaderComponent } from './components/shared/loader/loader.component';
-import { SidebarComponent } from './components/home/shared/layout/sidebar/sidebar.component';
-import { FooterComponent } from './components/home/shared/layout/footer/footer.component';
 import { AuthModule } from './components/public/auth/auth.module';
 import { PublicModule } from './components/public/public.module';
-import { HeaderPublicComponent } from './components/public/shared/header/header.component';
-import { HeaderComponent } from './components/home/shared/layout/header/header.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { HomeModule } from './components/core/home.module';
 
 export const CUSTOM_DATE_FORMATS = {
   parse: {
@@ -50,11 +47,6 @@ export function loadPreferencesFactory(preferencesService: PreferencesService) {
     AppComponent,
     NotificationsComponent,
     LoaderComponent,
-    HomeComponent,
-    SidebarComponent,
-    DashboardComponent,
-    FooterComponent,
-    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -64,6 +56,7 @@ export function loadPreferencesFactory(preferencesService: PreferencesService) {
     FormsModule,
     PublicModule,
     AuthModule,
+    HomeModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -71,6 +64,7 @@ export function loadPreferencesFactory(preferencesService: PreferencesService) {
         deps: [HttpClient]
       }
     }),
+    MatDialogModule
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

@@ -1,0 +1,187 @@
+
+@import '../../../../../assets/styles/variables';
+
+body {
+  background-color: var(--body-color);
+}
+.container1 {
+  width: min(95vw, 1200px);
+  margin: auto;
+  padding: 2rem;
+}
+
+/* Seção do Balanço */
+#balanco {
+  margin-top: -5rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Cartões (Cards) */
+.card {
+  min-width: 300px;
+  background: #F5F5F5;
+  border-radius: 10px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  margin-right: 2rem;
+  margin-left: 20px;
+  color: var(--text-color);
+}
+
+.card p {
+  font-size: 2rem;
+  line-height: 3rem;
+  margin-top: 1rem;
+}
+
+.card h3 {
+  font-size: 1rem;
+}
+
+.card.total {
+  background: #49AA26;
+  color: white;
+}
+
+/* Ícones dos Cards */
+.img-icon-responsive {
+  float: right;
+  margin-top: -30px;
+}
+
+.add {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--text-color);
+  font-size: 20px;
+  font-weight: normal;
+  margin-left: 20px;
+}
+
+.img-add {
+  width: 30px;
+  height: 34px;
+  margin-right: 10px;
+  color: #49AA26;
+}
+
+/* Tabela */
+#dados-tabela {
+  width: 100%;
+  border-spacing: 0 0.5rem;
+  font-size: 16px;
+  color: var(--text-color);
+  padding: 0 20px;
+}
+
+table thead tr th:first-child,
+table tbody tr td:first-child {
+  border-radius: 0.25rem 0 0 0.25rem;
+}
+
+table tbody td {
+  background: var(--secondary-color);
+  padding: 1rem 2rem;
+  font-weight: bold;
+}
+
+table tbody tr {
+  opacity: 0.7;
+  color: var(--text-color);
+}
+
+table tbody tr:hover {
+  opacity: 1;
+}
+
+table thead th {
+  padding: 1rem 2rem;
+  font-size: 16px;
+  text-align: left;
+  color: var(--text-color);
+}
+
+td.descricao {
+  color: var(--text-color);
+}
+
+td.ganho {
+  color: #12a454;
+}
+
+td.gasto {
+  color: #e92929;
+}
+
+td.altera-apaga {
+  height: auto;
+}
+
+tr td {
+  text-align: start;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+}
+
+.alterar {
+  height: 21px;
+  width: 21px;
+  margin-right: 10px;
+}
+
+.alterar:hover {
+  opacity: 0.6;
+}
+
+.apagar {
+  height: 30px;
+  width: 19px;
+  color: #FF0000;
+}
+
+.apagar:hover {
+  opacity: 0.6;
+}
+
+/* Media Query para ecrãs pequenos */
+@media only screen and (max-width: 737px) {
+  .container1 {
+    width: min(90vw, 800px);
+    margin: auto;
+  }
+  #balanco {
+    margin-top: -5rem;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .card {
+    min-width: 300px;
+    background: #F5F5F5;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    margin-right: 0.5rem;
+    margin-left: 20px;
+    margin-bottom: 1rem;
+    color: var(--dark-blue);
+  }
+  .card p {
+    font-size: 2rem;
+    line-height: 3rem;
+    margin-top: 1rem;
+    margin-left: 20px;
+  }
+  .card h3 {
+    font-size: 1rem;
+  }
+  .card.total {
+    background: #49AA26;
+    color: white;
+  }
+}

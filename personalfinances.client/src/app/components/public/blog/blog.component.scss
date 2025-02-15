@@ -1,114 +1,110 @@
-// Variáveis para cores e espaçamentos
-$primary-color: #3498db;
-$text-color: #333;
-$background-color: #fff;
-$shadow-color: rgba(0, 0, 0, 0.1);
+@import '../../../../assets/styles/variables.scss';
 
-// Estilo global da página do Blog
+// ======= Variáveis Extras =======
+$container-width: 1200px;
+$post-min-width: 300px;
+$spacing-lg: 2rem;
+$spacing-md: 1.5rem;
+$spacing-sm: 0.5rem;
+$border-radius: 10px;
+$box-shadow-light: 0 2px 5px rgba(0, 0, 0, 0.05);
+$box-shadow-hover: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+// ======= Mixins =======
+@mixin button-style($bg-color) {
+  display: inline-block;
+  background: $bg-color;
+  color: #fff;
+  padding: $spacing-sm $spacing-md;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background 0.3s ease-in-out;
+
+}
+
+@mixin box-shadow-style {
+  box-shadow: $box-shadow-light;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $box-shadow-hover;
+  }
+}
+
+// ======= Container Principal =======
 .main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2rem;
-  min-height: 100vh;
+  width: 100%;
 }
 
-// Container principal do conteúdo
+// ======= Container Centralizado =======
 .auth-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1rem;
+  max-width: $container-width;
+  margin: 0 auto;
 }
 
+// ======= Estilos do Blog =======
 .blog-content {
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px $shadow-color;
-  width: 100%;
+  padding: $spacing-lg;
+  border-radius: $border-radius;
 
+  // Título do Blog
   h1 {
+    text-align: center;
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: $text-color;
-    text-align: center;
+    color: var(--text-color);
   }
 
+  // Subtítulo e descrição
+  .subtitle, p.subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark-blue);
+  }
+
+  // Parágrafos Gerais
   p {
-    font-size: 1.1rem;
-    color: lighten($text-color, 20%);
     text-align: center;
-    margin-bottom: 2rem;
-  }
-
-  // Estilos para a secção de posts
-  .posts {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-
-    .post {
-      padding: 1.5rem;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      background-color: var(--input-bg);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-      &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 12px $shadow-color;
-      }
-
-      h2 {
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
-        color: text-color;
-      }
-
-      p {
-        font-size: 1rem;
-        color: text-color;
-        margin-bottom: 1rem;
-      }
-
-      .read-more {
-        font-size: 1rem;
-        color: $primary-color;
-        text-decoration: none;
-        font-weight: bold;
-        transition: color 0.3s ease;
-
-        &:hover {
-          color: darken($primary-color, 10%);
-        }
-      }
-    }
+    font-size: 1.1rem;
+    color: var(--text-color);
   }
 }
 
-// Media queries para dispositivos móveis
-@media (max-width: 768px) {
-  .blog-content {
-    padding: 1rem;
+// ======= Layout dos Posts =======
+.posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($post-min-width, 1fr));
+  grid-gap: $spacing-lg;
+  margin-top: $spacing-lg;
 
-    h1 {
-      font-size: 2rem;
+  .post {
+    background: var(--pop-bg);
+    padding: $spacing-md;
+    border-radius: 8px;
+    @include box-shadow-style;
+    cursor: pointer;
+
+    // Título de cada post
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: $spacing-sm;
+      color: var(--text-color);
     }
 
+    // Resumo do post
     p {
       font-size: 1rem;
+      color: var(--text-color);
+      line-height: 1.5;
+      margin-bottom: $spacing-sm;
     }
 
-    .posts {
-      .post {
-        padding: 1rem;
-
-        h2 {
-          font-size: 1.6rem;
-        }
-      }
+    // Botão "Ler mais"
+    .read-more {
+      @include button-style(var(--primary-color));
     }
   }
 }
