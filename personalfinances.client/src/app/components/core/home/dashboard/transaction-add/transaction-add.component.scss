@@ -1,0 +1,225 @@
+@import './../../../../../../assets/styles/global';
+
+// ======= Variáveis Específicas =======
+$border-radius: 10px;
+$padding: 20px;
+$transition-fast: 0.3s ease-in-out;
+
+// ======= Mixin para Botões =======
+@mixin button-style($bg-color, $text-color: #fff) {
+  align-items: center;
+  background: $bg-color;
+  border-radius: $border-radius;
+  cursor: pointer;
+  display: flex;
+  height: 50px;
+  justify-content: center;
+  width: 100%;
+  border: 1px solid var(--button-border);
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $bg-color;
+  }
+
+  color: $text-color;
+}
+
+// ======= Mixin para Dark Mode =======
+@mixin dark-mode {
+  background-color: var(--modal-bg);
+  color: var(--text-color);
+
+  .modal-content {
+    background-color: var(--modal-content-bg);
+    color: var(--text-color);
+  }
+
+  .modal-close {
+    background-color: var(--modal-close-bg);
+  }
+
+  #desc, #valor, #data {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+  }
+
+  .button-modal {
+    background: var(--button-bg);
+    color: var(--text-color);
+
+    &:hover {
+      background: var(--button-bg);
+    }
+  }
+
+  .submit {
+    background: var(--button-submit-bg);
+    color: #fff;
+
+    &:hover {
+      background: var(--button-submit-bg);
+    }
+  }
+}
+
+
+// ======= Modal Principal =======
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999999;
+  background-color: var(--modal-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: $padding;
+  cursor: pointer;
+}
+
+// ======= Conteúdo do Modal =======
+.modal-content {
+  min-height: 350px;
+  width: 100%;
+  max-width: 700px;
+  padding: 25px;
+  border-radius: 20px;
+  position: relative;
+  background-color: var(--modal-content-bg);
+  cursor: auto;
+}
+
+.dark .modal-content {
+  min-height: 350px;
+  width: 100%;
+  max-width: 700px;
+  padding: 25px;
+  border-radius: 20px;
+  position: relative;
+  background-color: var(--modal-content-bg-dark);
+  cursor: auto;
+}
+// ======= Botão Fechar =======
+.modal-close {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--modal-close-bg);
+  color: white;
+  cursor: pointer;
+}
+
+// ======= Formulário =======
+.newtransac {
+  color: var(--dark-blue);
+  font-weight: normal;
+}
+
+// Campos de Entrada
+#desc, #valor, #data {
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 28px;
+  padding: 8px 16px;
+  width: 100%;
+  min-height: 44px;
+  border: none;
+  border-radius: 4px;
+  outline-color: rgba(84, 105, 212, 0.5);
+  background: #EAF0F7;
+  color: var(--text-color);
+  .dark & {
+    background: var(--input-bg);
+    input:-webkit-autofill {
+      -webkit-text-fill-color: var(--text-color) !important;
+      transition: background-color 5000s ease-in-out 0s !important;
+    }
+  }
+}
+
+// ======= Botões =======
+.buttons {
+  display: flex;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.button-modal {
+  @include button-style(var(--button-bg), #000);
+  margin: 0 5px 28px 20px;
+
+  &:last-child {
+    margin: 0 20px 20px 5px;
+  }
+}
+
+// Botão de Submissão
+.submit {
+  @include button-style(var(--button-submit-bg), #fff);
+}
+
+// ======= Ativando Dark Mode =======
+.dark {
+  @include dark-mode;
+}
+
+// ======= Campos de Seleção (Dropdowns) =======
+select {
+  width: 100%;
+  min-height: 44px;
+  font-size: 16px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  outline-color: rgba(84, 105, 212, 0.5);
+  background: #EAF0F7;
+  color: var(--text-color);
+  cursor: pointer;
+
+  &:focus {
+    background: var(--input-focus-bg);
+  }
+
+  .dark & {
+    background: var(--input-bg);
+    color: var(--text-color);
+  }
+}
+
+// ======= Estilo para o Label dos Campos =======
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark-blue);
+  margin-bottom: 5px;
+
+  .dark & {
+    color: var(--text-color);
+  }
+}
+
+// ======= Ajuste para Modal em Telas Pequenas =======
+@media screen and (max-width: 600px) {
+  .modal-content {
+    width: 90%;
+    padding: 15px;
+  }
+}
+
+// ======= Melhorando Layout dos Campos =======
+.inputbox {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}

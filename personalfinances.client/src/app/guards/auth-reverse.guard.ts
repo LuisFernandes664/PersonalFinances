@@ -11,7 +11,8 @@ export class AuthReverseGuard implements CanActivate {
 
   canActivate(): boolean {
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/']);
+      console.log('AuthReverseGuard');
+      this.router.navigate(['/home']);
       return false;
     }
     return true;

@@ -112,7 +112,7 @@ td.ganho {
   color: #12a454;
 }
 
-td.gasto {
+td.perda {
   color: #e92929;
 }
 
@@ -133,6 +133,10 @@ tr td {
   height: 21px;
   width: 21px;
   margin-right: 10px;
+}
+
+.dark .alterar path {
+  fill: var(--text-color);
 }
 
 .alterar:hover {

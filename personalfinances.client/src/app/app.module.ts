@@ -21,6 +21,7 @@ import { AuthModule } from './components/public/auth/auth.module';
 import { PublicModule } from './components/public/public.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HomeModule } from './components/core/home.module';
+import { DashboardModule } from './components/core/home/dashboard/dashboard.module';
 
 export const CUSTOM_DATE_FORMATS = {
   parse: {
@@ -57,6 +58,7 @@ export function loadPreferencesFactory(preferencesService: PreferencesService) {
     PublicModule,
     AuthModule,
     HomeModule,
+    DashboardModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

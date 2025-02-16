@@ -1,0 +1,59 @@
+<div class="modal">
+  <div class="modal-content">
+    <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+      <i class="bx bx-x modal-close" (click)="onCancel()"></i>
+      <h1 class="newtransac">Nova Transação</h1>
+
+      <div class="inputbox" >
+        <input type="text" id="desc" formControlName="description" placeholder="Descrição">
+      </div>
+
+      <div class="inputbox" >
+        <input type="number" id="valor" formControlName="amount" placeholder="0,00">
+      </div>
+      <small>Use o sinal - (negativo) para despesas</small>
+
+      <input type="date" id="data" formControlName="date">
+
+      <!-- Categoria -->
+      <div class="inputbox">
+        <label>Categoria</label>
+        <select formControlName="category">
+          <option value="income">Receita</option>
+          <option value="expense">Despesa</option>
+        </select>
+      </div>
+
+      <!-- Método de pagamento -->
+      <div class="inputbox">
+        <label>Método de Pagamento</label>
+        <select formControlName="paymentMethod">
+          <option value="cash">Dinheiro</option>
+          <option value="credit_card">Cartão de Crédito</option>
+          <option value="debit_card">Cartão de Débito</option>
+          <option value="bank_transfer">Transferência Bancária</option>
+        </select>
+      </div>
+
+      <!-- Destinatário -->
+      <div class="inputbox">
+        <input type="text" formControlName="recipient" placeholder="Destinatário">
+      </div>
+
+      <!-- Status -->
+      <div class="inputbox">
+        <label>Status</label>
+        <select formControlName="status">
+          <option value="pending">Pendente</option>
+          <option value="confirmed">Confirmada</option>
+          <option value="cancelled">Cancelada</option>
+        </select>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="cancel button-modal" (click)="onCancel()">Cancelar</button>
+        <button type="submit" class="submit button-modal">Gravar</button>
+      </div>
+    </form>
+  </div>
+</div>

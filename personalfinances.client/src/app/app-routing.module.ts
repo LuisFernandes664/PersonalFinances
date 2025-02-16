@@ -7,10 +7,10 @@ import { SigninComponent } from './components/public/auth/signin/signin.componen
 import { SignupComponent } from './components/public/auth/signup/signup.component';
 import { BlogComponent } from './components/public/blog/blog.component';
 import { DashboardComponent } from './components/core/home/dashboard/dashboard.component';
-import { GraphycsComponent } from './components/core/home/graphycs/graphyc.component';
+import { GraphycComponent } from './components/core/home/graphycs/graphyc.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'signin', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'contact', component: ContactComponent },
@@ -22,7 +22,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'graphyc', component: GraphycsComponent }
+      { path: 'graphyc', component: GraphycComponent }
     ]
   },
   { path: '**', redirectTo: 'signin' }

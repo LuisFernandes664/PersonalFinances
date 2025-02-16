@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { TruncatePipe } from '../../pipes/truncate.pipe';
 import { BlogPostDialogComponent } from './blog/blog-post-dialog/blog-post-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { PipeModule } from '../../pipes/pipe.module';
 
 
 @NgModule({
@@ -18,7 +19,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     ContactComponent,
     BlogComponent,
     BlogComponent,
-    TruncatePipe,
   ],
   imports: [
     CommonModule,
@@ -29,6 +29,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
     AuthModule,
     MatDialogModule,
+    PipeModule
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

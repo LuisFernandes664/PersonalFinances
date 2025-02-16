@@ -3,22 +3,20 @@ import { CommonModule } from '@angular/common';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { LayoutModule } from './shared/layout/layout.module';
 import { HomeComponent } from './home/home.component';
-import { DashboardComponent } from './home/dashboard/dashboard.component';
 import { RouterModule } from '@angular/router';
-import { GraphycsComponent } from './home/graphycs/graphyc.component';
+import { DashboardModule } from './home/dashboard/dashboard.module';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
-    DashboardComponent,
-    GraphycsComponent
   ],
   imports: [
     CommonModule,
     NgApexchartsModule,
     LayoutModule,
-    RouterModule
+    RouterModule,
+    DashboardModule
   ],
   exports: [
     HomeComponent
