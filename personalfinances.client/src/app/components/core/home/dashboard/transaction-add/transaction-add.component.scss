@@ -126,7 +126,7 @@ $transition-fast: 0.3s ease-in-out;
 }
 
 // Campos de Entrada
-#desc, #valor, #data {
+#desc, #valor, #data, #destin {
   margin-bottom: 20px;
   font-size: 16px;
   line-height: 28px;
@@ -136,10 +136,10 @@ $transition-fast: 0.3s ease-in-out;
   border: none;
   border-radius: 4px;
   outline-color: rgba(84, 105, 212, 0.5);
-  background: #EAF0F7;
+  background: var(--input-bg);
   color: var(--text-color);
   .dark & {
-    background: var(--input-bg);
+    background: var(--input-bg) !important;
     input:-webkit-autofill {
       -webkit-text-fill-color: var(--text-color) !important;
       transition: background-color 5000s ease-in-out 0s !important;
@@ -182,7 +182,7 @@ select {
   border: none;
   border-radius: 4px;
   outline-color: rgba(84, 105, 212, 0.5);
-  background: #EAF0F7;
+  background: var(--input-bg);
   color: var(--text-color);
   cursor: pointer;
 

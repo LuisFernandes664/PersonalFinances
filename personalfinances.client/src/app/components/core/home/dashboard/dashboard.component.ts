@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TransactionService } from '../transaction.service';
 import { DashboardService } from './dashboard.service';
+import { Transaction } from '../transaction.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,17 +10,19 @@ import { DashboardService } from './dashboard.service';
   encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent {
-  transactions: any[] = [];
+  transactions: Transaction[] = [];
   showModal: boolean = false;
   editingIndex: number | null = null;
 
-  constructor(private transactionService: TransactionService, private dashboardService: DashboardService) { }
+  constructor(
+    private transactionService: TransactionService,
+    private dashboardService: DashboardService
+  ) { }
 
   ngOnInit() {
     this.transactionService.transactions$.subscribe(data => {
       this.transactions = data;
     });
-
   }
 
   openModal() {
@@ -37,11 +40,12 @@ export class DashboardComponent {
   }
 
   deleteTransaction(index: number) {
-    this.transactionService.deleteTransaction(index);
-    this.dashboardService.getTransactions().subscribe(data => {
-      this.transactions = data;
-    });
+    const transaction = this.transactions[index];
+    if (transaction && transaction.stampEntity) {
+      this.transactionService.deleteTransaction(transaction.stampEntity).subscribe(() => {
+        // Após eliminação, a lista será actualizada pelo loadTransactions() no serviço
+      });
+    }
   }
-
 
 }

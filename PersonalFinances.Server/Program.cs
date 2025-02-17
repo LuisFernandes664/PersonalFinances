@@ -3,9 +3,11 @@ using Microsoft.IdentityModel.Tokens;
 using PersonalFinances.BLL.Entities.Models.Notification.Senders;
 using PersonalFinances.BLL.Interfaces.Notification.Senders;
 using PersonalFinances.BLL.Interfaces.Repository;
+using PersonalFinances.BLL.Interfaces.Transaction;
 using PersonalFinances.BLL.Interfaces.User;
 using PersonalFinances.DAL;
 using PersonalFinances.DAL.Helpers;
+using PersonalFinances.DAL.Transaction;
 using PersonalFinances.DAL.User;
 using System.Text;
 
@@ -24,6 +26,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<ISmsSender, SmsSender>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<DatabaseContext>();
 
 await DatabaseHelper.CreateTablesAsync();

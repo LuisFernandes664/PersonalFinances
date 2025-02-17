@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TransactionService } from '../../transaction.service';
+import { Transaction } from '../../transaction.model';
 
 @Component({
   selector: 'app-transaction-add',
@@ -11,10 +12,11 @@ export class TransactionAddComponent {
   @Output() close = new EventEmitter<void>();
   @Input() editingIndex: number | null = null;
   transactionForm: FormGroup;
+  transactions: Transaction[] = [];
 
   constructor(private fb: FormBuilder, private transactionService: TransactionService) {
     this.transactionForm = this.fb.group({
-      id: [''],
+      // Não incluímos o id, pois o identificador é o stampEntity (gerado no backend)
       description: ['', Validators.required],
       amount: ['', Validators.required],
       date: ['', Validators.required],
@@ -26,15 +28,22 @@ export class TransactionAddComponent {
   }
 
   ngOnInit() {
-    if (this.editingIndex !== null) {
-      const transactions = this.transactionService.getTransactions();
+    // Obtem a lista actual de transacções
+    this.transactions = this.transactionService.getCurrentTransactions();
 
-      if (this.editingIndex >= 0 && this.editingIndex < transactions.length) {
-        const transaction = transactions[this.editingIndex];
-
-        if (transaction) {
-          this.transactionForm.setValue({ ...transaction });
-        }
+    // Se estiver em modo de edição, preenche o formulário com os dados da transacção seleccionada
+    if (this.editingIndex !== null && this.editingIndex >= 0 && this.editingIndex < this.transactions.length) {
+      const transaction = this.transactions[this.editingIndex];
+      if (transaction) {
+        this.transactionForm.patchValue({
+          description: transaction.description,
+          amount: transaction.amount,
+          date: transaction.date,
+          category: transaction.category,
+          paymentMethod: transaction.paymentMethod,
+          recipient: transaction.recipient,
+          status: transaction.status
+        });
       }
     }
   }
@@ -42,14 +51,22 @@ export class TransactionAddComponent {
   onSubmit() {
     if (this.transactionForm.valid) {
       const newTransaction = this.transactionForm.value;
-
       if (this.editingIndex !== null) {
-        this.transactionService.updateTransaction(this.editingIndex, newTransaction);
+        // Modo de edição: obter o stampEntity da transacção a editar
+        const transactionToEdit = this.transactions[this.editingIndex];
+        if (transactionToEdit && transactionToEdit.stampEntity) {
+          this.transactionService.updateTransaction(transactionToEdit.stampEntity, newTransaction).subscribe(() => {
+            // Após a actualização, o serviço actualiza a lista (via loadTransactions())
+            this.close.emit();
+          });
+        }
       } else {
-        this.transactionService.addTransaction(newTransaction);
+        // Modo de adição
+        this.transactionService.addTransaction(newTransaction).subscribe(() => {
+          this.close.emit();
+        });
       }
       this.transactionForm.reset();
-      this.close.emit();
     }
   }
 

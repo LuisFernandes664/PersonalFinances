@@ -55,6 +55,23 @@ namespace PersonalFinances.DAL.Helpers
                         { "expires_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false } },
                         { "used", new ColumnDefinition { DataType = "BIT", IsPrimaryKey = false, IsNullable = false } }
                     }
+                },
+                new TableDefinition
+                {
+                    TableName = "Transactions",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "description", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "amount", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
+                        { "date", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
+                        { "category", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "paymentMethod", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "recipient", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "status", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                        { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                    }
                 }
 
             };
