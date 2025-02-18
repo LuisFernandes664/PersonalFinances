@@ -1,4 +1,4 @@
-﻿using PersonalFinances.BLL.Entities.Models;
+﻿using PersonalFinances.BLL.Entities.Models.Transaction;
 using PersonalFinances.BLL.Interfaces.Transaction;
 using PersonalFinances.DAL.Helpers;
 using System;

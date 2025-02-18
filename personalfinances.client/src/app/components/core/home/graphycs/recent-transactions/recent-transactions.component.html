@@ -1,0 +1,16 @@
+<div class="recent-transactions">
+  <div class="section-header">
+    <h3>Recent Transactions</h3>
+  </div>
+  <ul>
+    <li *ngFor="let transaction of recentTransactions">
+      <div class="transaction-title">{{ transaction.description }}</div>
+      <div class="transaction-amount">{{ transaction.amount | number:'1.2-2' }}€</div>
+      <div class="transaction-date">{{ transaction.date | date:'MMM dd, yyyy' }}</div>
+      <div class="transaction-status"
+           [ngClass]="{'completed': transaction.status === 'confirmed', 'pending': transaction.status === 'pending'}">
+        {{ transaction.status }}
+      </div>
+    </li>
+  </ul>
+</div>

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { Transaction } from './transaction.model';
+import { Transaction } from './models/transaction.model';
 import { environment } from '../../../../environments/environment';
 import { APIResponse } from '../../../models/api-response.model';
+import { DashboardTotals } from './models/dashboard-totals.model';
 
 @Injectable({
   providedIn: 'root'
@@ -79,5 +80,11 @@ export class TransactionService {
   getCurrentTransactions(): Transaction[] {
     return this.transactionsSubject.getValue();
   }
+
+  getDashboardTotals(): Observable<DashboardTotals> {
+    return this.http.get<APIResponse<DashboardTotals>>(`${this.apiUrl}/dashboard-totals`)
+      .pipe(map(response => response.data));
+  }
+
 
 }

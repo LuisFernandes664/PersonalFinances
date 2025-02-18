@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TransactionService } from '../transaction.service';
 import { DashboardService } from './dashboard.service';
-import { Transaction } from '../transaction.model';
+import { Transaction } from '../models/transaction.model';
 
 @Component({
   selector: 'app-dashboard',

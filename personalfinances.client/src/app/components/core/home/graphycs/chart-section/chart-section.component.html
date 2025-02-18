@@ -1,0 +1,30 @@
+<div class="chart-section">
+  <div class="section-header">
+    <h3>Analytics</h3>
+    <div class="intervals">
+      <button
+        [class.active]="selectedInterval === 'daily'"
+        (click)="onSelectInterval('daily')">
+        Daily
+      </button>
+      <button
+        [class.active]="selectedInterval === 'weekly'"
+        (click)="onSelectInterval('weekly')">
+        Weekly
+      </button>
+      <button
+        [class.active]="selectedInterval === 'monthly'"
+        (click)="onSelectInterval('monthly')">
+        Monthly
+      </button>
+    </div>
+  </div>
+  <div class="chart-container">
+    <apx-chart
+      [series]="chartData"
+      [chart]="{ type: 'line', height: 320 }"
+      [xaxis]="{ categories: chartData.length > 0 ? chartData[0].categories : [] }"
+      [dataLabels]="{ enabled: true }">
+    </apx-chart>
+  </div>
+</div>

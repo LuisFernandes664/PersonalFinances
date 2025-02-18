@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PersonalFinances.BLL.Entities;
-using PersonalFinances.BLL.Entities.Models;
+using PersonalFinances.BLL.Entities.Models.Transaction;
 using PersonalFinances.BLL.Interfaces.Transaction;
 
 namespace PersonalFinances.Server.Controllers
@@ -86,6 +86,22 @@ namespace PersonalFinances.Server.Controllers
                 var response = APIResponse<object>.SuccessResponse(totals, "Totais calculados com sucesso.");
                 return Ok(response);
             }
+
+            [HttpGet("dashboard-totals")]
+            public async Task<IActionResult> GetDashboardTotals()
+            {
+                try
+                {
+                    var totals = await _service.GetDashboardTotalsAsync();
+                    var response = APIResponse<DashboardTotalsModel>.SuccessResponse(totals, "Dashboard totals calculated successfully.");
+                    return Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(APIResponse<object>.FailResponse($"Error calculating dashboard totals: {ex.Message}"));
+                }
+            }
+
         }
     }
 

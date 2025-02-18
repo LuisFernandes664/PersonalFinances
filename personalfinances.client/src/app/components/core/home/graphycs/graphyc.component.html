@@ -1,79 +1,25 @@
 <div class="graphs-container">
-  <!-- OVERVIEW -->
-  <div class="overview">
-    <div class="card">
-      <h3>Your Balance</h3>
-      <p class="amount">{{ totalBalance | number:'1.2-2' }}€</p>
-      <span class="info">
-        <span *ngIf="balanceVariation > 0" class="positive">+{{ balanceVariation | number:'1.1-2' }}%</span>
-        <span *ngIf="balanceVariation < 0" class="negative">{{ balanceVariation | number:'1.1-2' }}%</span>
-        compared with last month ({{ lastMonthBalance | number:'1.2-2' }}€)
-      </span>
-    </div>
-    <div class="card">
-      <h3>Saving</h3>
-      <p class="amount">{{ savings | number:'1.2-2' }}€</p>
-      <span class="info">{{ savingVariation | number:'1.1-2' }}% compared with last month</span>
-    </div>
-    <div class="card">
-      <h3>Expenses</h3>
-      <p class="amount">{{ totalExpenses | number:'1.2-2' }}€</p>
-    </div>
-    <div class="card">
-      <h3>Incomes</h3>
-      <p class="amount">{{ totalIncome | number:'1.2-2' }}€</p>
-    </div>
-  </div>
+  <!-- Componente Overview (cartões de resumo) -->
+  <app-overview
+    [totalBalance]="totalBalance"
+    [balanceVariation]="balanceVariation"
+    [lastMonthBalance]="lastMonthBalance"
+    [savings]="savings"
+    [savingVariation]="savingVariation"
+    [totalExpenses]="totalExpenses"
+    [totalIncome]="totalIncome">
+  </app-overview>
 
-
-  <!-- SEGUNDA LINHA: Analytics + (Saving Plan e Recent Transactions) -->
+  <!-- Linha inferior: Gráfico + Coluna da Direita -->
   <div class="bottom-row">
-    <div class="chart-section">
-      <div class="section-header">
-        <h3>Analytics</h3>
-        <div class="intervals">
-          <button>Daily</button>
-          <button class="active">Weekly</button>
-          <button>Monthly</button>
-        </div>
-      </div>
-
-      <!-- Gráfico ApexCharts -->
-      <apx-chart
-        [series]="chartData"
-        [chart]="{ type: 'bar', height: 300 }"
-        [xaxis]="{ categories: ['Total'] }"
-        [dataLabels]="{ enabled: true }">
-      </apx-chart>
-    </div>
-
+    <app-chart-section
+      [chartData]="chartData"
+      [selectedInterval]="selectedInterval"
+      (intervalChanged)="onIntervalChanged($event)">
+    </app-chart-section>
     <div class="right-column">
-      <div class="saving-plan">
-        <div class="section-header">
-          <h3>Saving Plan</h3>
-        </div>
-        <ul>
-          <li>
-            <div class="plan-title">Emergency Fund</div>
-            <div class="plan-amount">${{ savings | number:'1.2-2' }} / 10,000 €</div>
-            <div class="plan-progress">{{ (savings / 10000) * 100 | number:'1.0-0' }}%</div>
-          </li>
-        </ul>
-      </div>
-
-      <div class="recent-transactions">
-        <div class="section-header">
-          <h3>Recent Transactions</h3>
-        </div>
-        <ul>
-          <li *ngFor="let transaction of recentTransactions">
-            <div class="transaction-title">{{ transaction.description }}</div>
-            <div class="transaction-amount">{{ transaction.amount | number:'1.2-2' }}€</div>
-            <div class="transaction-date">{{ transaction.date | date:'MMM dd, yyyy' }}</div>
-            <div class="transaction-status completed">{{ transaction.status }}</div>
-          </li>
-        </ul>
-      </div>
+      <app-saving-plan [savings]="savings"></app-saving-plan>
+      <app-recent-transactions [recentTransactions]="recentTransactions"></app-recent-transactions>
     </div>
   </div>
 </div>

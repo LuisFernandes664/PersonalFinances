@@ -1,4 +1,4 @@
-﻿using PersonalFinances.BLL.Entities.Models;
+﻿using PersonalFinances.BLL.Entities.Models.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +17,7 @@ namespace PersonalFinances.BLL.Interfaces.Transaction
         Task<decimal> GetTotalBalanceAsync();
         Task<decimal> GetTotalIncomeAsync();
         Task<decimal> GetTotalExpensesAsync();
+        Task<DashboardTotalsModel> GetDashboardTotalsAsync();
     }
 
 }

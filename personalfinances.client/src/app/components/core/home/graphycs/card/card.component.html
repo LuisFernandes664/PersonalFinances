@@ -1,0 +1,13 @@
+<div class="card">
+  <h3>{{ title }}</h3>
+  <p class="amount">{{ amount | number:'1.2-2' }}€</p>
+  <ng-container *ngIf="info">
+    <span class="info">
+      <ng-container *ngIf="variation !== undefined">
+        <span *ngIf="variation > 0" class="positive">+{{ variation | number:'1.1-2' }}%</span>
+        <span *ngIf="variation < 0" class="negative">{{ variation | number:'1.1-2' }}%</span>
+      </ng-container>
+      {{ info }}
+    </span>
+  </ng-container>
+</div>

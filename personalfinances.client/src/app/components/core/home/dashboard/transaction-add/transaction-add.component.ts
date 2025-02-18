@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TransactionService } from '../../transaction.service';
-import { Transaction } from '../../transaction.model';
+import { Transaction } from '../../models/transaction.model';
 
 @Component({
   selector: 'app-transaction-add',

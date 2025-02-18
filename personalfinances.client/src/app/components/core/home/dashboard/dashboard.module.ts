@@ -18,8 +18,7 @@ import { GraphycComponent } from '../graphycs/graphyc.component';
 @NgModule({
   declarations: [
     DashboardComponent,
-    TransactionAddComponent,
-    GraphycComponent
+    TransactionAddComponent
   ],
   imports: [
     CommonModule,
@@ -35,8 +34,7 @@ import { GraphycComponent } from '../graphycs/graphyc.component';
     MatNativeDateModule
   ],
   exports: [
-    DashboardComponent,
-    GraphycComponent
+    DashboardComponent
   ],
   providers: [
     MatDatepickerModule,

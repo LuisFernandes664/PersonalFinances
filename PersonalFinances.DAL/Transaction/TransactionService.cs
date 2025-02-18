@@ -1,9 +1,8 @@
-﻿using PersonalFinances.BLL.Entities.Models;
+﻿using PersonalFinances.BLL.Entities.Models.Transaction;
 using PersonalFinances.BLL.Interfaces.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PersonalFinances.DAL.Transaction
@@ -83,6 +82,69 @@ namespace PersonalFinances.DAL.Transaction
             var transactions = await _repository.GetAllAsync();
             return transactions.Where(t => t.Category == "expense").Sum(t => t.Amount);
         }
-    }
 
+        public async Task<DashboardTotalsModel> GetDashboardTotalsAsync()
+        {
+            var transactions = await _repository.GetAllAsync();
+
+            // Obter a data atual
+            var now = DateTime.Now;
+            int currentMonth = now.Month;
+            int currentYear = now.Year;
+            int lastMonth = currentMonth == 1 ? 12 : currentMonth - 1;
+            int lastMonthYear = currentMonth == 1 ? currentYear - 1 : currentYear;
+
+            // Inicializa os acumuladores
+            decimal currentIncome = 0m, currentExpenses = 0m;
+            decimal lastIncome = 0m, lastExpenses = 0m;
+
+            foreach (var t in transactions)
+            {
+                if (t.Date.Month == currentMonth && t.Date.Year == currentYear)
+                {
+                    if (t.Category == "income")
+                        currentIncome += t.Amount;
+                    else if (t.Category == "expense")
+                        currentExpenses += t.Amount;
+                }
+                else if (t.Date.Month == lastMonth && t.Date.Year == lastMonthYear)
+                {
+                    if (t.Category == "income")
+                        lastIncome += t.Amount;
+                    else if (t.Category == "expense")
+                        lastExpenses += t.Amount;
+                }
+            }
+
+            // Cálculos para o mês atual
+            var totalIncome = currentIncome;
+            var totalExpenses = currentExpenses;
+            var totalBalance = totalIncome - totalExpenses;
+
+            // Cálculos para o mês passado
+            var lastMonthBalance = lastIncome - lastExpenses;
+
+            // Cálculo da variação do saldo
+            decimal balanceVariation = 0;
+            if (lastMonthBalance != 0)
+            {
+                balanceVariation = ((totalBalance - lastMonthBalance) / Math.Abs(lastMonthBalance)) * 100;
+            }
+
+            // Cálculo de savings (exemplo: 10% do totalIncome) e savingVariation (exemplo: 4% do savings)
+            var savings = totalIncome * 0.1m;
+            var savingVariation = savings * 0.04m;
+
+            return new DashboardTotalsModel
+            {
+                TotalBalance = totalBalance,
+                TotalIncome = totalIncome,
+                TotalExpenses = totalExpenses,
+                LastMonthBalance = lastMonthBalance,
+                BalanceVariation = balanceVariation,
+                Savings = savings,
+                SavingVariation = savingVariation
+            };
+        }
+    }
 }

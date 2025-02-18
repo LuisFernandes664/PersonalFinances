@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PersonalFinances.BLL.Entities.Models
+namespace PersonalFinances.BLL.Entities.Models.Transaction
 {
     public class TransactionModel : BaseEntity
     {
