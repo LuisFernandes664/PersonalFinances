@@ -5,6 +5,7 @@
   box-shadow: var(--card-shadow);
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding-bottom: 55px;
 
   &:hover {
     transform: translateY(-4px);

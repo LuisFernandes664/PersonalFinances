@@ -1,25 +1,30 @@
 <div class="overview">
-  <div class="row">
-    <app-card
-      title="Your Balance"
-      [amount]="totalBalance"
-      [info]="'Compared with last month (' + (lastMonthBalance | number:'1.2-2') + '€)'"
-      [variation]="balanceVariation">
-    </app-card>
-    <app-card
-      title="Saving"
-      [amount]="savings"
-      [info]="'Compared with last month (' + (savingVariation | number:'1.1-2') + '%)'">
-    </app-card>
+  <div class="container-left">
+    <div class="row">
+      <app-card
+        title="Your Balance"
+        [amount]="totalBalance"
+        [info]="'Compared with last month (' + (lastMonthBalance | number:'1.2-2') + '€)'"
+        [variation]="balanceVariation">
+      </app-card>
+      <app-card
+        title="Saving"
+        [amount]="savings"
+        [info]="'Compared with last month (' + (savingVariation | number:'1.1-2') + '%)'">
+      </app-card>
+    </div>
+    <div class="row">
+      <app-card
+        title="Expenses"
+        [amount]="totalExpenses"
+        [info]="'ㅤ'">
+      </app-card>
+      <app-card
+        title="Incomes"
+        [amount]="totalIncome"
+        [info]="'ㅤ'">
+      </app-card>
+    </div>
   </div>
-  <div class="row">
-    <app-card
-      title="Expenses"
-      [amount]="totalExpenses">
-    </app-card>
-    <app-card
-      title="Incomes"
-      [amount]="totalIncome">
-    </app-card>
-  </div>
+
 </div>

@@ -21,10 +21,12 @@
   </div>
   <div class="chart-container">
     <apx-chart
+      #chart
       [series]="chartData"
       [chart]="{ type: 'line', height: 320 }"
-      [xaxis]="{ categories: chartData.length > 0 ? chartData[0].categories : [] }"
-      [dataLabels]="{ enabled: true }">
+      [xaxis]="{ categories: categories }"
+      [dataLabels]="{ enabled: true }"
+      [colors]="['#00E396', '#FF4560']">
     </apx-chart>
   </div>
 </div>

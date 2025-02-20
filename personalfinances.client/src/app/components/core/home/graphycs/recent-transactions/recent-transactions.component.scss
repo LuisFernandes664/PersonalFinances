@@ -1,3 +1,12 @@
+:root {
+  --card-bg-color: #ffffff;
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --border-color: #e0e0e0;
+  --hover-bg: #f9f9f9;
+  --text-color: #333333;
+  --primary-color: #007bff;
+}
+
 .recent-transactions {
   background-color: var(--card-bg-color);
   border-radius: 12px;
@@ -31,7 +40,6 @@
 
     li {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       padding: 0.8rem 0;
       border-bottom: 1px solid var(--border-color);
@@ -46,8 +54,21 @@
       }
 
       .transaction-title {
+        flex: 2; // Ocupa o dobro do espaço, alinhado à esquerda
         font-weight: 500;
         color: var(--text-color);
+        text-align: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
+
+      .transaction-amount,
+      .transaction-date,
+      .transaction-status {
+        flex: 1;             // Ocupam igual largura, alinhados à direita
+        text-align: right;
       }
 
       .transaction-amount {
@@ -58,7 +79,6 @@
 
       .transaction-date {
         font-size: 0.85rem;
-        color: var(--secondary-color);
       }
 
       .transaction-status {
@@ -66,11 +86,11 @@
         text-transform: capitalize;
 
         &.completed {
-          color: var(--accent-color);
+          color: #328525;
         }
 
         &.pending {
-          color: var(--negative-color);
+          color: #dc3545;
         }
       }
     }

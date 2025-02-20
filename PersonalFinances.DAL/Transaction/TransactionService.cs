@@ -146,5 +146,67 @@ namespace PersonalFinances.DAL.Transaction
                 SavingVariation = savingVariation
             };
         }
+
+        public async Task<ChartDataModel> GetChartDataAsync(string interval)
+        {
+            var transactions = await _repository.GetAllAsync();
+            var now = DateTime.Now;
+            var groupedData = new Dictionary<string, (decimal profits, decimal losses)>();
+
+            Func<TransactionModel, string> keySelector;
+            switch (interval.ToLower())
+            {
+                case "daily":
+                    keySelector = t => t.Date.ToString("yyyy-MM-dd");
+                    break;
+                case "weekly":
+                    keySelector = t => $"{t.Date.Year}-W{GetWeek(t.Date)}";
+                    break;
+                case "monthly":
+                    keySelector = t => t.Date.ToString("yyyy-MM");
+                    break;
+                default:
+                    throw new ArgumentException("Intervalo inválido. Use 'daily', 'weekly' ou 'monthly'.");
+            }
+
+            foreach (var t in transactions)
+            {
+                var key = keySelector(t);
+                if (!groupedData.ContainsKey(key))
+                    groupedData[key] = (0m, 0m);
+
+                var (profits, losses) = groupedData[key];
+                if (t.Category == "income")
+                    profits += t.Amount;
+                else if (t.Category == "expense")
+                    losses += Math.Abs(t.Amount);
+                groupedData[key] = (profits, losses);
+            }
+
+            var orderedKeys = groupedData.Keys.OrderBy(k => k).ToList();
+            var profitsData = orderedKeys.Select(k => groupedData[k].profits).ToList();
+            var lossesData = orderedKeys.Select(k => groupedData[k].losses).ToList();
+
+            var series = new List<ChartSeriesModel>
+            {
+                new ChartSeriesModel { Name = "Lucros", Data = profitsData },
+                new ChartSeriesModel { Name = "Perdas", Data = lossesData }
+            };
+
+            return new ChartDataModel
+            {
+                Series = series,
+                Categories = orderedKeys
+            };
+        }
+
+        // Método auxiliar para obter o número da semana
+        private static int GetWeek(DateTime date)
+        {
+            var day = date.DayOfYear;
+            var firstDay = new DateTime(date.Year, 1, 1);
+            var weekOffset = (7 - (int)firstDay.DayOfWeek + 1) % 7;
+            return (day + weekOffset) / 7 + 1;
+        }
     }
 }

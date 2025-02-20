@@ -1,16 +1,14 @@
-
-
 .graphs-container {
   width: 100%;
   min-height: 100vh;
   padding: 2rem;
+  padding-left: 120px;
   background-color: #E4E9F7;
   color: var(--text-color);
   display: flex;
   flex-direction: column;
   gap: 2rem;
   transition: background-color 0.4s ease, color 0.4s ease;
-  padding-left: 120px;
 }
 
 .dark .graphs-container {
@@ -18,24 +16,24 @@
   color: var(--text-color);
 }
 
+.top-row,
 .bottom-row {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr; /* A coluna esquerda ocupa 2 partes, a direita 1 parte */
   gap: 2rem;
+  align-items: stretch; /* Faz com que ambas as colunas tenham a mesma altura */
 }
 
-.right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+/* Limitar a altura dos containers da coluna da direita para a altura da linha e permitir scroll */
+.right-column,
+.right-column-top {
+  max-height: 100%;
+  overflow: auto;
 }
 
-/* Se necessitares, podes incluir regras responsivas aqui */
 @media (max-width: 768px) {
-  .graphs-container {
-    padding: 1rem;
-  }
+  .top-row,
   .bottom-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Em telas menores, empilha os containers */
   }
 }

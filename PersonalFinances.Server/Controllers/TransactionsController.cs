@@ -102,6 +102,26 @@ namespace PersonalFinances.Server.Controllers
                 }
             }
 
+            [HttpGet("chartdata")]
+            public async Task<IActionResult> GetChartData([FromQuery] string interval)
+            {
+                try
+                {
+                    var chartData = await _service.GetChartDataAsync(interval);
+                    var responseData = new
+                    {
+                        series = chartData.Series,
+                        categories = chartData.Categories
+                    };
+                    var response = APIResponse<object>.SuccessResponse(responseData, "Dados do gráfico obtidos com sucesso.");
+                    return Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(APIResponse<object>.FailResponse($"Erro ao obter dados do gráfico: {ex.Message}"));
+                }
+            }
+
         }
     }
 

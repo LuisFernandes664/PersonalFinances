@@ -1,24 +1,27 @@
 <div class="graphs-container">
-  <!-- Componente Overview (cartões de resumo) -->
-  <app-overview
-    [totalBalance]="totalBalance"
-    [balanceVariation]="balanceVariation"
-    [lastMonthBalance]="lastMonthBalance"
-    [savings]="savings"
-    [savingVariation]="savingVariation"
-    [totalExpenses]="totalExpenses"
-    [totalIncome]="totalIncome">
-  </app-overview>
-
-  <!-- Linha inferior: Gráfico + Coluna da Direita -->
+  <div class="top-row">
+    <app-overview
+      [totalBalance]="totalBalance"
+      [balanceVariation]="balanceVariation"
+      [lastMonthBalance]="lastMonthBalance"
+      [savings]="savings"
+      [savingVariation]="savingVariation"
+      [totalExpenses]="totalExpenses"
+      [totalIncome]="totalIncome">
+    </app-overview>
+    <div class="right-column-top">
+      <app-saving-plan [savings]="savings"></app-saving-plan>
+    </div>
+  </div>
   <div class="bottom-row">
     <app-chart-section
+      *ngIf="chartData.length > 0"
       [chartData]="chartData"
+      [categories]="chartCategories"
       [selectedInterval]="selectedInterval"
       (intervalChanged)="onIntervalChanged($event)">
     </app-chart-section>
     <div class="right-column">
-      <app-saving-plan [savings]="savings"></app-saving-plan>
       <app-recent-transactions [recentTransactions]="recentTransactions"></app-recent-transactions>
     </div>
   </div>

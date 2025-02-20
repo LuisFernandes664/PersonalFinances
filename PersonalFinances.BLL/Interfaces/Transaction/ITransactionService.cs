@@ -18,6 +18,19 @@ namespace PersonalFinances.BLL.Interfaces.Transaction
         Task<decimal> GetTotalIncomeAsync();
         Task<decimal> GetTotalExpensesAsync();
         Task<DashboardTotalsModel> GetDashboardTotalsAsync();
+
+        Task<ChartDataModel> GetChartDataAsync(string interval);
     }
 
+    public class ChartDataModel
+    {
+        public List<ChartSeriesModel> Series { get; set; }
+        public List<string> Categories { get; set; }
+    }
+
+    public class ChartSeriesModel
+    {
+        public string Name { get; set; }
+        public List<decimal> Data { get; set; }
+    }
 }
