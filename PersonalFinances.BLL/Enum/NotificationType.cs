@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PersonalFinances.BLL.Interfaces.Notification
+namespace PersonalFinances.BLL.Enum
 {
-    public interface INotification
+    public enum NotificationType
     {
-        void SendNotification();
+        Email,
+        SMS
     }
 }

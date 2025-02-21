@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PersonalFinances.BLL.Entities;
+using PersonalFinances.BLL.Entities.Models.Notification;
 using PersonalFinances.BLL.Entities.Models.Transaction;
 using PersonalFinances.BLL.Interfaces.Transaction;
 

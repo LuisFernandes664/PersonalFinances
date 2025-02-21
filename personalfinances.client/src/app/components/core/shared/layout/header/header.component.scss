@@ -11,3 +11,7 @@
   width: 416px;
   height: 45px;
 }
+
+.dark #logo {
+  filter: invert(1);
+}

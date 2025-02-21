@@ -14,6 +14,12 @@ export class DashboardComponent {
   showModal: boolean = false;
   editingIndex: number | null = null;
 
+  totals = {
+    totalIncome: 0,
+    totalExpenses: 0,
+    totalBalance: 0
+  };
+
   constructor(
     private transactionService: TransactionService,
     private dashboardService: DashboardService
@@ -22,6 +28,14 @@ export class DashboardComponent {
   ngOnInit() {
     this.transactionService.transactions$.subscribe(data => {
       this.transactions = data;
+    });
+
+    this.dashboardService.getTotals().subscribe(totals => {
+      totals.totalBalance = Math.abs(totals.totalBalance);
+      totals.totalExpenses = Math.abs(totals.totalExpenses);
+      totals.totalIncome = Math.abs(totals.totalIncome);
+      this.totals = totals;
+
     });
   }
 
@@ -43,7 +57,6 @@ export class DashboardComponent {
     const transaction = this.transactions[index];
     if (transaction && transaction.stampEntity) {
       this.transactionService.deleteTransaction(transaction.stampEntity).subscribe(() => {
-        // Após eliminação, a lista será actualizada pelo loadTransactions() no serviço
       });
     }
   }
