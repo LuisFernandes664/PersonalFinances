@@ -3,10 +3,14 @@ using Microsoft.IdentityModel.Tokens;
 using PersonalFinances.BLL.Entities.Models.Notification.Senders;
 using PersonalFinances.BLL.Interfaces.Notification.Senders;
 using PersonalFinances.BLL.Interfaces.Repository;
+using PersonalFinances.BLL.Interfaces.SavingPlan.Budget;
+using PersonalFinances.BLL.Interfaces.SavingPlan.Goal;
 using PersonalFinances.BLL.Interfaces.Transaction;
 using PersonalFinances.BLL.Interfaces.User;
 using PersonalFinances.DAL;
 using PersonalFinances.DAL.Helpers;
+using PersonalFinances.DAL.SavingPlan.Budget;
+using PersonalFinances.DAL.SavingPlan.Goal;
 using PersonalFinances.DAL.Transaction;
 using PersonalFinances.DAL.User;
 using System.Text;
@@ -28,6 +32,12 @@ builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<ISmsSender, SmsSender>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IGoalRepository, GoalRepository>();
+builder.Services.AddScoped<IGoalService, GoalService>();
+builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
+builder.Services.AddScoped<IBudgetService, BudgetService>();
+
+
 builder.Services.AddScoped<DatabaseContext>();
 
 await DatabaseHelper.CreateTablesAsync();

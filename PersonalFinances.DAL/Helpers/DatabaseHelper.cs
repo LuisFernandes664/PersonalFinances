@@ -72,6 +72,36 @@ namespace PersonalFinances.DAL.Helpers
                         { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
                         { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
                     }
+                },
+                // Nova Tabela: Budgets
+                new TableDefinition
+                {
+                    TableName = "Budgets",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "UserId", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "Categoria", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "ValorOrcado", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
+                        { "DataInicio", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
+                        { "DataFim", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
+                        { "CreatedAt", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                    }
+                },
+                // Nova Tabela: Goals
+                new TableDefinition
+                {
+                    TableName = "Goals",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "UserId", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "Descricao", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "ValorAlvo", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
+                        { "ValorAtual", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
+                        { "DataLimite", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
+                        { "CreatedAt", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                    }
                 }
 
             };

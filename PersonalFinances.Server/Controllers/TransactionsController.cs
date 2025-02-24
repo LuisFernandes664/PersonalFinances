@@ -20,6 +20,8 @@ namespace PersonalFinances.Server.Controllers
                 _service = service;
             }
 
+            #region Geral
+
             [HttpGet]
             public async Task<IActionResult> GetAll()
             {
@@ -76,6 +78,10 @@ namespace PersonalFinances.Server.Controllers
                 return Ok(response);
             }
 
+            #endregion
+
+            #region Structural Objects
+
             [HttpGet("totals")]
             public async Task<IActionResult> GetTotals()
             {
@@ -123,6 +129,7 @@ namespace PersonalFinances.Server.Controllers
                 }
             }
 
+            #endregion
         }
     }
 

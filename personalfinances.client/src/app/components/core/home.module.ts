@@ -11,6 +11,18 @@ import { ChartSectionComponent } from './home/graphycs/chart-section/chart-secti
 import { SavingPlanComponent } from './home/graphycs/saving-plan/saving-plan.component';
 import { RecentTransactionsComponent } from './home/graphycs/recent-transactions/recent-transactions.component';
 import { GraphycComponent } from './home/graphycs/graphyc.component';
+import { BudgetComponent } from './home/budget/budget.component';
+import { GoalComponent } from './home/goal/goal.component';
+import { FormControl, FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { SavingPlanDialogComponent } from './home/graphycs/saving-plan/saving-plan-dialog/saving-plan-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -21,14 +33,26 @@ import { GraphycComponent } from './home/graphycs/graphyc.component';
     ChartSectionComponent,
     SavingPlanComponent,
     RecentTransactionsComponent,
-    GraphycComponent
+    GraphycComponent,
+    BudgetComponent,
+    GoalComponent,
+    SavingPlanDialogComponent
   ],
   imports: [
     CommonModule,
     NgApexchartsModule,
     LayoutModule,
     RouterModule,
-    DashboardModule
+    DashboardModule,
+    BrowserModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatDialogModule,
+    MatIconModule
   ],
   exports: [
     HomeComponent

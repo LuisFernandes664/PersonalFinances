@@ -1,9 +1,10 @@
-
 @import '../../../../../assets/styles/variables';
 
 body {
   background-color: var(--body-color);
+  font-family: 'Poppins', sans-serif;
 }
+
 .container1 {
   width: min(95vw, 1200px);
   margin: auto;
@@ -16,6 +17,7 @@ body {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  gap: 1rem;
 }
 
 /* Cartões (Cards) */
@@ -28,6 +30,13 @@ body {
   margin-right: 2rem;
   margin-left: 20px;
   color: var(--text-color);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
 }
 
 .card p {
@@ -38,6 +47,7 @@ body {
 
 .card h3 {
   font-size: 1rem;
+  margin: 0;
 }
 
 .card.total {
@@ -49,6 +59,7 @@ body {
 .img-icon-responsive {
   float: right;
   margin-top: -30px;
+  max-width: 100%;
 }
 
 .add {
@@ -59,6 +70,11 @@ body {
   font-size: 20px;
   font-weight: normal;
   margin-left: 20px;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
 .img-add {
@@ -86,11 +102,13 @@ table tbody td {
   background: var(--secondary-color);
   padding: 1rem 2rem;
   font-weight: bold;
+  border-radius: 4px;
 }
 
 table tbody tr {
   opacity: 0.7;
   color: var(--text-color);
+  transition: opacity 0.3s ease;
 }
 
 table tbody tr:hover {
@@ -127,30 +145,33 @@ tr td {
 .icons {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .alterar {
   height: 21px;
   width: 21px;
   margin-right: 10px;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 0.6;
+  }
 }
 
 .dark .alterar path {
   fill: var(--text-color);
 }
 
-.alterar:hover {
-  opacity: 0.6;
-}
-
 .apagar {
   height: 30px;
   width: 19px;
   color: #FF0000;
-}
+  transition: opacity 0.3s ease;
 
-.apagar:hover {
-  opacity: 0.6;
+  &:hover {
+    opacity: 0.6;
+  }
 }
 
 /* Media Query para ecrãs pequenos */
@@ -158,13 +179,17 @@ tr td {
   .container1 {
     width: min(90vw, 800px);
     margin: auto;
+    padding: 1rem;
   }
+
   #balanco {
     margin-top: -5rem;
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
+    gap: 1rem;
   }
+
   .card {
     min-width: 300px;
     background: #F5F5F5;
@@ -175,15 +200,18 @@ tr td {
     margin-bottom: 1rem;
     color: var(--dark-blue);
   }
+
   .card p {
     font-size: 2rem;
     line-height: 3rem;
     margin-top: 1rem;
     margin-left: 20px;
   }
+
   .card h3 {
     font-size: 1rem;
   }
+
   .card.total {
     background: #49AA26;
     color: white;

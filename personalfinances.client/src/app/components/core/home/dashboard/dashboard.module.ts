@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { GraphycComponent } from '../graphycs/graphyc.component';
 
+
 @NgModule({
   declarations: [
     DashboardComponent,

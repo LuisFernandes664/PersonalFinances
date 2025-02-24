@@ -1,48 +1,23 @@
-// _variables.scss
+// ==================================================
+// Variáveis Globais
+// ==================================================
 
-// Cores
+// Cores, espaçamentos, transições, etc.
 $primary-color: #695CFE;
 $primary-light: #F6F5FF;
-$text-color: #707070;
+$text-color-default: #707070;
 $body-color: #E4E9F7;
 $sidebar-color: #FFF;
 $card-bg: #ffffff;
 
-// Outros estilos globais
-$box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-$border-radius: 12px;
 $spacing-sm: 5px;
 $spacing-md: 10px;
 $spacing-lg: 15px;
+$padding: 20px;
 
-// Transições
+$border-radius: 12px;
+$box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+
 $transition-fast: 0.3s ease-in-out;
 $transition-medium: 0.4s ease-in-out;
 $transition-slow: 0.5s ease-in-out;
-
-// ====== Definição de Variáveis CSS Globais ======
-:root {
-  /* Modo Claro */
-  --modal-bg: rgba(0, 0, 0, 0.25);
-  --modal-content-bg: #fff;
-  --modal-close-bg: #bd2121;
-  --button-bg: #edf1f7;
-  --button-border: #edf1f79e;
-  --button-submit-bg: #0060f6;
-  --input-bg: #ffffff;
-  --text-color: #333;
-
-  /* Modo Escuro */
-  --modal-bg-dark: rgba(0, 0, 0, 0.5);
-  --modal-content-bg-dark: #252525;
-  --modal-close-bg-dark: #a10e0e;
-  --button-bg-dark: #2a2a2a;
-  --button-submit-bg-dark: #0044cc;
-  --input-bg-dark: #1c1c1c;
-  --text-color-dark: #eaeaea;
-}
-
-/* Outras variáveis SCSS */
-$border-radius: 10px;
-$padding: 20px;
-$transition-fast: 0.3s ease-in-out;

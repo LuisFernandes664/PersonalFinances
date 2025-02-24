@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Novo Saving Plan</h2>
+<mat-dialog-content>
+  <form>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Descrição</mat-label>
+      <input matInput [(ngModel)]="newPlan.Descricao" name="descricao" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Valor Alvo</mat-label>
+      <input matInput type="number" [(ngModel)]="newPlan.ValorAlvo" name="valorAlvo" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Valor Atual</mat-label>
+      <input matInput type="number" [(ngModel)]="newPlan.ValorAtual" name="valorAtual" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Data Limite</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="newPlan.DataLimite" name="dataLimite" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onCreate()">Criar</button>
+</mat-dialog-actions>

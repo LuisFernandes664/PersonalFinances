@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TransactionService, ChartSeries, ChartData } from '../transaction.service';
+import { TransactionService, ChartSeries } from '../transaction.service';
 import { Transaction } from '../models/transaction.model';
 import { DashboardTotals } from '../models/dashboard-totals.model';
 import { APIResponse } from '../../../../models/api-response.model';
+import { GoalService, SavingPlan } from '../goal/goal.service';
 
 @Component({
   selector: 'app-graphyc',
@@ -27,9 +28,18 @@ export class GraphycComponent implements OnInit, OnDestroy {
   recentTransactions: Transaction[] = [];
   selectedInterval: string = 'daily';
 
-  constructor(private transactionService: TransactionService) {}
+  // Propriedade para armazenar os saving plans
+  savingPlans: SavingPlan[] = [];
+  // UserId; em uma aplicação real, isso viria do AuthService
+  userId: string = 'user-id-exemplo';
+
+  constructor(
+    private transactionService: TransactionService,
+    private savingPlanService: GoalService
+  ) {}
 
   ngOnInit(): void {
+    // Buscar os totais do dashboard
     this.transactionService.getDashboardTotals()
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -47,6 +57,7 @@ export class GraphycComponent implements OnInit, OnDestroy {
         error => console.error('Erro ao obter os totais do dashboard:', error)
       );
 
+    // Buscar as transacções recentes
     this.transactionService.transactions$
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -57,6 +68,16 @@ export class GraphycComponent implements OnInit, OnDestroy {
         },
         error => console.error('Erro ao obter as transacções:', error)
       );
+
+    // Buscar os Saving Plans (Goals) do usuário
+    this.savingPlanService.getSavingPlans(this.userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (plans) => {
+          this.savingPlans = plans.data;
+        },
+        error => console.error('Erro ao obter saving plans:', error)
+      );
   }
 
   onIntervalChanged(interval: string): void {
@@ -65,7 +86,6 @@ export class GraphycComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (response: APIResponse<any>) => {
-
           if (response && response.data) {
             if (Array.isArray(response.data) && response.data.length > 0) {
               const rawSeries = response.data[0];
@@ -81,9 +101,7 @@ export class GraphycComponent implements OnInit, OnDestroy {
                 }
               ];
               this.chartCategories = rawSeries.categories || this.generateCategories(interval, rawSeries.data.length);
-            }
-
-            else if (response.data.series && response.data.categories) {
+            } else if (response.data.series && response.data.categories) {
               this.chartData = response.data.series;
               this.chartCategories = response.data.categories;
             }

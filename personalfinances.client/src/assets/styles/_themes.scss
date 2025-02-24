@@ -1,0 +1,53 @@
+@import 'variables';
+
+// Modo Claro
+$light-theme: (
+  body-color: #E4E9F7,
+  sidebar-color: #FFF,
+  primary-color: #695CFE,
+  primary-light: #F6F5FF,
+  toggle-color: #DDD,
+  text-color: #333,
+  card-bg: #ffffff,
+  input-bg: #ffffff,
+  pop-bg: #f9f9f9,
+  secondary-color: #ffffff,
+  success: #0ABF30,
+  error: #E24D4C,
+  warning: #E9BD0C,
+  info: #3498DB,
+
+  // Valores de elementos do modal e botões
+  modal-bg: rgba(0, 0, 0, 0.25),
+  modal-content-bg: #fff,
+  modal-close-bg: #bd2121,
+  button-bg: #edf1f7,
+  button-border: #edf1f79e,
+  button-submit-bg: #0060f6
+);
+
+// Modo Escuro
+$dark-theme: (
+  body-color: #181818,
+  sidebar-color: #202020,
+  primary-color: #4a90e2,
+  primary-light: #587da9,
+  toggle-color: #888,
+  text-color: #eaeaea,
+  card-bg: #252525,
+  input-bg: #1c1c1c,
+  pop-bg: #303030,
+  secondary-color: #282828,
+  success: #0ABF30,
+  error: #E24D4C,
+  warning: #E9BD0C,
+  info: #3498DB,
+
+  // Valores para o modal e botões em dark
+  modal-bg: rgba(0, 0, 0, 0.5),
+  modal-content-bg: #252525,
+  modal-close-bg: #a10e0e,
+  button-bg: #2a2a2a,
+  button-border: #edf1f79e,  // pode reutilizar o mesmo ou definir outro
+  button-submit-bg: #0044cc
+);

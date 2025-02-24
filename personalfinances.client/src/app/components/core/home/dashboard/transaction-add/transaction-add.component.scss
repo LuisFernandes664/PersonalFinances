@@ -1,225 +1,251 @@
 @import './../../../../../../assets/styles/global';
 
-// ======= Variáveis Específicas =======
+// ==================================================
+// Variáveis e Mixins
+// ==================================================
+
 $border-radius: 10px;
 $padding: 20px;
 $transition-fast: 0.3s ease-in-out;
 
-// ======= Mixin para Botões =======
+// Mixin para botões
 @mixin button-style($bg-color, $text-color: #fff) {
-  align-items: center;
-  background: $bg-color;
-  border-radius: $border-radius;
-  cursor: pointer;
   display: flex;
-  height: 50px;
+  align-items: center;
   justify-content: center;
   width: 100%;
+  height: 50px;
+  background: $bg-color;
+  color: $text-color;
   border: 1px solid var(--button-border);
-  transition: background $transition-fast;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: background $transition-fast, transform $transition-fast;
 
   &:hover {
     background: $bg-color;
-  }
-
-  color: $text-color;
-}
-
-// ======= Mixin para Dark Mode =======
-@mixin dark-mode {
-  background-color: var(--modal-bg);
-  color: var(--text-color);
-
-  .modal-content {
-    background-color: var(--modal-content-bg);
-    color: var(--text-color);
-  }
-
-  .modal-close {
-    background-color: var(--modal-close-bg);
-  }
-
-  #desc, #valor, #data {
-    background-color: var(--input-bg);
-    color: var(--text-color);
-  }
-
-  .button-modal {
-    background: var(--button-bg);
-    color: var(--text-color);
-
-    &:hover {
-      background: var(--button-bg);
-    }
-  }
-
-  .submit {
-    background: var(--button-submit-bg);
-    color: #fff;
-
-    &:hover {
-      background: var(--button-submit-bg);
-    }
+    transform: translateY(-2px);
   }
 }
 
+// ==================================================
+// Estilos do Popup (Modal)
+// ==================================================
 
-// ======= Modal Principal =======
+// Modal principal
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 999999;
   background-color: var(--modal-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   padding: $padding;
   cursor: pointer;
+  animation: fadeIn 0.4s ease;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 }
 
-// ======= Conteúdo do Modal =======
+// Conteúdo do Modal
 .modal-content {
-  min-height: 350px;
   width: 100%;
   max-width: 700px;
-  padding: 25px;
+  min-height: 350px;
+  padding: 30px;
   border-radius: 20px;
   position: relative;
   background-color: var(--modal-content-bg);
   cursor: auto;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: slideDown 0.4s ease;
+
+  @keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
 }
 
 .dark .modal-content {
-  min-height: 350px;
-  width: 100%;
-  max-width: 700px;
-  padding: 25px;
-  border-radius: 20px;
-  position: relative;
   background-color: var(--modal-content-bg-dark);
-  cursor: auto;
 }
-// ======= Botão Fechar =======
+
+// Botão de fechar
 .modal-close {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
+  top: 15px;
+  right: 15px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background-color: var(--modal-close-bg);
-  color: white;
-  cursor: pointer;
-}
-
-// ======= Formulário =======
-.newtransac {
-  color: var(--dark-blue);
-  font-weight: normal;
-}
-
-// Campos de Entrada
-#desc, #valor, #data, #destin {
-  margin-bottom: 20px;
-  font-size: 16px;
-  line-height: 28px;
-  padding: 8px 16px;
-  width: 100%;
-  min-height: 44px;
-  border: none;
-  border-radius: 4px;
-  outline-color: rgba(84, 105, 212, 0.5);
-  background: var(--input-bg);
-  color: var(--text-color);
-  .dark & {
-    background: var(--input-bg) !important;
-    input:-webkit-autofill {
-      -webkit-text-fill-color: var(--text-color) !important;
-      transition: background-color 5000s ease-in-out 0s !important;
-    }
-  }
-}
-
-// ======= Botões =======
-.buttons {
+  color: #fff;
   display: flex;
-  margin-top: 8px;
-  width: 100%;
-}
-
-.button-modal {
-  @include button-style(var(--button-bg), #000);
-  margin: 0 5px 28px 20px;
-
-  &:last-child {
-    margin: 0 20px 20px 5px;
-  }
-}
-
-// Botão de Submissão
-.submit {
-  @include button-style(var(--button-submit-bg), #fff);
-}
-
-// ======= Ativando Dark Mode =======
-.dark {
-  @include dark-mode;
-}
-
-// ======= Campos de Seleção (Dropdowns) =======
-select {
-  width: 100%;
-  min-height: 44px;
-  font-size: 16px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  outline-color: rgba(84, 105, 212, 0.5);
-  background: var(--input-bg);
-  color: var(--text-color);
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  font-size: 1.2rem;
+  transition: transform $transition-fast;
 
-  &:focus {
-    background: var(--input-focus-bg);
-  }
-
-  .dark & {
-    background: var(--input-bg);
-    color: var(--text-color);
+  &:hover {
+    transform: scale(1.1);
   }
 }
 
-// ======= Estilo para o Label dos Campos =======
-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
+// Título do formulário
+.newtransac {
+  font-size: 1.8rem;
   color: var(--dark-blue);
-  margin-bottom: 5px;
-
-  .dark & {
-    color: var(--text-color);
-  }
+  margin-bottom: 25px;
+  text-align: center;
 }
 
-// ======= Ajuste para Modal em Telas Pequenas =======
-@media screen and (max-width: 600px) {
-  .modal-content {
-    width: 90%;
-    padding: 15px;
-  }
-}
+// ==================================================
+// Estilos do Formulário
+// ==================================================
 
-// ======= Melhorando Layout dos Campos =======
+// Wrapper dos campos
 .inputbox {
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
+}
+
+// Labels
+label {
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--dark-blue);
+
+  .dark & {
+    color: var(--text-color);
+  }
+}
+
+// Inputs (texto, número, data e destinatário)
+#desc, #valor, #data, #destin {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 16px;
+  border: 1px solid rgba(84, 105, 212, 0.2);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: rgba(84, 105, 212, 0.5);
+    box-shadow: 0 0 8px rgba(84, 105, 212, 0.3);
+    background-color: var(--input-focus-bg);
+  }
+}
+
+// Estilo para mensagens auxiliares (ex.: <small>)
+small {
+  display: block;
   margin-bottom: 15px;
+  font-size: 13px;
+  color: var(--text-color);
+}
+
+// ==================================================
+// Estilos para Selects Personalizados
+// ==================================================
+
+// Container para o select (para posicionar o ícone)
+.select-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+// Select customizado
+.custom-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 40px 10px 16px;
+  font-size: 16px;
+  border: 1px solid var(--toggle-color);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+    border-color: rgba(84, 105, 212, 0.5);
+    background-color: var(--input-focus-bg);
+  }
+
+  option {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+  }
+}
+
+// Ícone personalizado para o dropdown
+.select-container::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--text-color);
+  transform: translateY(-50%);
+}
+
+.dark .custom-select {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--toggle-color);
+}
+
+.dark .select-container::after {
+  border-top-color: var(--text-color);
+}
+
+// ==================================================
+// Botões do Formulário
+// ==================================================
+
+.buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.button-modal {
+  @include button-style(var(--modal-close-bg), #fff);
+  flex: 1;
+}
+
+.submit {
+  @include button-style(var(--button-submit-bg), #fff);
+  flex: 1;
+}
+
+// ==================================================
+// Responsividade
+// ==================================================
+
+@media screen and (max-width: 600px) {
+  .modal-content {
+    width: 90%;
+    padding: 20px;
+  }
 }

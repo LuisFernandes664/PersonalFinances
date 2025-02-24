@@ -1,0 +1,34 @@
+<div class="goal-container">
+  <h2>Metas Financeiras</h2>
+  <div *ngFor="let goal of goals" class="goal-card">
+    <h3>{{ goal.Descricao }}</h3>
+    <p>Valor Alvo: {{ goal.ValorAlvo | currency }}</p>
+    <p>Valor Atual: {{ goal.ValorAtual | currency }}</p>
+    <p>Data Limite: {{ goal.DataLimite | date }}</p>
+    <p>Progresso: {{ (goal.ValorAtual / goal.ValorAlvo) * 100 | number:'1.0-0' }}%</p>
+    <!-- Pode incluir uma barra de progresso visual -->
+  </div>
+
+  <div class="new-goal-form">
+    <h3>Nova Meta</h3>
+    <form >
+      <label>
+        Descrição:
+        <input type="text" [(ngModel)]="newGoal.Descricao" name="descricao" required>
+      </label>
+      <label>
+        Valor Alvo:
+        <input type="number" [(ngModel)]="newGoal.ValorAlvo" name="valorAlvo" required>
+      </label>
+      <label>
+        Valor Atual:
+        <input type="number" [(ngModel)]="newGoal.ValorAtual" name="valorAtual" required>
+      </label>
+      <label>
+        Data Limite:
+        <input type="date" [(ngModel)]="newGoal.DataLimite" name="dataLimite" required>
+      </label>
+      <button type="submit">Criar Meta</button>
+    </form>
+  </div>
+</div>

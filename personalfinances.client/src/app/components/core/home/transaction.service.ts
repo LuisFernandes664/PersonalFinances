@@ -28,6 +28,14 @@ export class TransactionService {
   private transactionsSubject = new BehaviorSubject<Transaction[]>([]);
   transactions$ = this.transactionsSubject.asObservable();
 
+  private totalsSubject = new BehaviorSubject<{ totalBalance: number, totalIncome: number, totalExpenses: number }>({
+    totalBalance: 0,
+    totalIncome: 0,
+    totalExpenses: 0
+  });
+  totals$ = this.totalsSubject.asObservable();
+
+
   constructor(private http: HttpClient) {
     this.loadTransactions();
   }
@@ -36,8 +44,17 @@ export class TransactionService {
   loadTransactions(): void {
     this.http.get<APIResponse<Transaction[]>>(this.transactionsApiUrl)
       .pipe(map(response => response.data))
-      .subscribe(transactions => this.transactionsSubject.next(transactions));
+      .subscribe(transactions => {
+        this.transactionsSubject.next(transactions);
+        // Atualizar os totais sempre que as transacções são carregadas
+        this.http.get<APIResponse<{ totalBalance: number, totalIncome: number, totalExpenses: number }>>(`${this.transactionsApiUrl}/totals`)
+          .pipe(map(response => response.data))
+          .subscribe(totals => {
+            this.totalsSubject.next(totals);
+          });
+      });
   }
+
 
   getTransactions(): Observable<Transaction[]> {
     return this.http.get<APIResponse<Transaction[]>>(this.transactionsApiUrl)
@@ -49,6 +66,7 @@ export class TransactionService {
       .pipe(map(response => response.data));
   }
 
+  // SIM
   addTransaction(transaction: Transaction): Observable<Transaction> {
     return this.http.post<APIResponse<Transaction>>(this.transactionsApiUrl, transaction)
       .pipe(
@@ -57,11 +75,13 @@ export class TransactionService {
       );
   }
 
+  // SIM
   updateTransaction(id: string, transaction: Transaction): Observable<any> {
     return this.http.put<APIResponse<any>>(`${this.transactionsApiUrl}/${id}`, transaction)
       .pipe(tap(() => this.loadTransactions()));
   }
 
+  // SIM
   deleteTransaction(id: string): Observable<any> {
     return this.http.delete<APIResponse<any>>(`${this.transactionsApiUrl}/${id}`)
       .pipe(tap(() => this.loadTransactions()));
@@ -72,21 +92,25 @@ export class TransactionService {
       .pipe(map(response => response.data));
   }
 
+  // SIM
   getDashboardTotals(): Observable<DashboardTotals> {
     return this.http.get<APIResponse<DashboardTotals>>(`${this.transactionsApiUrl}/dashboard-totals`)
       .pipe(map(response => response.data));
   }
 
+  // SIM
   getCurrentTransactions(): Transaction[] {
     return this.transactionsSubject.getValue();
   }
 
-  // Métodos para dados do gráfico
-  // getChartData(interval: string): Observable<APIResponse<{ date: string; value: number }[]>> {
-  //   return this.http.get<APIResponse<{ date: string; value: number }[]>>(`${this.chartApiUrl}?interval=${interval}`);
-  // }
-
-  getChartData(interval: string): Observable<APIResponse<ChartData>> {
-    return this.http.get<APIResponse<ChartData>>(`${this.transactionsApiUrl}/chartdata?interval=${interval}`);
+  // SIM
+  getChartData(interval: string): Observable<APIResponse<{ date: string; value: number }[]>> {
+    return this.http.get<APIResponse<{ date: string; value: number }[]>>(`${this.chartApiUrl}?interval=${interval}`);
   }
+
+  // SIM
+  refreshTotals(): Observable<{ totalBalance: number, totalIncome: number, totalExpenses: number }> {
+    return this.totals$;
+  }
+
 }

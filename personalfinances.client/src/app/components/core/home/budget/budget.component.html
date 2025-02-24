@@ -1,0 +1,32 @@
+<div class="budget-container">
+  <h2>Orçamentos</h2>
+  <div *ngFor="let budget of budgets" class="budget-card">
+    <h3>{{ budget.Categoria }}</h3>
+    <p>Valor Orçado: {{ budget.ValorOrcado | currency }}</p>
+    <p>Período: {{ budget.DataInicio | date }} - {{ budget.DataFim | date }}</p>
+    <!-- Aqui você pode incluir uma barra de progresso que compare os gastos (obtidos de outra fonte, por exemplo, transações) com o orçamento -->
+  </div>
+
+  <div class="new-budget-form">
+    <h3>Novo Orçamento</h3>
+    <form (ngSubmit)="createBudget()">
+      <label>
+        Categoria:
+        <input type="text" [(ngModel)]="newBudget.Categoria" name="categoria" required>
+      </label>
+      <label>
+        Valor Orçado:
+        <input type="number" [(ngModel)]="newBudget.ValorOrcado" name="valorOrcado" required>
+      </label>
+      <label>
+        Data Início:
+        <input type="date" [(ngModel)]="newBudget.DataInicio" name="dataInicio" required>
+      </label>
+      <label>
+        Data Fim:
+        <input type="date" [(ngModel)]="newBudget.DataFim" name="dataFim" required>
+      </label>
+      <button type="submit">Criar Orçamento</button>
+    </form>
+  </div>
+</div>

@@ -21,7 +21,7 @@ export class SidebarComponent {
 
   logout(): void {
     this.authService.removeToken();
-    this.router.navigate(['/']);
+    this.router.navigate(['/signin']);
   }
 
   toggleSidebar(): void {

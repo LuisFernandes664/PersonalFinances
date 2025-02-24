@@ -56,7 +56,6 @@ export class TransactionAddComponent {
         const transactionToEdit = this.transactions[this.editingIndex];
         if (transactionToEdit && transactionToEdit.stampEntity) {
           this.transactionService.updateTransaction(transactionToEdit.stampEntity, newTransaction).subscribe(() => {
-            // Após a actualização, o serviço actualiza a lista (via loadTransactions())
             this.close.emit();
           });
         }

@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TransactionService } from '../transaction.service';
-import { DashboardService } from './dashboard.service';
 import { Transaction } from '../models/transaction.model';
 
 @Component({
@@ -20,17 +19,14 @@ export class DashboardComponent {
     totalBalance: 0
   };
 
-  constructor(
-    private transactionService: TransactionService,
-    private dashboardService: DashboardService
-  ) { }
+  constructor(private transactionService: TransactionService) { }
 
   ngOnInit() {
     this.transactionService.transactions$.subscribe(data => {
       this.transactions = data;
     });
 
-    this.dashboardService.getTotals().subscribe(totals => {
+    this.transactionService.refreshTotals().subscribe(totals => {
       totals.totalBalance = Math.abs(totals.totalBalance);
       totals.totalExpenses = Math.abs(totals.totalExpenses);
       totals.totalIncome = Math.abs(totals.totalIncome);
