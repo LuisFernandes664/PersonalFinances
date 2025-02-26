@@ -2,15 +2,14 @@
 using PersonalFinances.BLL.Interfaces.SavingPlan.Budget;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace PersonalFinances.DAL.SavingPlan.Budget
+namespace PersonalFinances.BLL.Services.SavingPlan.Budget
 {
     public class BudgetService : IBudgetService
     {
         private readonly IBudgetRepository _repository;
+
         public BudgetService(IBudgetRepository repository)
         {
             _repository = repository;
@@ -21,9 +20,13 @@ namespace PersonalFinances.DAL.SavingPlan.Budget
             return await _repository.GetBudgetsByUserAsync(userId);
         }
 
+        public async Task<BudgetModel> GetBudgetByIdAsync(string budgetId)
+        {
+            return await _repository.GetBudgetByIdAsync(budgetId);
+        }
+
         public async Task CreateBudgetAsync(BudgetModel budget)
         {
-            budget.StampEntity = Guid.NewGuid().ToString();
             await _repository.CreateBudgetAsync(budget);
         }
 
@@ -32,10 +35,19 @@ namespace PersonalFinances.DAL.SavingPlan.Budget
             await _repository.UpdateBudgetAsync(budget);
         }
 
-        public async Task DeleteBudgetAsync(string stampEntity)
+        public async Task DeleteBudgetAsync(string budgetId)
         {
-            await _repository.DeleteBudgetAsync(stampEntity);
+            await _repository.DeleteBudgetAsync(budgetId);
+        }
+
+        public async Task<IEnumerable<BudgetHistoryModel>> GetBudgetHistoryAsync(string budgetId)
+        {
+            return await _repository.GetBudgetHistoryAsync(budgetId);
+        }
+
+        public async Task AddBudgetHistoryAsync(string budgetId, string transactionId, decimal valorGasto)
+        {
+            await _repository.AddBudgetHistoryAsync(budgetId, transactionId, valorGasto);
         }
     }
-
 }

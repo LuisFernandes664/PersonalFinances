@@ -1,12 +1,9 @@
 ﻿using PersonalFinances.BLL.Entities.Models.SavingPlan;
 using PersonalFinances.BLL.Interfaces.SavingPlan.Goal;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace PersonalFinances.DAL.SavingPlan.Goal
+namespace PersonalFinances.BLL.Services.SavingPlan.Goal
 {
     public class GoalService : IGoalService
     {
@@ -21,9 +18,13 @@ namespace PersonalFinances.DAL.SavingPlan.Goal
             return await _repository.GetGoalsByUserAsync(userId);
         }
 
+        public async Task<GoalModel> GetGoalByIdAsync(string goalId)
+        {
+            return await _repository.GetGoalByIdAsync(goalId);
+        }
+
         public async Task CreateGoalAsync(GoalModel goal)
         {
-            goal.StampEntity = Guid.NewGuid().ToString();
             await _repository.CreateGoalAsync(goal);
         }
 
@@ -32,10 +33,19 @@ namespace PersonalFinances.DAL.SavingPlan.Goal
             await _repository.UpdateGoalAsync(goal);
         }
 
-        public async Task DeleteGoalAsync(string stampEntity)
+        public async Task DeleteGoalAsync(string goalId)
         {
-            await _repository.DeleteGoalAsync(stampEntity);
+            await _repository.DeleteGoalAsync(goalId);
+        }
+
+        public async Task<IEnumerable<GoalProgressModel>> GetGoalProgressAsync(string goalId)
+        {
+            return await _repository.GetGoalProgressAsync(goalId);
+        }
+
+        public async Task AddGoalProgressAsync(string goalId, decimal valorAtual)
+        {
+            await _repository.AddGoalProgressAsync(goalId, valorAtual);
         }
     }
-
 }

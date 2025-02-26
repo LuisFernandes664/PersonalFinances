@@ -1,18 +1,15 @@
 ﻿using PersonalFinances.BLL.Entities.Models.SavingPlan;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinances.BLL.Interfaces.SavingPlan.Goal
 {
     public interface IGoalService
     {
         Task<IEnumerable<GoalModel>> GetGoalsByUserAsync(string userId);
+        Task<GoalModel> GetGoalByIdAsync(string goalId);
         Task CreateGoalAsync(GoalModel goal);
         Task UpdateGoalAsync(GoalModel goal);
-        Task DeleteGoalAsync(string stampEntity);
-
+        Task DeleteGoalAsync(string goalId);
+        Task<IEnumerable<GoalProgressModel>> GetGoalProgressAsync(string goalId);
+        Task AddGoalProgressAsync(string goalId, decimal valorAtual);
     }
 }

@@ -16,14 +16,14 @@ import { GoalComponent } from './home/goal/goal.component';
 import { FormControl, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatButtonModule } from '@angular/material/button';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOption, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { SavingPlanDialogComponent } from './home/graphycs/saving-plan/saving-plan-dialog/saving-plan-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-
+import { MatSelectModule } from '@angular/material/select'
 
 @NgModule({
   declarations: [
@@ -52,7 +52,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatDatepickerModule,
     MatNativeDateModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   exports: [
     HomeComponent

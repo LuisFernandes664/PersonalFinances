@@ -7,6 +7,8 @@ using PersonalFinances.BLL.Interfaces.SavingPlan.Budget;
 using PersonalFinances.BLL.Interfaces.SavingPlan.Goal;
 using PersonalFinances.BLL.Interfaces.Transaction;
 using PersonalFinances.BLL.Interfaces.User;
+using PersonalFinances.BLL.Services.SavingPlan.Budget;
+using PersonalFinances.BLL.Services.SavingPlan.Goal;
 using PersonalFinances.DAL;
 using PersonalFinances.DAL.Helpers;
 using PersonalFinances.DAL.SavingPlan.Budget;
@@ -36,7 +38,6 @@ builder.Services.AddScoped<IGoalRepository, GoalRepository>();
 builder.Services.AddScoped<IGoalService, GoalService>();
 builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
-
 
 builder.Services.AddScoped<DatabaseContext>();
 

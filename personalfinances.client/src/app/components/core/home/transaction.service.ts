@@ -55,17 +55,6 @@ export class TransactionService {
       });
   }
 
-
-  getTransactions(): Observable<Transaction[]> {
-    return this.http.get<APIResponse<Transaction[]>>(this.transactionsApiUrl)
-      .pipe(map(response => response.data));
-  }
-
-  getTransactionById(id: string): Observable<Transaction> {
-    return this.http.get<APIResponse<Transaction>>(`${this.transactionsApiUrl}/${id}`)
-      .pipe(map(response => response.data));
-  }
-
   // SIM
   addTransaction(transaction: Transaction): Observable<Transaction> {
     return this.http.post<APIResponse<Transaction>>(this.transactionsApiUrl, transaction)
@@ -85,11 +74,6 @@ export class TransactionService {
   deleteTransaction(id: string): Observable<any> {
     return this.http.delete<APIResponse<any>>(`${this.transactionsApiUrl}/${id}`)
       .pipe(tap(() => this.loadTransactions()));
-  }
-
-  getTotals(): Observable<{ totalBalance: number, totalIncome: number, totalExpenses: number }> {
-    return this.http.get<APIResponse<{ totalBalance: number, totalIncome: number, totalExpenses: number }>>(`${this.transactionsApiUrl}/totals`)
-      .pipe(map(response => response.data));
   }
 
   // SIM

@@ -1,17 +1,15 @@
 ﻿using PersonalFinances.BLL.Entities.Models.SavingPlan;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinances.BLL.Interfaces.SavingPlan.Budget
 {
     public interface IBudgetService
     {
         Task<IEnumerable<BudgetModel>> GetBudgetsByUserAsync(string userId);
+        Task<BudgetModel> GetBudgetByIdAsync(string budgetId);
         Task CreateBudgetAsync(BudgetModel budget);
         Task UpdateBudgetAsync(BudgetModel budget);
-        Task DeleteBudgetAsync(string stampEntity);
+        Task DeleteBudgetAsync(string budgetId);
+        Task<IEnumerable<BudgetHistoryModel>> GetBudgetHistoryAsync(string budgetId);
+        Task AddBudgetHistoryAsync(string budgetId, string transactionId, decimal valorGasto);
     }
 }

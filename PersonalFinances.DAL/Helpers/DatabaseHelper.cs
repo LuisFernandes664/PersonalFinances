@@ -73,37 +73,76 @@ namespace PersonalFinances.DAL.Helpers
                         { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
                     }
                 },
-                // Nova Tabela: Budgets
+                // Tabela de Categorias compartilhada entre Budgets e Goals
+                new TableDefinition
+                {
+                    TableName = "Categories",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "name", new ColumnDefinition { DataType = "NVARCHAR(100)", IsPrimaryKey = false, IsNullable = false } },
+                        { "type", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } } // Ex: "budget", "goal"
+                    }
+                },
+
+                // Tabela Budgets (Orçamentos)
                 new TableDefinition
                 {
                     TableName = "Budgets",
                     Columns = new Dictionary<string, ColumnDefinition>
                     {
                         { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
-                        { "UserId", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
-                        { "Categoria", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
-                        { "ValorOrcado", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
-                        { "DataInicio", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
-                        { "DataFim", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
-                        { "CreatedAt", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                        { "user_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "category_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, IsForeignKey = true, ForeignKeyTable = "Categories", ForeignKeyColumn = "stamp_entity" } },
+                        { "valor_orcado", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
+                        { "data_inicio", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
+                        { "data_fim", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
                     }
                 },
-                // Nova Tabela: Goals
+
+                // Histórico de gastos para budgets
+                new TableDefinition
+                {
+                    TableName = "BudgetHistory",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "budget_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, IsForeignKey = true, ForeignKeyTable = "Budgets", ForeignKeyColumn = "stamp_entity" } },
+                        { "transaction_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, IsForeignKey = true, ForeignKeyTable = "Transactions", ForeignKeyColumn = "stamp_entity" } },
+                        { "valor_gasto", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
+                        { "data_registro", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
+                },
+
+                // Tabela Goals (Metas Financeiras)
                 new TableDefinition
                 {
                     TableName = "Goals",
                     Columns = new Dictionary<string, ColumnDefinition>
                     {
                         { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
-                        { "UserId", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
-                        { "Descricao", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
-                        { "ValorAlvo", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
-                        { "ValorAtual", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
-                        { "DataLimite", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
-                        { "CreatedAt", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                        { "user_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "category_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, IsForeignKey = true, ForeignKeyTable = "Categories", ForeignKeyColumn = "stamp_entity" } },
+                        { "descricao", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "valor_alvo", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
+                        { "data_limite", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
+                },
+
+                // Tabela de progresso das metas (Goal Progress)
+                new TableDefinition
+                {
+                    TableName = "GoalProgress",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "goal_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, IsForeignKey = true, ForeignKeyTable = "Goals", ForeignKeyColumn = "stamp_entity" } },
+                        { "valor_atual", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
+                        { "data_registro", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
                     }
                 }
-
             };
 
 
@@ -123,6 +162,7 @@ namespace PersonalFinances.DAL.Helpers
                             successLogs.Add($"Consitencia da tabela: {table.TableName} verificada com sucesso!");
                         }
 
+                        // await PopulateCategoriesAsync(dbContext.Connection);
                         dbContext.Commit();
                         successLogs.ForEach(logMessage => Logger.WriteLog(logMessage, LogStatus.Success));
                     }
@@ -217,6 +257,42 @@ namespace PersonalFinances.DAL.Helpers
 
                 {indexStatements}
                 ";
+        }
+
+        private static async Task PopulateCategoriesAsync(SqlConnection connection)
+        {
+            var categories = new List<(string, string)>
+            {
+                ("Alimentação", "budget"),
+                ("Transporte", "budget"),
+                ("Moradia", "budget"),
+                ("Saúde", "budget"),
+                ("Educação", "budget"),
+                ("Lazer", "budget"),
+                ("Compras", "budget"),
+                ("Assinaturas", "budget"),
+                ("Fundo de Emergência", "goal"),
+                ("Viagem", "goal"),
+                ("Compra de Carro", "goal"),
+                ("Casa Própria", "goal"),
+                ("Investimentos", "goal"),
+                ("Casamento", "goal"),
+                ("Educação dos Filhos", "goal"),
+                ("Aposentadoria", "goal")
+            };
+
+            foreach (var (name, type) in categories)
+            {
+                var query = @"IF NOT EXISTS (SELECT 1 FROM Categories WHERE name = @name AND type = @type)
+                      INSERT INTO Categories (stamp_entity, name, type) VALUES (NEWID(), @name, @type);";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@name", name);
+                    command.Parameters.AddWithValue("@type", type);
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
         }
 
 

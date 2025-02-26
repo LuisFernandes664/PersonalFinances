@@ -38,4 +38,9 @@ export class GoalService {
   deleteSavingPlan(stampEntity: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${stampEntity}`);
   }
+
+  getCategories(): Observable<APIResponse<{ stamp_entity: string, name: string }[]>> {
+    return this.http.get<APIResponse<{ stamp_entity: string, name: string }[]>>(`${this.apiUrl}/categories`);
+  }
+
 }
