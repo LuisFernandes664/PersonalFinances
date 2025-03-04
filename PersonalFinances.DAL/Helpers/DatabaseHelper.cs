@@ -10,11 +10,58 @@ namespace PersonalFinances.DAL.Helpers
 
         private static string connectionString;
 
+        /// <summary>
+        /// Cria ou atualiza as tabelas do banco de dados conforme as definições
+        /// </summary>
         public static async Task CreateTablesAsync()
         {
             connectionString = ConfigManager.GetConnectionString();
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                Logger.WriteLog("String de conexão não configurada", LogStatus.Error);
+                throw new InvalidOperationException("Connection string não configurada");
+            }
 
-            var tables = new List<TableDefinition>
+            var tables = GetTableDefinitions();
+
+            using (var dbContext = new DatabaseContext())
+            {
+                try
+                {
+                    var successLogs = new List<string>();
+                    foreach (var table in tables)
+                    {
+                        var createTableQuery = GenerateCreateTableQuery(table);
+                        await SQLHelper.ExecuteNonQueryAsync(createTableQuery, transaction: dbContext.Transaction);
+                        await EnsureColumnsExistAsync(dbContext.Connection, table.TableName, table.Columns, dbContext.Transaction);
+                        successLogs.Add($"Consistência da tabela: {table.TableName} verificada com sucesso!");
+                    }
+
+                    await PopulateCategoriesAsync(dbContext.Connection, dbContext.Transaction);
+                    dbContext.Commit();
+                    successLogs.ForEach(logMessage => Logger.WriteLog(logMessage, LogStatus.Success));
+                }
+                catch (SqlException ex)
+                {
+                    dbContext.Rollback();
+                    Logger.WriteLog($"Erro SQL ao executar CreateTablesAsync(): {ex.Message}", LogStatus.Error);
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    dbContext.Rollback();
+                    Logger.WriteLog($"Erro ao executar CreateTablesAsync(): {ex.Message}", LogStatus.Error);
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retorna as definições de todas as tabelas do sistema
+        /// </summary>
+        private static List<TableDefinition> GetTableDefinitions()
+        {
+            return new List<TableDefinition>
             {
                 new TableDefinition
                 {
@@ -62,6 +109,7 @@ namespace PersonalFinances.DAL.Helpers
                     Columns = new Dictionary<string, ColumnDefinition>
                     {
                         { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "user_stamp", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
                         { "description", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
                         { "amount", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
                         { "date", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
@@ -144,36 +192,6 @@ namespace PersonalFinances.DAL.Helpers
                     }
                 }
             };
-
-
-            if (!string.IsNullOrEmpty(connectionString))
-            {
-                using (var dbContext = new DatabaseContext())
-                {
-
-                    try
-                    {
-                        var successLogs = new List<string>();
-                        foreach (var table in tables)
-                        {
-                            var createTableQuery = GenerateCreateTableQuery(table);
-                            await SQLHelper.ExecuteNonQueryAsync(createTableQuery, transaction: dbContext.Transaction);
-                            await EnsureColumnsExistAsync(dbContext.Connection, table.TableName, table.Columns, dbContext.Transaction);
-                            successLogs.Add($"Consitencia da tabela: {table.TableName} verificada com sucesso!");
-                        }
-
-                        // await PopulateCategoriesAsync(dbContext.Connection);
-                        dbContext.Commit();
-                        successLogs.ForEach(logMessage => Logger.WriteLog(logMessage, LogStatus.Success));
-                    }
-                    catch (Exception ex)
-                    {
-                        dbContext.Rollback();
-                        Logger.WriteLog(string.Concat("Erro ao executar CreateTablesAsync(): ", ex), LogStatus.Error);
-                        throw;
-                    }
-                }
-            }
         }
 
         private static async Task EnsureColumnsExistAsync(SqlConnection connection, string tableName, Dictionary<string, ColumnDefinition> columns, SqlTransaction transaction)
@@ -259,7 +277,7 @@ namespace PersonalFinances.DAL.Helpers
                 ";
         }
 
-        private static async Task PopulateCategoriesAsync(SqlConnection connection)
+        private static async Task PopulateCategoriesAsync(SqlConnection connection, SqlTransaction transaction = null)
         {
             var categories = new List<(string, string)>
             {
@@ -286,7 +304,7 @@ namespace PersonalFinances.DAL.Helpers
                 var query = @"IF NOT EXISTS (SELECT 1 FROM Categories WHERE name = @name AND type = @type)
                       INSERT INTO Categories (stamp_entity, name, type) VALUES (NEWID(), @name, @type);";
 
-                using (var command = new SqlCommand(query, connection))
+                using (var command = new SqlCommand(query, connection, transaction))
                 {
                     command.Parameters.AddWithValue("@name", name);
                     command.Parameters.AddWithValue("@type", type);
@@ -294,6 +312,7 @@ namespace PersonalFinances.DAL.Helpers
                 }
             }
         }
+
 
 
     }

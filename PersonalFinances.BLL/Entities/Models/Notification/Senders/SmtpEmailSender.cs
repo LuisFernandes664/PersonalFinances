@@ -11,26 +11,31 @@ namespace PersonalFinances.BLL.Entities.Models.Notification.Senders
 {
     public class SmtpEmailSender : IEmailSender
     {
-        public Task SendEmailAsync(string to, string subject, string body)
+        private readonly string _smtpServer = "smtp.gmail.com";
+        private readonly int _smtpPort = 587;
+        private readonly string _smtpUser = "noreply@focustrack.com";
+        private readonly string _smtpPass = "passs";
+
+        public async Task SendEmailAsync(string to, string subject, string body)
         {
-            using (var smtpClient = new SmtpClient("smtp.gmail.com"))
+            using (var client = new SmtpClient(_smtpServer, _smtpPort))
             {
+                client.Credentials = new NetworkCredential(_smtpUser, _smtpPass);
+                client.EnableSsl = true;
+
                 var mailMessage = new MailMessage
                 {
-                    From = new MailAddress("noreply@focustrack.com"),
+                    From = new MailAddress(_smtpUser),
                     Subject = subject,
                     Body = body,
-                    IsBodyHtml = true
+                    IsBodyHtml = false
                 };
 
                 mailMessage.To.Add(to);
 
-                smtpClient.Credentials = new NetworkCredential("user", "passs");
-                smtpClient.EnableSsl = true;
-                Console.WriteLine($"Enviar e-mail para {to}: {body}");
-                smtpClient.Send(mailMessage);
-                return Task.CompletedTask;
+                await client.SendMailAsync(mailMessage);
             }
+
         }
 
     }

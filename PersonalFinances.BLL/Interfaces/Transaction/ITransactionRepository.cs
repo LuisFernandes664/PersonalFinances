@@ -9,7 +9,7 @@ namespace PersonalFinances.BLL.Interfaces.Transaction
 {
     public interface ITransactionRepository
     {
-        Task<IEnumerable<TransactionModel>> GetAllAsync();
+        Task<IEnumerable<TransactionModel>> GetAllAsync(string userID);
         Task<TransactionModel> GetByStampEntityAsync(string stampEntity);
         Task AddAsync(TransactionModel transaction);
         Task UpdateAsync(TransactionModel transaction);

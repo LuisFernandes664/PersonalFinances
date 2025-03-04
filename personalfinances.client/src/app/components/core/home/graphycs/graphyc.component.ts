@@ -5,7 +5,11 @@ import { TransactionService, ChartSeries } from '../transaction.service';
 import { Transaction } from '../models/transaction.model';
 import { DashboardTotals } from '../models/dashboard-totals.model';
 import { APIResponse } from '../../../../models/api-response.model';
-import { GoalService, SavingPlan } from '../goal/goal.service';
+import { SavingPlan } from './saving-plan/saving.plan.model';
+import { GoalService } from './goal/goal.service';
+import { BudgetService } from './budget/budget.service';
+import { BudgetModel } from './budget/budget.model';
+import { GoalModel } from './goal/goal.model';
 
 @Component({
   selector: 'app-graphyc',
@@ -29,13 +33,13 @@ export class GraphycComponent implements OnInit, OnDestroy {
   selectedInterval: string = 'daily';
 
   // Propriedade para armazenar os saving plans
-  savingPlans: SavingPlan[] = [];
-  // UserId; em uma aplicação real, isso viria do AuthService
-  userId: string = 'user-id-exemplo';
+  savingPlans: GoalModel[] = [];
 
   constructor(
     private transactionService: TransactionService,
-    private savingPlanService: GoalService
+    private savingPlanService: GoalService,
+    private goalService: GoalService,
+    private budgetService: BudgetService
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +74,7 @@ export class GraphycComponent implements OnInit, OnDestroy {
       );
 
     // Buscar os Saving Plans (Goals) do usuário
-    this.savingPlanService.getSavingPlans(this.userId)
+    this.savingPlanService.getSavingPlans()
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (plans) => {

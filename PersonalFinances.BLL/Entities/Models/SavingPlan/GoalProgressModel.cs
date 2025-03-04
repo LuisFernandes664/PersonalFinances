@@ -23,7 +23,12 @@ namespace PersonalFinances.BLL.Entities.Models.SavingPlan
         /// </summary>
         public DateTime DataRegistro { get; set; }
 
-        public GoalProgressModel() : base() { }
+        public GoalProgressModel() : base() 
+        {
+            GoalId = string.Empty;
+            ValorAtual = 0;
+            DataRegistro = DateTime.Now;
+        }
 
         public GoalProgressModel(DataRow row) : base(row)
         {

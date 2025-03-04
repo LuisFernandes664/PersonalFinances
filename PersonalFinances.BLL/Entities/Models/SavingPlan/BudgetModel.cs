@@ -33,7 +33,13 @@ namespace PersonalFinances.BLL.Entities.Models.SavingPlan
         /// </summary>
         public DateTime DataFim { get; set; }
 
-        public BudgetModel() : base() { }
+        public BudgetModel() : base() { 
+            UserId = string.Empty;
+            CategoryId = string.Empty;
+            ValorOrcado = 0;
+            DataInicio = DateTime.Now;
+            DataFim = DateTime.Now;
+        }
 
         public BudgetModel(DataRow row) : base(row)
         {

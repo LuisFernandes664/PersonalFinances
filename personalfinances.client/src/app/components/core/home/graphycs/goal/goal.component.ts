@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GoalService } from './goal.service';
-import { AuthService } from '../../../public/auth/auth.service';
+import { AuthService } from '../../../../public/auth/auth.service';
 
 @Component({
   selector: 'app-goal',
@@ -20,14 +20,14 @@ export class GoalComponent implements OnInit {
   constructor(private goalService: GoalService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    // this.loadGoals();
+    this.loadGoals();
   }
 
-  // loadGoals() {
-  //   this.goalService.getGoals(this.userId).subscribe((res) => {
-  //     this.goals = res.data;
-  //   });
-  // }
+  loadGoals() {
+    this.goalService.getSavingPlans().subscribe((res) => {
+      this.goals = res.data;
+    });
+  }
 
   // createGoal() {
   //   this.newGoal.UserId = this.userId;

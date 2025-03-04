@@ -61,15 +61,19 @@ var key = Encoding.UTF8.GetBytes(CommonStrings.SecretKey);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
             ValidateIssuer = false,
             ValidateAudience = false,
-            ValidateLifetime = true
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
         };
     });
+
 
 builder.Services.AddAuthorization(options =>
 {
@@ -94,7 +98,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// **Atenção:** Adiciona o middleware de autenticação antes da autorização.
 app.UseAuthentication();
 app.UseAuthorization();
 

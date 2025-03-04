@@ -9,11 +9,18 @@
       [totalExpenses]="totalExpenses"
       [totalIncome]="totalIncome">
     </app-overview>
+
     <div class="right-column-top">
-      <app-saving-plan [plans]="savingPlans"></app-saving-plan>
+      <div>
+        <app-budget-saving-plan></app-budget-saving-plan>
+      </div>
+      <div>
+        <app-goal-saving-plan></app-goal-saving-plan>
+      </div>
     </div>
 
   </div>
+
   <div class="bottom-row">
     <app-chart-section
       *ngIf="chartData.length > 0"
@@ -22,6 +29,7 @@
       [selectedInterval]="selectedInterval"
       (intervalChanged)="onIntervalChanged($event)">
     </app-chart-section>
+
     <div class="right-column">
       <app-recent-transactions [recentTransactions]="recentTransactions"></app-recent-transactions>
     </div>

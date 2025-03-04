@@ -91,7 +91,6 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "proxyConfig": "proxy.conf.js",
             "port": 50649
           }
         },

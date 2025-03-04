@@ -6,6 +6,8 @@ import { environment } from '../../../../environments/environment';
 import { APIResponse } from '../../../models/api-response.model';
 import { Transaction } from './models/transaction.model';
 import { DashboardTotals } from './models/dashboard-totals.model';
+import { GoalService } from './graphycs/goal/goal.service';
+import { BudgetService } from './graphycs/budget/budget.service';
 
 // transaction.service.ts
 export interface ChartSeries {
@@ -28,6 +30,9 @@ export class TransactionService {
   private transactionsSubject = new BehaviorSubject<Transaction[]>([]);
   transactions$ = this.transactionsSubject.asObservable();
 
+  budgets: any[] = [];
+  goals: any[] = [];
+
   private totalsSubject = new BehaviorSubject<{ totalBalance: number, totalIncome: number, totalExpenses: number }>({
     totalBalance: 0,
     totalIncome: 0,
@@ -36,8 +41,10 @@ export class TransactionService {
   totals$ = this.totalsSubject.asObservable();
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, protected goalService: GoalService, private budgetService: BudgetService) {
     this.loadTransactions();
+    this.goalService.getSavingPlans().subscribe(goals => this.goals = goals.data);
+    this.budgetService.getBudgets().subscribe(budgets => this.budgets = budgets.data);
   }
 
   // Métodos de transacções

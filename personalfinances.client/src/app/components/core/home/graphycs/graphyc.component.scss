@@ -24,6 +24,10 @@
   align-items: stretch; /* Faz com que ambas as colunas tenham a mesma altura */
 }
 
+.top-row {
+  grid-template-columns: 3fr 3fr; /* A coluna esquerda ocupa 2 partes, a direita 1 parte */
+}
+
 /* Limitar a altura dos containers da coluna da direita para a altura da linha e permitir scroll */
 .right-column,
 .right-column-top {
@@ -31,9 +35,23 @@
   overflow: auto;
 }
 
+.right-column-top {
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  width: 100%;
+  height: 100%;
+  gap: 2rem;
+}
+
+.right-column-top > div {
+  min-height: 100%;
+  overflow: auto;
+}
+
 @media (max-width: 768px) {
   .top-row,
-  .bottom-row {
+  .bottom-row,
+  .right-column-top {
     grid-template-columns: 1fr; /* Em telas menores, empilha os containers */
   }
 }

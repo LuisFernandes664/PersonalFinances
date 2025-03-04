@@ -1,39 +1,51 @@
-<h2 mat-dialog-title>Novo Saving Plan</h2>
-<mat-dialog-content>
-  <form>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Descrição</mat-label>
-      <input matInput [(ngModel)]="newPlan.Descricao" name="descricao" required>
-    </mat-form-field>
+<div class="dialog">
+  <h2>{{ isBudget ? 'Novo Orçamento' : 'Nova Meta' }}</h2>
+  <div class="dialog-content">
+    <form>
+      <div class="form-field full-width">
+        <label for="descricao">Descrição</label>
+        <input id="descricao" type="text" [(ngModel)]="newPlan.descricao" name="descricao" required autofocus
+          [ngClass]="{'invalid': formSubmitted && !newPlan.descricao}">
+        <div *ngIf="formSubmitted && !newPlan.descricao" class="error-message">
+          Este campo é obrigatório.
+        </div>
+      </div>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Categoria</mat-label>
-      <mat-select [(ngModel)]="newPlan.CategoryId" name="category" required>
-        <mat-option *ngFor="let category of categories" [value]="category.stamp_entity">
-          {{ category.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+      <div class="form-field full-width">
+        <label for="category">Categoria</label>
+        <select id="category" [(ngModel)]="newPlan.categoryId" name="category" required
+          [ngClass]="{'invalid': formSubmitted && !newPlan.categoryId}">
+          <option value="" disabled selected>Selecione uma categoria</option>
+          <option *ngFor="let category of categories" [value]="category.value">
+            {{ category.text }}
+          </option>
+        </select>
+        <div *ngIf="formSubmitted && !newPlan.categoryId" class="error-message">
+          Este campo é obrigatório.
+        </div>
+      </div>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Valor Alvo</mat-label>
-      <input matInput type="number" [(ngModel)]="newPlan.ValorAlvo" name="valorAlvo" required>
-    </mat-form-field>
+      <div class="form-field full-width">
+        <label for="valorAlvo">{{ isBudget ? 'Valor Orçado' : 'Valor Alvo' }}</label>
+        <input id="valorAlvo" type="number" [(ngModel)]="newPlan.valorAlvo" name="valorAlvo" required
+          [ngClass]="{'invalid': formSubmitted && (!newPlan.valorAlvo || newPlan.valorAlvo <= 0)}">
+        <div *ngIf="formSubmitted && (!newPlan.valorAlvo || newPlan.valorAlvo <= 0)" class="error-message">
+          Deve ser superior a 0.
+        </div>
+      </div>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Valor Atual</mat-label>
-      <input matInput type="number" [(ngModel)]="newPlan.ValorAtual" name="valorAtual" required>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Data Limite</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="newPlan.DataLimite" name="dataLimite" required>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="onCreate()">Criar</button>
-</mat-dialog-actions>
+      <div class="form-field full-width">
+        <label for="dataLimite">Data Limite</label>
+        <input id="dataLimite" type="date" [(ngModel)]="newPlan.dataLimite" name="dataLimite" required
+          [ngClass]="{'invalid': formSubmitted && !newPlan.dataLimite}">
+        <div *ngIf="formSubmitted && !newPlan.dataLimite" class="error-message">
+          Este campo é obrigatório.
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="dialog-actions">
+    <button type="button" (click)="onCancel()">Cancelar</button>
+    <button type="button" (click)="onCreate()">Criar</button>
+  </div>
+</div>

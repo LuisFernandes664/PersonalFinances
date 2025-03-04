@@ -8,7 +8,7 @@ namespace PersonalFinances.BLL.Entities.Models
 {
     public class NewPasswordModel
     {
-        public string NewPassword { get; set; }
-        public string ConfirmPassword { get; set; }
+        public required string NewPassword { get; set; }
+        public required string ConfirmPassword { get; set; }
     }
 }

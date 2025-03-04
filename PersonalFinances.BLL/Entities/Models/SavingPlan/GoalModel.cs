@@ -38,7 +38,12 @@ namespace PersonalFinances.BLL.Entities.Models.SavingPlan
         /// </summary>
         public decimal ValorAtual { get; set; }
 
-        public GoalModel() : base() { }
+        public GoalModel() : base()
+        {
+            UserId = string.Empty;
+            CategoryId = string.Empty;
+            Descricao = string.Empty;
+        }
 
         public GoalModel(DataRow row) : base(row)
         {
@@ -49,5 +54,6 @@ namespace PersonalFinances.BLL.Entities.Models.SavingPlan
             DataLimite = row.Field<DateTime?>("data_limite") ?? DateTime.Now;
             ValorAtual = row.Field<decimal?>("valor_atual") ?? 0;
         }
+        
     }
 }

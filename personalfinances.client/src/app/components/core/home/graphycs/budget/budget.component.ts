@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BudgetService } from './budget.service';
-import { AuthService } from '../../../public/auth/auth.service';
+import { AuthService } from '../../../../public/auth/auth.service';
 
 @Component({
   selector: 'app-budget',

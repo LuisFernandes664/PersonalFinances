@@ -3,213 +3,182 @@ using PersonalFinances.BLL.Interfaces.SavingPlan.Goal;
 using PersonalFinances.DAL.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace PersonalFinances.DAL.SavingPlan.Goal
 {
     public class GoalRepository : IGoalRepository
     {
-        private readonly string _connectionString;
-        public GoalRepository()
-        {
-            _connectionString = ConfigManager.GetConnectionString();
-        }
-
         public async Task<IEnumerable<GoalModel>> GetGoalsByUserAsync(string userId)
         {
             var goals = new List<GoalModel>();
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = @"SELECT 
-                                g.*, 
-                                COALESCE(
-                                    (SELECT TOP 1 gp.valor_atual 
-                                     FROM GoalProgress gp 
-                                     WHERE gp.goal_id = g.stamp_entity 
-                                     ORDER BY gp.data_registro DESC), 0) AS valor_atual
-                              FROM Goals g
-                              WHERE g.user_id = @userId";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@userId", userId);
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var goal = new GoalModel
-                        {
-                            StampEntity = reader["stamp_entity"].ToString(),
-                            UserId = reader["user_id"].ToString(),
-                            CategoryId = reader["category_id"].ToString(),
-                            Descricao = reader["descricao"].ToString(),
-                            ValorAlvo = Convert.ToDecimal(reader["valor_alvo"]),
-                            DataLimite = Convert.ToDateTime(reader["data_limite"]),
-                            CreatedAt = Convert.ToDateTime(reader["created_at"]),
-                            // ValorAtual é obtido a partir do GoalProgress
-                            ValorAtual = Convert.ToDecimal(reader["valor_atual"])
-                        };
-                        goals.Add(goal);
-                    }
-                }
-            }
+            var parameters = new List<SqlParameter> { new SqlParameter("@userId", userId) };
+            var query = 
+                "SELECT g.*, COALESCE((SELECT TOP 1 gp.valor_atual FROM GoalProgress gp WHERE gp.goal_id = g.stamp_entity ORDER BY gp.data_registro DESC), 0) AS valor_atual " +
+                "FROM Goals g " +
+                "WHERE g.user_id = @userId";
+            
+            var result = await SQLHelper.ExecuteQueryAsync(query, parameters);
+            foreach (DataRow row in result.Rows)
+                goals.Add(new GoalModel(row));
+
             return goals;
         }
 
         public async Task<GoalModel> GetGoalByIdAsync(string goalId)
         {
             GoalModel goal = null;
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = @"SELECT 
-                                g.*, 
-                                COALESCE(
-                                    (SELECT TOP 1 gp.valor_atual 
-                                     FROM GoalProgress gp 
-                                     WHERE gp.goal_id = g.stamp_entity 
-                                     ORDER BY gp.data_registro DESC), 0) AS valor_atual
-                              FROM Goals g
-                              WHERE g.stamp_entity = @goalId";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@goalId", goalId);
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    if (await reader.ReadAsync())
-                    {
-                        goal = new GoalModel
-                        {
-                            StampEntity = reader["stamp_entity"].ToString(),
-                            UserId = reader["user_id"].ToString(),
-                            CategoryId = reader["category_id"].ToString(),
-                            Descricao = reader["descricao"].ToString(),
-                            ValorAlvo = Convert.ToDecimal(reader["valor_alvo"]),
-                            DataLimite = Convert.ToDateTime(reader["data_limite"]),
-                            CreatedAt = Convert.ToDateTime(reader["created_at"]),
-                            ValorAtual = Convert.ToDecimal(reader["valor_atual"])
-                        };
-                    }
-                }
-            }
+            var parameters = new List<SqlParameter> { new SqlParameter("@goalId", goalId) };
+            var query = 
+                "SELECT g.*, COALESCE((SELECT TOP 1 gp.valor_atual FROM GoalProgress gp WHERE gp.goal_id = g.stamp_entity ORDER BY gp.data_registro DESC), 0) AS valor_atual " +
+                "FROM Goals g " +
+                "WHERE g.stamp_entity = @goalId";
+
+            var result = await SQLHelper.ExecuteQueryAsync(query, parameters);
+            if (result.Rows.Count > 0)
+                goal = new GoalModel(result.Rows[0]);
+
             return goal;
+        }
+
+    public async Task<IEnumerable<SelectListItem>> GetCategoriesAsync()
+    {
+        var categories = new List<SelectListItem>();
+        var query = "SELECT stamp_entity, name FROM Categories WHERE type = 'goal'";
+
+        var result = await SQLHelper.ExecuteQueryAsync(query);
+        foreach (DataRow row in result.Rows)
+        {
+            categories.Add(new SelectListItem
+            {
+                Text = row["name"].ToString(),
+                Value = row["stamp_entity"].ToString()
+            });
+        }
+
+        return categories;
+    }
+
+        public async Task<decimal> GetAccumulatedAmountByGoal(string goalId)
+        {
+            var query = @"SELECT COALESCE(SUM(amount), 0) 
+                  FROM Transactions 
+                  WHERE reference_id = @goalId 
+                  AND reference_type = 'Goal'";
+
+            var parameters = new List<SqlParameter> { new("@goalId", goalId) };
+            var result = await SQLHelper.ExecuteScalarAsync(query, parameters);
+
+            return result != null ? Convert.ToDecimal(result) : 0;
+        }
+
+        public async Task<decimal> GetGoalProgressPercentage(string goalId)
+        {
+            var query = @"SELECT (COALESCE(SUM(amount), 0) / g.valor_alvo) * 100
+                  FROM Transactions t
+                  JOIN Goals g ON t.reference_id = g.stamp_entity
+                  WHERE t.reference_id = @goalId 
+                  AND t.reference_type = 'Goal'";
+
+            var parameters = new List<SqlParameter> { new("@goalId", goalId) };
+            var result = await SQLHelper.ExecuteScalarAsync(query, parameters);
+
+            return result != null ? Convert.ToDecimal(result) : 0;
         }
 
         public async Task CreateGoalAsync(GoalModel goal)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            var getCategoryQuery = "SELECT stamp_entity FROM Categories WHERE stamp_entity = @categoryID AND type = 'goal'";
+            var categoryParams = new List<SqlParameter> { new SqlParameter("@categoryID", goal.CategoryId) };
+            var result = await SQLHelper.ExecuteScalarAsync(getCategoryQuery, categoryParams);
+
+            string categoryId = result?.ToString();
+            if (categoryId == null)
+                throw new Exception("Categoria inválida.");
+
+            var query = 
+                "INSERT INTO Goals (stamp_entity, user_id, category_id, descricao, valor_alvo, data_limite, created_at)" +
+                "VALUES (@stampEntity, @userId, @categoryId, @descricao, @valorAlvo, @dataLimite, GETDATE());";
+            
+            var parameters = new List<SqlParameter>
             {
-                await connection.OpenAsync();
+                new("@stampEntity", goal.StampEntity),
+                new("@userId", goal.UserId),
+                new("@categoryId", goal.CategoryId),
+                new("@descricao", goal.Descricao),
+                new("@valorAlvo", goal.ValorAlvo),
+                new("@dataLimite", goal.DataLimite)
+            };
 
-                // Buscar ID da categoria correspondente
-                var getCategoryQuery = "SELECT stamp_entity FROM Categories WHERE name = @name AND type = 'goal'";
-                string categoryId = null;
-
-                using (var command = new SqlCommand(getCategoryQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@name", goal.Descricao);
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            categoryId = reader["stamp_entity"].ToString();
-                        }
-                    }
-                }
-
-                if (categoryId == null)
-                    throw new Exception("Categoria inválida.");
-
-                // Criar a meta com a categoria correta
-                var query = @"INSERT INTO Goals 
-                      (stamp_entity, user_id, category_id, descricao, valor_alvo, data_limite, created_at)
-                      VALUES (@stampEntity, @userId, @categoryId, @descricao, @valorAlvo, @dataLimite, GETDATE());";
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@stampEntity", goal.StampEntity);
-                    command.Parameters.AddWithValue("@userId", goal.UserId);
-                    command.Parameters.AddWithValue("@categoryId", categoryId);
-                    command.Parameters.AddWithValue("@descricao", goal.Descricao);
-                    command.Parameters.AddWithValue("@valorAlvo", goal.ValorAlvo);
-                    command.Parameters.AddWithValue("@dataLimite", goal.DataLimite);
-                    await command.ExecuteNonQueryAsync();
-                }
-            }
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
         }
-
 
         public async Task UpdateGoalAsync(GoalModel goal)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            var query = @"UPDATE Goals SET category_id = @categoryId, descricao = @descricao, valor_alvo = @valorAlvo, data_limite = @dataLimite WHERE stamp_entity = @goalId";
+
+            var parameters = new List<SqlParameter>
             {
-                await connection.OpenAsync();
-                var query = @"UPDATE Goals SET 
-                              category_id = @categoryId,
-                              descricao = @descricao,
-                              valor_alvo = @valorAlvo,
-                              data_limite = @dataLimite
-                              WHERE stamp_entity = @goalId";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@categoryId", goal.CategoryId);
-                command.Parameters.AddWithValue("@descricao", goal.Descricao);
-                command.Parameters.AddWithValue("@valorAlvo", goal.ValorAlvo);
-                command.Parameters.AddWithValue("@dataLimite", goal.DataLimite);
-                command.Parameters.AddWithValue("@goalId", goal.StampEntity);
-                await command.ExecuteNonQueryAsync();
-            }
+                new("@categoryId", goal.CategoryId),
+                new("@descricao", goal.Descricao),
+                new("@valorAlvo", goal.ValorAlvo),
+                new("@dataLimite", goal.DataLimite),
+                new("@goalId", goal.StampEntity)
+            };
+
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
         }
 
         public async Task DeleteGoalAsync(string goalId)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = "DELETE FROM Goals WHERE stamp_entity = @goalId";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@goalId", goalId);
-                await command.ExecuteNonQueryAsync();
-            }
+            var query = "DELETE FROM Goals WHERE stamp_entity = @goalId";
+            var parameters = new List<SqlParameter> { new("@goalId", goalId) };
+
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
         }
 
         public async Task<IEnumerable<GoalProgressModel>> GetGoalProgressAsync(string goalId)
         {
             var progressList = new List<GoalProgressModel>();
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = @"SELECT * FROM GoalProgress WHERE goal_id = @goalId ORDER BY data_registro DESC";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@goalId", goalId);
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        progressList.Add(new GoalProgressModel
-                        {
-                            StampEntity = reader["stamp_entity"].ToString(),
-                            GoalId = reader["goal_id"].ToString(),
-                            ValorAtual = Convert.ToDecimal(reader["valor_atual"]),
-                            DataRegistro = Convert.ToDateTime(reader["data_registro"])
-                        });
-                    }
-                }
-            }
+            var parameters = new List<SqlParameter> { new("@goalId", goalId) };
+            var query = "SELECT * FROM GoalProgress WHERE goal_id = @goalId ORDER BY data_registro DESC";
+
+            var result = await SQLHelper.ExecuteQueryAsync(query, parameters);
+            foreach (DataRow row in result.Rows)
+                progressList.Add(new GoalProgressModel(row));
+
             return progressList;
         }
 
         public async Task AddGoalProgressAsync(string goalId, decimal valorAtual)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            var query = @"INSERT INTO GoalProgress (stamp_entity, goal_id, valor_atual, data_registro) VALUES (NEWID(), @goalId, @valorAtual, GETDATE());";
+
+            var parameters = new List<SqlParameter>
             {
-                await connection.OpenAsync();
-                var query = @"INSERT INTO GoalProgress 
-                              (stamp_entity, goal_id, valor_atual, data_registro)
-                              VALUES (NEWID(), @goalId, @valorAtual, GETDATE());";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@goalId", goalId);
-                command.Parameters.AddWithValue("@valorAtual", valorAtual);
-                await command.ExecuteNonQueryAsync();
-            }
+                new("@goalId", goalId),
+                new("@valorAtual", valorAtual)
+            };
+
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
         }
+
+        public async Task UpdateGoalAccumulatedAmount(string goalId)
+        {
+            var query = @"UPDATE Goals 
+                        SET valor_atual = (SELECT COALESCE(SUM(amount), 0) FROM Transactions WHERE reference_id = @goalId AND reference_type = 'Goal')
+                        WHERE stamp_entity = @goalId";
+
+            var parameters = new List<SqlParameter>
+            {
+                new("@goalId", goalId)
+            };
+
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
+        }
+
     }
 }

@@ -28,7 +28,11 @@ namespace PersonalFinances.BLL.Entities.Models.SavingPlan
         /// </summary>
         public DateTime DataRegistro { get; set; }
 
-        public BudgetHistoryModel() : base() { }
+        public BudgetHistoryModel() : base()
+        {
+            BudgetId = string.Empty;
+            TransactionId = string.Empty;
+        }
 
         public BudgetHistoryModel(DataRow row) : base(row)
         {

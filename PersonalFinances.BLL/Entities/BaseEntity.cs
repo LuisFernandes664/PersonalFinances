@@ -33,7 +33,9 @@ namespace PersonalFinances.BLL.Entities
         {
             StampEntity = row.Field<string>("stamp_entity") ?? string.Empty;
             CreatedAt = row.Field<DateTime?>("created_at") ?? DateTime.Now;
-            UpdatedAt = CreatedAt = row.Field<DateTime?>("updated_at") ?? DateTime.Now;
+
+            if (row.Table.Columns.Contains("updated_at"))
+                UpdatedAt = row.Field<DateTime?>("updated_at") ?? CreatedAt;
         }
 
         public BaseEntity(object row)

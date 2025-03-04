@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PersonalFinances.BLL.Entities;
 using PersonalFinances.BLL.Entities.Models.SavingPlan;
+using PersonalFinances.BLL.Entities.Models.Transaction;
 using PersonalFinances.BLL.Interfaces.SavingPlan.Budget;
+using System.Security.Claims;
 
 namespace PersonalFinances.Server.Controllers
 {
     
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = "Bearer")]
     public class BudgetsController : ControllerBase
     {
         private readonly IBudgetService _service;
@@ -29,6 +33,11 @@ namespace PersonalFinances.Server.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(APIResponse<BudgetModel>.FailResponse(ModelState));
 
+            var userStamp = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userStamp))
+                return Unauthorized(APIResponse<TransactionModel>.FailResponse("Utilizador não autenticado."));
+
+            budget.UserId = userStamp;
             await _service.CreateBudgetAsync(budget);
             return Ok(APIResponse<BudgetModel>.SuccessResponse(budget, "Orçamento criado com sucesso."));
         }

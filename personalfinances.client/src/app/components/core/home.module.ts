@@ -8,11 +8,8 @@ import { DashboardModule } from './home/dashboard/dashboard.module';
 import { OverviewComponent } from './home/graphycs/overview/overview.component';
 import { CardComponent } from './home/graphycs/card/card.component';
 import { ChartSectionComponent } from './home/graphycs/chart-section/chart-section.component';
-import { SavingPlanComponent } from './home/graphycs/saving-plan/saving-plan.component';
 import { RecentTransactionsComponent } from './home/graphycs/recent-transactions/recent-transactions.component';
 import { GraphycComponent } from './home/graphycs/graphyc.component';
-import { BudgetComponent } from './home/budget/budget.component';
-import { GoalComponent } from './home/goal/goal.component';
 import { FormControl, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +21,11 @@ import { SavingPlanDialogComponent } from './home/graphycs/saving-plan/saving-pl
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select'
+import { GoalComponent } from './home/graphycs/goal/goal.component';
+import { BudgetComponent } from './home/graphycs/budget/budget.component';
+import { BaseSavingPlanComponent } from './home/graphycs/saving-plan/base-saving-plan/base-saving-plan.component';
+import { BudgetSavingPlanComponent } from './home/graphycs/saving-plan/budget-saving-plan/budget-saving-plan.component';
+import { GoalSavingPlanComponent } from './home/graphycs/saving-plan/goal-saving-plan/goal-saving-plan.component';
 
 @NgModule({
   declarations: [
@@ -31,12 +33,14 @@ import { MatSelectModule } from '@angular/material/select'
     OverviewComponent,
     CardComponent,
     ChartSectionComponent,
-    SavingPlanComponent,
     RecentTransactionsComponent,
     GraphycComponent,
-    BudgetComponent,
+    SavingPlanDialogComponent,
     GoalComponent,
-    SavingPlanDialogComponent
+    BudgetComponent,
+    BaseSavingPlanComponent,
+    BudgetSavingPlanComponent,
+    GoalSavingPlanComponent
   ],
   imports: [
     CommonModule,

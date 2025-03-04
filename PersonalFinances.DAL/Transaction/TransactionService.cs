@@ -16,9 +16,9 @@ namespace PersonalFinances.DAL.Transaction
             _repository = repository;
         }
 
-        public async Task<IEnumerable<TransactionModel>> GetTransactionsAsync()
+        public async Task<IEnumerable<TransactionModel>> GetTransactionsAsync(string userID)
         {
-            return await _repository.GetAllAsync();
+            return await _repository.GetAllAsync(userID);
         }
 
         public async Task<TransactionModel> GetTransactionByStampEntityAsync(string stampEntity)
@@ -65,27 +65,27 @@ namespace PersonalFinances.DAL.Transaction
             await _repository.DeleteAsync(stampEntity);
         }
 
-        public async Task<decimal> GetTotalBalanceAsync()
+        public async Task<decimal> GetTotalBalanceAsync(string userStamp)
         {
-            var transactions = await _repository.GetAllAsync();
+            var transactions = await _repository.GetAllAsync(userStamp);
             return transactions.Sum(t => t.Amount);
         }
 
-        public async Task<decimal> GetTotalIncomeAsync()
+        public async Task<decimal> GetTotalIncomeAsync(string userStamp)
         {
-            var transactions = await _repository.GetAllAsync();
+            var transactions = await _repository.GetAllAsync(userStamp);
             return transactions.Where(t => t.Category == "income").Sum(t => t.Amount);
         }
 
-        public async Task<decimal> GetTotalExpensesAsync()
+        public async Task<decimal> GetTotalExpensesAsync(string userStamp)
         {
-            var transactions = await _repository.GetAllAsync();
+            var transactions = await _repository.GetAllAsync(userStamp);
             return transactions.Where(t => t.Category == "expense").Sum(t => t.Amount);
         }
 
-        public async Task<DashboardTotalsModel> GetDashboardTotalsAsync()
+        public async Task<DashboardTotalsModel> GetDashboardTotalsAsync(string userStamp)
         {
-            var transactions = await _repository.GetAllAsync();
+            var transactions = await _repository.GetAllAsync(userStamp);
 
             // Obter a data atual
             var now = DateTime.Now;
@@ -147,9 +147,9 @@ namespace PersonalFinances.DAL.Transaction
             };
         }
 
-        public async Task<ChartDataModel> GetChartDataAsync(string interval)
+        public async Task<ChartDataModel> GetChartDataAsync(string interval, string userStamp)
         {
-            var transactions = await _repository.GetAllAsync();
+            var transactions = await _repository.GetAllAsync(userStamp);
             var now = DateTime.Now;
             var groupedData = new Dictionary<string, (decimal profits, decimal losses)>();
 

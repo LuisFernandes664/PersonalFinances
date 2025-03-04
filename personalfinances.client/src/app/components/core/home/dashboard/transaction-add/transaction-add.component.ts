@@ -14,7 +14,7 @@ export class TransactionAddComponent {
   transactionForm: FormGroup;
   transactions: Transaction[] = [];
 
-  constructor(private fb: FormBuilder, private transactionService: TransactionService) {
+  constructor(private fb: FormBuilder, protected transactionService: TransactionService) {
     this.transactionForm = this.fb.group({
       // Não incluímos o id, pois o identificador é o stampEntity (gerado no backend)
       description: ['', Validators.required],
@@ -23,11 +23,14 @@ export class TransactionAddComponent {
       category: ['expense', Validators.required],
       paymentMethod: ['cash', Validators.required],
       recipient: [''],
-      status: ['pending', Validators.required]
+      status: ['pending', Validators.required],
+      referenceId: [''],
+      referenceType: ['']
     });
   }
 
   ngOnInit() {
+
     // Obtem a lista actual de transacções
     this.transactions = this.transactionService.getCurrentTransactions();
 
@@ -50,6 +53,15 @@ export class TransactionAddComponent {
 
   onSubmit() {
     if (this.transactionForm.valid) {
+
+      const transactionData = this.transactionForm.value;
+      if (transactionData.referenceId) {
+        const isBudget = this.transactionService.budgets.some(b => b.stampEntity === transactionData.referenceId);
+        transactionData.referenceType = isBudget ? 'Budget' : 'Goal';
+      } else {
+        transactionData.referenceType = null;
+      }
+
       const newTransaction = this.transactionForm.value;
       if (this.editingIndex !== null) {
         // Modo de edição: obter o stampEntity da transacção a editar

@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
-import { AuthService } from '../../../public/auth/auth.service';
+import { AuthService } from '../../../../public/auth/auth.service';
+import { environment } from '../../../../../../environments/environment';
+import { BudgetModel } from './budget.model';
+import { APIResponse } from '../../../../../models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +15,8 @@ export class BudgetService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   // Obtém os orçamentos do utilizador
-  getBudgets(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${this.authService.getDecodedToken().nameid}`);
+  getBudgets(): Observable<APIResponse<BudgetModel[]>> {
+    return this.http.get<APIResponse<BudgetModel[]>>(`${this.apiUrl}/${this.authService.getDecodedToken().nameid}`);
   }
 
   createBudget(budget: any): Observable<any> {

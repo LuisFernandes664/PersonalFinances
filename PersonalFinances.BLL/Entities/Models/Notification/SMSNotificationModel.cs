@@ -1,26 +1,21 @@
-﻿
-using PersonalFinances.BLL.Interfaces.Notification;
-using PersonalFinances.BLL.Interfaces.Notification.Senders;
+﻿using PersonalFinances.BLL.Interfaces.Notification.Senders;
+using System.Threading.Tasks;
 
 namespace PersonalFinances.BLL.Entities.Models.Notification
 {
-    public class SMSNotificationModel : IAsyncNotification
+    public class SMSNotificationModel : NotificationModel
     {
-        public string PhoneNumber { get; private set; }
-        public string Message { get; private set; }
-
         private readonly ISmsSender _smsSender;
 
-        public SMSNotificationModel(ISmsSender smsSender, string phoneNumber, string message)
+        public SMSNotificationModel(ISmsSender smsSender, string recipient, string message)
+            : base(recipient, message)
         {
             _smsSender = smsSender ?? throw new ArgumentNullException(nameof(smsSender));
-            PhoneNumber = !string.IsNullOrEmpty(phoneNumber) ? phoneNumber : throw new ArgumentException("O número de telefone não pode ser nulo ou vazio.");
-            Message = !string.IsNullOrEmpty(message) ? message : throw new ArgumentException("A mensagem não pode ser nula ou vazia.");
         }
 
-        public async Task SendNotificationAsync()
+        public override async Task SendNotificationAsync()
         {
-            await _smsSender.SendSmsAsync(PhoneNumber, Message);
+            await _smsSender.SendSmsAsync(Recipient, Message);
         }
 
         public static SMSNotificationModel CreatePasswordResetNotification(string phoneNumber, string resetCode, ISmsSender smsSender)
@@ -32,5 +27,4 @@ namespace PersonalFinances.BLL.Entities.Models.Notification
             );
         }
     }
-
 }

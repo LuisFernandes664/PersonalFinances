@@ -1,25 +1,21 @@
-﻿using PersonalFinances.BLL.Interfaces.Notification;
-using PersonalFinances.BLL.Interfaces.Notification.Senders;
+﻿using PersonalFinances.BLL.Interfaces.Notification.Senders;
+using System.Threading.Tasks;
 
 namespace PersonalFinances.BLL.Entities.Models.Notification
 {
-    public class EmailNotificationModel : IAsyncNotification
+    public class EmailNotificationModel : NotificationModel
     {
-        public string EmailAddress { get; private set; }
-        public string Message { get; private set; }
-
         private readonly IEmailSender _emailSender;
 
-        public EmailNotificationModel(IEmailSender emailSender, string emailAddress, string message)
+        public EmailNotificationModel(IEmailSender emailSender, string recipient, string message)
+            : base(recipient, message)
         {
             _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
-            EmailAddress = !string.IsNullOrEmpty(emailAddress) ? emailAddress : throw new ArgumentException("O endereço de e-mail não pode ser nulo ou vazio.");
-            Message = !string.IsNullOrEmpty(message) ? message : throw new ArgumentException("A mensagem não pode ser nula ou vazia.");
         }
 
-        public async Task SendNotificationAsync()
+        public override async Task SendNotificationAsync()
         {
-            await _emailSender.SendEmailAsync(EmailAddress, "Notificação", Message);
+            await _emailSender.SendEmailAsync(Recipient, "Notificação", Message);
         }
 
         public static EmailNotificationModel CreatePasswordResetNotification(string emailAddress, string resetLink, IEmailSender emailSender)
@@ -31,5 +27,4 @@ namespace PersonalFinances.BLL.Entities.Models.Notification
             );
         }
     }
-
 }

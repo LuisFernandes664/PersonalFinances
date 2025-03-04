@@ -47,20 +47,26 @@ namespace PersonalFinances.DAL.User
         public string GenerateJwtToken(UserModel user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(CommonStrings.SecretKey);
+            var key = Encoding.UTF8.GetBytes(CommonStrings.SecretKey);
+
+            var claims = new List<Claim>
+            {
+                new(JwtRegisteredClaimNames.Sub, user.StampEntity),
+                new(ClaimTypes.NameIdentifier, user.StampEntity),
+                new(ClaimTypes.Email, user.Email)
+            };
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.StampEntity),
-                    new Claim(ClaimTypes.Email, user.Email)
-                }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddHours(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
 
         public async Task<UserModel> GetUserByStampEntity(string stampEntity)
         {
@@ -126,8 +132,6 @@ namespace PersonalFinances.DAL.User
                 throw new Exception("Utilizador não encontrado.");
             }
 
-            IAsyncNotification notification;
-
             // Gera o token e expiração
             string resetToken = Guid.NewGuid().ToString();
             DateTime expiresAt = DateTime.UtcNow.AddMinutes(30);
@@ -139,8 +143,23 @@ namespace PersonalFinances.DAL.User
                 expiresAt,
                 false
             );
+
+            // Apaga resets anteriores e salva o novo pedido
             await _passwordResetRepository.DeleteAsync(userIdentifier);
             await _passwordResetRepository.SaveAsync(resetRequest);
+
+            // Criar a notificação
+            IAsyncNotification notification = CreatePasswordResetNotification(user, resetType, resetToken);
+
+            // Enviar notificação
+            await notification.SendNotificationAsync();
+        }
+
+        /// <summary>
+        /// Cria a notificação para o reset de senha com base no tipo de reset (email ou sms).
+        /// </summary>
+        private IAsyncNotification CreatePasswordResetNotification(UserModel user, string resetType, string resetToken)
+        {
             if (resetType == "email")
             {
                 if (string.IsNullOrEmpty(user.Email))
@@ -148,7 +167,8 @@ namespace PersonalFinances.DAL.User
                     throw new Exception("O utilizador não possui um e-mail registado.");
                 }
 
-                notification = EmailNotificationModel.CreatePasswordResetNotification(user.Email, GenerateResetLink(userIdentifier), _emailSender);
+                string resetLink = GenerateResetLink(user.StampEntity, resetToken);
+                return EmailNotificationModel.CreatePasswordResetNotification(user.Email, resetLink, _emailSender);
             }
             else if (resetType == "sms")
             {
@@ -157,18 +177,23 @@ namespace PersonalFinances.DAL.User
                     throw new Exception("O utilizador não possui um número de telefone registado.");
                 }
 
-                notification = SMSNotificationModel.CreatePasswordResetNotification(user.PhoneNumber, GenerateResetCode(), _smsSender);
+                string resetCode = GenerateResetCode();
+                return SMSNotificationModel.CreatePasswordResetNotification(user.PhoneNumber, resetCode, _smsSender);
             }
             else
             {
                 throw new Exception("Tipo de notificação inválido.");
             }
-
-            await notification.SendNotificationAsync();
-
         }
 
-        private string GenerateResetLink(string userID) => $"https://example.com/reset/{userID}/{Guid.NewGuid()}";
+        /// <summary>
+        /// Gera um link de reset de senha com o token.
+        /// </summary>
+        private string GenerateResetLink(string userID, string token) => $"https://example.com/reset/{userID}/{token}";
+
+        /// <summary>
+        /// Gera um código numérico de 6 dígitos para reset via SMS.
+        /// </summary>
         private string GenerateResetCode() => new Random().Next(100000, 999999).ToString();
 
         public async Task ConfirmResetPassword(string token, string newPassword)

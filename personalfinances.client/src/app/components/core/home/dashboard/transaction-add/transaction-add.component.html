@@ -39,6 +39,23 @@
       <div class="inputbox">
         <input type="text" id="destin" formControlName="recipient" placeholder="Destinatário">
       </div>
+      <!-- Vincular a um Budget ou Goal -->
+      <div class="inputbox">
+        <label>Vincular a</label>
+        <select formControlName="referenceId" class="custom-select">
+          <option value="">Nenhum</option>
+          <optgroup label="Orçamentos">
+            <option *ngFor="let budget of transactionService.budgets" [value]="budget.stampEntity">
+              {{ budget.name }} (Budget)
+            </option>
+          </optgroup>
+          <optgroup label="Metas">
+            <option *ngFor="let goal of transactionService.goals" [value]="goal.stampEntity">
+              {{ goal.descricao }} (Goal)
+            </option>
+          </optgroup>
+        </select>
+      </div>
 
       <!-- Status -->
       <div class="inputbox">
@@ -49,6 +66,8 @@
           <option value="cancelled">Cancelada</option>
         </select>
       </div>
+
+
 
       <div class="buttons">
         <button type="button" class="cancel button-modal" (click)="onCancel()">Cancelar</button>

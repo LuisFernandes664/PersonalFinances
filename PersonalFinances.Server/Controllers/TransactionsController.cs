@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PersonalFinances.BLL.Entities;
 using PersonalFinances.BLL.Entities.Models.Notification;
 using PersonalFinances.BLL.Entities.Models.Transaction;
+using PersonalFinances.BLL.Interfaces.SavingPlan.Budget;
+using PersonalFinances.BLL.Interfaces.SavingPlan.Goal;
 using PersonalFinances.BLL.Interfaces.Transaction;
 
 namespace PersonalFinances.Server.Controllers
@@ -11,9 +15,12 @@ namespace PersonalFinances.Server.Controllers
     {
         [ApiController]
         [Route("api/[controller]")]
+        [Authorize(Policy = "Bearer")]
         public class TransactionsController : ControllerBase
         {
             private readonly ITransactionService _service;
+            private readonly IGoalService _goalService;
+            private readonly IBudgetService _budgetService;
 
             public TransactionsController(ITransactionService service)
             {
@@ -23,11 +30,15 @@ namespace PersonalFinances.Server.Controllers
             #region Geral
 
             [HttpGet]
-            public async Task<IActionResult> GetAll()
+            public async Task<IActionResult> GetTransactions()
             {
-                var transactions = await _service.GetTransactionsAsync();
-                var response = APIResponse<IEnumerable<TransactionModel>>.SuccessResponse(transactions, "Transacções obtidas com sucesso.");
-                return Ok(response);
+                var userStamp = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userStamp))
+                    return Unauthorized(APIResponse<TransactionModel>.FailResponse("Utilizador não autenticado."));
+
+                var transactions = await _service.GetTransactionsAsync(userStamp);
+                return Ok(APIResponse<IEnumerable<TransactionModel>>.SuccessResponse(transactions, "Transações obtidas com sucesso."));
             }
 
             [HttpGet("{stampEntity}")]
@@ -42,15 +53,33 @@ namespace PersonalFinances.Server.Controllers
             }
 
             [HttpPost]
+            [HttpPost]
             public async Task<IActionResult> Create([FromBody] TransactionModel transaction)
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(APIResponse<TransactionModel>.FailResponse(ModelState));
+                var userStamp = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userStamp))
+                    return Unauthorized(APIResponse<TransactionModel>.FailResponse("Utilizador não autenticado."));
+
+                transaction.UserStamp = userStamp;
 
                 await _service.AddTransactionAsync(transaction);
-                var response = APIResponse<TransactionModel>.SuccessResponse(transaction, "Transacção criada com sucesso.");
-                return CreatedAtAction(nameof(GetByStampEntity), new { stampEntity = transaction.StampEntity }, response);
+
+                // Atualiza Budget ou Goal automaticamente após criar a transação
+                if (!string.IsNullOrEmpty(transaction.ReferenceId))
+                {
+                    if (transaction.ReferenceType == "Budget")
+                    {
+                        await _budgetService.UpdateBudgetSpentAmount(transaction.ReferenceId);
+                    }
+                    else if (transaction.ReferenceType == "Goal")
+                    {
+                        await _goalService.UpdateGoalAccumulatedAmount(transaction.ReferenceId);
+                    }
+                }
+
+                return Ok(APIResponse<TransactionModel>.SuccessResponse(transaction, "Transação criada com sucesso."));
             }
+
 
             [HttpPut("{stampEntity}")]
             public async Task<IActionResult> Update(string stampEntity, [FromBody] TransactionModel transaction)
@@ -85,9 +114,14 @@ namespace PersonalFinances.Server.Controllers
             [HttpGet("totals")]
             public async Task<IActionResult> GetTotals()
             {
-                var totalBalance = await _service.GetTotalBalanceAsync();
-                var totalIncome = await _service.GetTotalIncomeAsync();
-                var totalExpenses = await _service.GetTotalExpensesAsync();
+                var userStamp = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userStamp))
+                    return Unauthorized(APIResponse<TransactionModel>.FailResponse("Utilizador não autenticado."));
+
+                var totalBalance = await _service.GetTotalBalanceAsync(userStamp);
+                var totalIncome = await _service.GetTotalIncomeAsync(userStamp);
+                var totalExpenses = await _service.GetTotalExpensesAsync(userStamp);
 
                 var totals = new { totalBalance, totalIncome, totalExpenses };
                 var response = APIResponse<object>.SuccessResponse(totals, "Totais calculados com sucesso.");
@@ -99,7 +133,12 @@ namespace PersonalFinances.Server.Controllers
             {
                 try
                 {
-                    var totals = await _service.GetDashboardTotalsAsync();
+                    var userStamp = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                    if (string.IsNullOrEmpty(userStamp))
+                        return Unauthorized(APIResponse<TransactionModel>.FailResponse("Utilizador não autenticado."));
+
+                    var totals = await _service.GetDashboardTotalsAsync(userStamp);
                     var response = APIResponse<DashboardTotalsModel>.SuccessResponse(totals, "Dashboard totals calculated successfully.");
                     return Ok(response);
                 }
@@ -114,7 +153,12 @@ namespace PersonalFinances.Server.Controllers
             {
                 try
                 {
-                    var chartData = await _service.GetChartDataAsync(interval);
+                    var userStamp = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                    if (string.IsNullOrEmpty(userStamp))
+                        return Unauthorized(APIResponse<TransactionModel>.FailResponse("Utilizador não autenticado."));
+
+                    var chartData = await _service.GetChartDataAsync(interval, userStamp);
                     var responseData = new
                     {
                         series = chartData.Series,

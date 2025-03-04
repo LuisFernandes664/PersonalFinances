@@ -9,17 +9,18 @@ namespace PersonalFinances.BLL.Interfaces.Transaction
 {
     public interface ITransactionService
     {
-        Task<IEnumerable<TransactionModel>> GetTransactionsAsync();
+        Task<IEnumerable<TransactionModel>> GetTransactionsAsync(string userID);
         Task<TransactionModel> GetTransactionByStampEntityAsync(string stampEntity);
         Task AddTransactionAsync(TransactionModel transaction);
         Task UpdateTransactionAsync(string stampEntity, TransactionModel transaction);
         Task DeleteTransactionAsync(string stampEntity);
-        Task<decimal> GetTotalBalanceAsync();
-        Task<decimal> GetTotalIncomeAsync();
-        Task<decimal> GetTotalExpensesAsync();
-        Task<DashboardTotalsModel> GetDashboardTotalsAsync();
+        Task<decimal> GetTotalBalanceAsync(string userStamp);
+        Task<decimal> GetTotalIncomeAsync(string userStamp);
+        Task<decimal> GetTotalExpensesAsync(string userStamp);
+        Task<DashboardTotalsModel> GetDashboardTotalsAsync(string userStamp);
 
-        Task<ChartDataModel> GetChartDataAsync(string interval);
+
+        Task<ChartDataModel> GetChartDataAsync(string interval, string userStamp);
     }
 
     public class ChartDataModel

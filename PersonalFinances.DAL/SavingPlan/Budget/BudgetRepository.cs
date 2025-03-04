@@ -11,175 +11,141 @@ namespace PersonalFinances.DAL.SavingPlan.Budget
 {
     public class BudgetRepository : IBudgetRepository
     {
-        private readonly string _connectionString;
-        public BudgetRepository()
-        {
-            _connectionString = ConfigManager.GetConnectionString();
-        }
-
         public async Task<IEnumerable<BudgetModel>> GetBudgetsByUserAsync(string userId)
         {
             var budgets = new List<BudgetModel>();
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = @"SELECT * FROM Budgets WHERE user_id = @userId";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@userId", userId);
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(reader);
+            var parameters = new List<SqlParameter> { new("@userId", userId) };
+            var query = "SELECT * FROM Budgets WHERE user_id = @userId";
 
-                    foreach (DataRow row in dataTable.Rows)
-                    {
-                        budgets.Add(new BudgetModel(row));
-                    }
-                }
-            }
+            var result = await SQLHelper.ExecuteQueryAsync(query, parameters);
+            foreach (DataRow row in result.Rows)
+                budgets.Add(new BudgetModel(row));
+
             return budgets;
         }
 
         public async Task<BudgetModel> GetBudgetByIdAsync(string budgetId)
         {
             BudgetModel budget = null;
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = "SELECT * FROM Budgets WHERE stamp_entity = @budgetId";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@budgetId", budgetId);
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(reader);
+            var parameters = new List<SqlParameter> { new("@budgetId", budgetId) };
+            var query = "SELECT * FROM Budgets WHERE stamp_entity = @budgetId";
 
-                    if (dataTable.Rows.Count > 0)
-                    {
-                        budget = new BudgetModel(dataTable.Rows[0]);
-                    }
-                }
-            }
+            var result = await SQLHelper.ExecuteQueryAsync(query, parameters);
+            if (result.Rows.Count > 0)
+                budget = new BudgetModel(result.Rows[0]);
+
             return budget;
+        }
+
+        public async Task<decimal> GetSpentAmountByBudget(string budgetId)
+        {
+            var query = @"SELECT COALESCE(SUM(amount), 0) 
+                  FROM Transactions 
+                  WHERE reference_id = @budgetId 
+                  AND reference_type = 'Budget'";
+
+            var parameters = new List<SqlParameter> { new("@budgetId", budgetId) };
+            var result = await SQLHelper.ExecuteScalarAsync(query, parameters);
+
+            return result != null ? Convert.ToDecimal(result) : 0;
         }
 
         public async Task CreateBudgetAsync(BudgetModel budget)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            var getCategoryQuery = "SELECT stamp_entity FROM Categories WHERE name = @name AND type = 'budget'";
+            var categoryParams = new List<SqlParameter> { new("@name", budget.CategoryId) };
+            var result = await SQLHelper.ExecuteScalarAsync(getCategoryQuery, categoryParams);
+
+            string categoryId = result?.ToString();
+            if (categoryId == null)
+                throw new Exception("Categoria inválida.");
+
+            var query = @"INSERT INTO Budgets 
+                          (stamp_entity, user_id, category_id, valor_orcado, data_inicio, data_fim, created_at)
+                          VALUES (@stampEntity, @userId, @categoryId, @valorOrcado, @dataInicio, @dataFim, GETDATE());";
+
+            var parameters = new List<SqlParameter>
             {
-                await connection.OpenAsync();
+                new("@stampEntity", budget.StampEntity),
+                new("@userId", budget.UserId),
+                new("@categoryId", categoryId),
+                new("@valorOrcado", budget.ValorOrcado),
+                new("@dataInicio", budget.DataInicio),
+                new("@dataFim", budget.DataFim)
+            };
 
-                // Buscar o ID da categoria pelo nome
-                var getCategoryQuery = "SELECT stamp_entity FROM Categories WHERE name = @name AND type = 'budget'";
-                string categoryId = null;
-
-                using (var command = new SqlCommand(getCategoryQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@name", budget.CategoryId);
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            categoryId = reader["stamp_entity"].ToString();
-                        }
-                    }
-                }
-
-                if (categoryId == null)
-                    throw new Exception("Categoria inválida.");
-
-                // Criar o orçamento com a categoria correspondente
-                var query = @"INSERT INTO Budgets 
-                      (stamp_entity, user_id, category_id, valor_orcado, data_inicio, data_fim, created_at)
-                      VALUES (@stampEntity, @userId, @categoryId, @valorOrcado, @dataInicio, @dataFim, GETDATE());";
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@stampEntity", budget.StampEntity);
-                    command.Parameters.AddWithValue("@userId", budget.UserId);
-                    command.Parameters.AddWithValue("@categoryId", categoryId);
-                    command.Parameters.AddWithValue("@valorOrcado", budget.ValorOrcado);
-                    command.Parameters.AddWithValue("@dataInicio", budget.DataInicio);
-                    command.Parameters.AddWithValue("@dataFim", budget.DataFim);
-                    await command.ExecuteNonQueryAsync();
-                }
-            }
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
         }
-
 
         public async Task UpdateBudgetAsync(BudgetModel budget)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = @"UPDATE Budgets SET 
-                              category_id = @categoryId,
-                              valor_orcado = @valorOrcado,
-                              data_inicio = @dataInicio,
-                              data_fim = @dataFim
-                              WHERE stamp_entity = @stampEntity";
+            var query = @"UPDATE Budgets SET 
+                          category_id = @categoryId,
+                          valor_orcado = @valorOrcado,
+                          data_inicio = @dataInicio,
+                          data_fim = @dataFim
+                          WHERE stamp_entity = @stampEntity";
 
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@categoryId", budget.CategoryId);
-                command.Parameters.AddWithValue("@valorOrcado", budget.ValorOrcado);
-                command.Parameters.AddWithValue("@dataInicio", budget.DataInicio);
-                command.Parameters.AddWithValue("@dataFim", budget.DataFim);
-                command.Parameters.AddWithValue("@stampEntity", budget.StampEntity);
-                await command.ExecuteNonQueryAsync();
-            }
+            var parameters = new List<SqlParameter>
+            {
+                new("@categoryId", budget.CategoryId),
+                new("@valorOrcado", budget.ValorOrcado),
+                new("@dataInicio", budget.DataInicio),
+                new("@dataFim", budget.DataFim),
+                new("@stampEntity", budget.StampEntity)
+            };
+
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
         }
 
         public async Task DeleteBudgetAsync(string budgetId)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = "DELETE FROM Budgets WHERE stamp_entity = @budgetId";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@budgetId", budgetId);
-                await command.ExecuteNonQueryAsync();
-            }
+            var query = "DELETE FROM Budgets WHERE stamp_entity = @budgetId";
+            var parameters = new List<SqlParameter> { new("@budgetId", budgetId) };
+
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
         }
 
         public async Task<IEnumerable<BudgetHistoryModel>> GetBudgetHistoryAsync(string budgetId)
         {
             var history = new List<BudgetHistoryModel>();
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = @"SELECT * FROM BudgetHistory WHERE budget_id = @budgetId";
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@budgetId", budgetId);
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(reader);
+            var parameters = new List<SqlParameter> { new("@budgetId", budgetId) };
+            var query = "SELECT * FROM BudgetHistory WHERE budget_id = @budgetId";
 
-                    foreach (DataRow row in dataTable.Rows)
-                    {
-                        history.Add(new BudgetHistoryModel(row));
-                    }
-                }
-            }
+            var result = await SQLHelper.ExecuteQueryAsync(query, parameters);
+            foreach (DataRow row in result.Rows)
+                history.Add(new BudgetHistoryModel(row));
+
             return history;
         }
 
-
         public async Task AddBudgetHistoryAsync(string budgetId, string transactionId, decimal valorGasto)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = @"INSERT INTO BudgetHistory 
-                              (stamp_entity, budget_id, transaction_id, valor_gasto, data_registro)
-                              VALUES (NEWID(), @budgetId, @transactionId, @valorGasto, GETDATE());";
+            var query = @"INSERT INTO BudgetHistory 
+                          (stamp_entity, budget_id, transaction_id, valor_gasto, data_registro)
+                          VALUES (NEWID(), @budgetId, @transactionId, @valorGasto, GETDATE());";
 
-                var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@budgetId", budgetId);
-                command.Parameters.AddWithValue("@transactionId", transactionId);
-                command.Parameters.AddWithValue("@valorGasto", valorGasto);
-                await command.ExecuteNonQueryAsync();
-            }
+            var parameters = new List<SqlParameter>
+            {
+                new("@budgetId", budgetId),
+                new("@transactionId", transactionId),
+                new("@valorGasto", valorGasto)
+            };
+
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
         }
+
+        public async Task UpdateBudgetSpentAmount(string budgetId)
+        {
+            var query = @"UPDATE Budgets SET valor_gasto = (SELECT COALESCE(SUM(amount), 0) FROM Transactions WHERE reference_id = @budgetId AND reference_type = 'Budget') WHERE stamp_entity = @budgetId";
+
+            var parameters = new List<SqlParameter>
+            {
+                new("@budgetId", budgetId)
+            };
+
+            await SQLHelper.ExecuteNonQueryAsync(query, parameters);
+        }
+
     }
 }

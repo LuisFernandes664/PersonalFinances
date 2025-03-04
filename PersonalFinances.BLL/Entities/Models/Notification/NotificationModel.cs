@@ -1,41 +1,52 @@
-﻿using System.Data;
+﻿using PersonalFinances.BLL.Interfaces.Notification;
+using System.Data;
 
 namespace PersonalFinances.BLL.Entities.Models.Notification
 {
     /// <summary>
-    /// Representa uma notificação enviada a um utilizador. Contém informações sobre o tipo da notificação, a mensagem e a data de criação.
+    /// Representa uma notificação enviada a um utilizador. 
+    /// Esta classe deve ser herdada por tipos específicos de notificações (exemplo: Email, SMS).
     /// </summary>
-    public abstract class NotificationModel : BaseEntity
+    public abstract class NotificationModel : BaseEntity, IAsyncNotification
     {
-        #region Propertys
+        #region Propriedades
 
         /// <summary>
         /// Identificador único do utilizador que recebeu a notificação.
         /// </summary>
-        public string UserId { get; set; }
+        public string UserId { get; private set; }
 
         /// <summary>
-        /// Tipo da notificação. Pode ser algo como 'start', 'end', 'reminder', entre outros.
+        /// Tipo da notificação (ex: 'start', 'end', 'reminder').
         /// </summary>
-        public string Type { get; set; } = string.Empty;
+        public string Type { get; private set; }
 
         /// <summary>
-        /// Mensagem da notificação. Contém o conteúdo informativo enviado ao utilizador.
+        /// Mensagem da notificação.
         /// </summary>
-        public string Message { get; set; } = string.Empty;
+        public string Message { get; private set; }
 
+        public string Recipient { get; protected set; }
 
         #endregion
 
-        public NotificationModel()  { }
+        #region Construtores
 
         /// <summary>
-        /// Construtor que permite inicializar diretamente as propriedades da notificação.
+        /// Construtor protegido para impedir instância direta da classe base.
         /// </summary>
-        /// <param name="userId">Identificador único do utilizador.</param>
-        /// <param name="type">Tipo da notificação.</param>
-        /// <param name="message">Mensagem da notificação.</param>
-        /// <param name="createdAt">Data de criação da notificação.</param>
+        protected NotificationModel() { }
+
+        protected NotificationModel(string recipient, string message)
+        {
+            Recipient = !string.IsNullOrEmpty(recipient) ? recipient : throw new ArgumentException("O destinatário não pode ser nulo ou vazio.");
+            Message = !string.IsNullOrEmpty(message) ? message : throw new ArgumentException("A mensagem não pode ser nula ou vazia.");
+        }
+
+
+        /// <summary>
+        /// Construtor principal que inicializa as propriedades essenciais da notificação.
+        /// </summary>
         protected NotificationModel(string userId, string type, string message)
         {
             UserId = !string.IsNullOrEmpty(userId) ? userId : throw new ArgumentException("O ID do utilizador não pode ser nulo ou vazio.");
@@ -45,10 +56,8 @@ namespace PersonalFinances.BLL.Entities.Models.Notification
         }
 
         /// <summary>
-        /// Construtor que mapeia os dados de um DataRow para as propriedades da notificação.
-        /// Utiliza o método IfExists para garantir que valores nulos ou ausentes não causem erros.
+        /// Construtor que mapeia os dados de um DataRow para um objeto NotificationModel.
         /// </summary>
-        /// <param name="row">Linha de dados que contém as informações da notificação.</param>
         public NotificationModel(DataRow row) : base(row)
         {
             UserId = row.Field<string>("user_id") ?? string.Empty;
@@ -56,21 +65,44 @@ namespace PersonalFinances.BLL.Entities.Models.Notification
             Message = row.Field<string>("message") ?? string.Empty;
         }
 
-        // A ser implementado pelas classes derivadas
-        public abstract void SendNotification();
+        #endregion
 
-        public async Task ProcessNotificationsAsync(List<NotificationModel> notifications)
+        #region Métodos Abstratos
+
+        /// <summary>
+        /// Método abstrato que deve ser implementado por subclasses para enviar a notificação.
+        /// </summary>
+        public abstract Task SendNotificationAsync();
+
+        #endregion
+
+        #region Métodos Auxiliares
+
+        /// <summary>
+        /// Processa múltiplas notificações de forma assíncrona.
+        /// </summary>
+        public static async Task ProcessNotificationsAsync(List<NotificationModel> notifications)
         {
+            if (notifications == null || notifications.Count == 0) return;
+
+            var tasks = new List<Task>();
             foreach (var notification in notifications)
             {
-                await Task.Run(() => notification.SendNotification());
+                tasks.Add(notification.SendNotificationAsync());
             }
+
+            await Task.WhenAll(tasks);
         }
 
-        public void ProcessNotifications(NotificationModel notification)
+        /// <summary>
+        /// Processa uma única notificação.
+        /// </summary>
+        public static async Task ProcessNotificationAsync(NotificationModel notification)
         {
-            notification.SendNotification();
+            if (notification == null) return;
+            await notification.SendNotificationAsync();
         }
-    }
 
+        #endregion
+    }
 }
