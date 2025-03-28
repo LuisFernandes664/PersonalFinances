@@ -1,5 +1,4 @@
 ﻿using PersonalFinances.BLL.Entities.Models.SavingPlan;
-using System.Web.Mvc;
 
 namespace PersonalFinances.BLL.Interfaces.SavingPlan.Goal
 {
@@ -7,7 +6,7 @@ namespace PersonalFinances.BLL.Interfaces.SavingPlan.Goal
     {
         Task<IEnumerable<GoalModel>> GetGoalsByUserAsync(string userId);
         Task<GoalModel> GetGoalByIdAsync(string goalId);
-        Task<IEnumerable<SelectListItem>> GetCategoriesAsync();
+        //Task<IEnumerable<SelectListItem>> GetCategoriesAsync();
         Task<decimal> GetAccumulatedAmountByGoal(string goalId);
         Task<decimal> GetGoalProgressPercentage(string goalId);
         Task CreateGoalAsync(GoalModel goal);

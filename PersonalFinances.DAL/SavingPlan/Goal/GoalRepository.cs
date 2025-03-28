@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace PersonalFinances.DAL.SavingPlan.Goal
 {
@@ -44,23 +43,23 @@ namespace PersonalFinances.DAL.SavingPlan.Goal
             return goal;
         }
 
-    public async Task<IEnumerable<SelectListItem>> GetCategoriesAsync()
-    {
-        var categories = new List<SelectListItem>();
-        var query = "SELECT stamp_entity, name FROM Categories WHERE type = 'goal'";
+        //public async Task<IEnumerable<SelectListItem>> GetCategoriesAsync()
+        //{
+        //    var categories = new List<SelectListItem>();
+        //    var query = "SELECT stamp_entity, name FROM Categories WHERE type = 'goal'";
 
-        var result = await SQLHelper.ExecuteQueryAsync(query);
-        foreach (DataRow row in result.Rows)
-        {
-            categories.Add(new SelectListItem
-            {
-                Text = row["name"].ToString(),
-                Value = row["stamp_entity"].ToString()
-            });
-        }
+        //    var result = await SQLHelper.ExecuteQueryAsync(query);
+        //    foreach (DataRow row in result.Rows)
+        //    {
+        //        categories.Add(new SelectListItem
+        //        {
+        //            Text = row["name"].ToString(),
+        //            Value = row["stamp_entity"].ToString()
+        //        });
+        //    }
 
-        return categories;
-    }
+        //    return categories;
+        //}
 
         public async Task<decimal> GetAccumulatedAmountByGoal(string goalId)
         {
