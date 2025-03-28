@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DateFormatPipe } from './date-format.pipe';
-import { TruncatePipe } from './truncate.pipe';
+import { DateFormatPipe } from './helpers/date-format.pipe';
+import { TruncatePipe } from './helpers/truncate.pipe';
 
 @NgModule({
   declarations: [

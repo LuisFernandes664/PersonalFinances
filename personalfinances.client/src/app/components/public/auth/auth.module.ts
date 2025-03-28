@@ -11,9 +11,14 @@ import { HeaderPublicComponent } from '../shared/header/header.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpLoaderFactory } from '../../../app.module';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { ContactComponent } from './../contact/contact.component';
+import { AuthReverseGuard } from '../../../guards/auth-reverse.guard';
 
+const routes: Routes = [
+    { path: 'signin', component: SigninComponent, canActivate: [AuthReverseGuard] },
+    { path: 'signup', component: SignupComponent , canActivate: [AuthReverseGuard] },
+];
 
 @NgModule({
   declarations: [
@@ -28,8 +33,7 @@ import { ContactComponent } from './../contact/contact.component';
     CommonModule,
     FormsModule,
     TranslateModule,
-    RouterModule,
-
+    RouterModule.forChild(routes)
   ],
   providers: [
     AuthService
@@ -37,8 +41,7 @@ import { ContactComponent } from './../contact/contact.component';
   exports: [
     SigninComponent,
     SignupComponent,
-    RouterModule,
     HeaderPublicComponent
-  ]
+  ],
 })
 export class AuthModule { }

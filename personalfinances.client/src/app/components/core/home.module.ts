@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { LayoutModule } from './shared/layout/layout.module';
 import { HomeComponent } from './home/home.component';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { DashboardModule } from './home/dashboard/dashboard.module';
 import { OverviewComponent } from './home/graphycs/overview/overview.component';
 import { CardComponent } from './home/graphycs/card/card.component';
@@ -26,6 +26,21 @@ import { BudgetComponent } from './home/graphycs/budget/budget.component';
 import { BaseSavingPlanComponent } from './home/graphycs/saving-plan/base-saving-plan/base-saving-plan.component';
 import { BudgetSavingPlanComponent } from './home/graphycs/saving-plan/budget-saving-plan/budget-saving-plan.component';
 import { GoalSavingPlanComponent } from './home/graphycs/saving-plan/goal-saving-plan/goal-saving-plan.component';
+import { AuthGuard } from '../../guards/auth.guard';
+import { DashboardComponent } from './home/dashboard/dashboard.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    component: HomeComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'graphyc', component: GraphycComponent }
+    ]
+  }
+];
 
 @NgModule({
   declarations: [
@@ -48,7 +63,6 @@ import { GoalSavingPlanComponent } from './home/graphycs/saving-plan/goal-saving
     LayoutModule,
     RouterModule,
     DashboardModule,
-    BrowserModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -58,7 +72,8 @@ import { GoalSavingPlanComponent } from './home/graphycs/saving-plan/goal-saving
     MatDialogModule,
     MatIconModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    RouterModule.forChild(routes)
   ],
   exports: [
     HomeComponent

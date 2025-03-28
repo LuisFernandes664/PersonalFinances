@@ -1,4 +1,6 @@
 // Mixin para aplicar os temas como CSS Custom Properties
+/// Aplica as propriedades do tema como variáveis CSS.
+/// @param $theme - Mapa contendo as cores e estilos do tema.
 @mixin theme-styles($theme) {
   --body-color: #{map-get($theme, body-color)};
   --sidebar-color: #{map-get($theme, sidebar-color)};
@@ -24,23 +26,59 @@
   --button-submit-bg: #{map-get($theme, button-submit-bg)};
 }
 
-
-// Exemplo de mixin para botões
-@mixin button-style($bg-color, $text-color: #fff) {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+// Mixin genérico para estilos de componentes
+/// Aplica estilos básicos para componentes como botões, inputs, cards, etc.
+/// @param $bg-color - Cor de fundo do componente.
+/// @param $text-color - Cor do texto do componente.
+/// @param $padding - Espaçamento interno do componente (opcional).
+@mixin component-style($bg-color, $text-color: #fff, $padding: 15px) {
+  display: block;
   width: 100%;
-  height: 50px;
+  padding: $padding;
   background: $bg-color;
   color: $text-color;
-  border: none;
   border-radius: $border-radius;
-  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   transition: background $transition-fast, transform $transition-fast;
 
   &:hover {
     background: darken($bg-color, 5%);
     transform: translateY(-2px);
   }
+}
+
+// Mixin para botões
+/// Estilos específicos para botões.
+/// @param $bg-color - Cor de fundo do botão.
+/// @param $text-color - Cor do texto do botão.
+@mixin button-style($bg-color, $text-color: #fff) {
+  @include component-style($bg-color, $text-color, 0);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  border: none;
+  cursor: pointer;
+}
+
+// Mixin para inputs
+/// Estilos específicos para inputs.
+/// @param $bg-color - Cor de fundo do input.
+/// @param $text-color - Cor do texto do input.
+@mixin input-style($bg-color, $text-color: #fff) {
+  @include component-style($bg-color, $text-color, 0);
+  height: 50px;
+  padding: 0 15px;
+
+  &:focus {
+    background: darken($bg-color, 5%);
+  }
+}
+
+// Mixin para cards, modais, popups e toggles
+/// Estilos genéricos para cards, modais, popups e toggles.
+/// @param $bg-color - Cor de fundo.
+/// @param $text-color - Cor do texto.
+@mixin card-style($bg-color, $text-color: #fff) {
+  @include component-style($bg-color, $text-color);
 }

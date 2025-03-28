@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ThemeService } from './theme.service';
 
 export interface UserPreferences {
   darkMode: boolean;
@@ -10,6 +11,9 @@ export interface UserPreferences {
   providedIn: 'root'
 })
 export class PreferencesService {
+  private readonly DARK_MODE_KEY = 'darkMode';
+  private readonly LANGUAGE_KEY = 'language';
+
   private defaultPreferences: UserPreferences = {
     darkMode: false,
     language: 'pt'
@@ -18,29 +22,50 @@ export class PreferencesService {
   private preferencesSubject = new BehaviorSubject<UserPreferences>(this.defaultPreferences);
   public preferences$ = this.preferencesSubject.asObservable();
 
-  constructor() {}
+  constructor(private themeService: ThemeService) {
+    this.loadPreferences();
+  }
 
-  loadPreferences(): Promise<void> {
-    return new Promise(resolve => {
-      const storedDarkMode = JSON.parse(localStorage.getItem('darkMode') || 'false');
-      if (storedDarkMode) {
-        document.body.classList.add('dark');
-      }
+  /**
+   * Carrega as preferências do utilizador a partir do localStorage.
+   * Atualiza o estado das preferências e aplica o modo escuro, se necessário.
+  */
+  async loadPreferences(): Promise<void> {
+    try {
+      const storedDarkMode = JSON.parse(localStorage.getItem(this.DARK_MODE_KEY) || 'false');
+      const storedLanguage = localStorage.getItem(this.LANGUAGE_KEY) || 'pt';
+
       const loadedPreferences: UserPreferences = {
         darkMode: storedDarkMode,
-        language: localStorage.getItem('language') || 'pt'
+        language: storedLanguage,
       };
 
       this.preferencesSubject.next(loadedPreferences);
-      resolve();
-    });
+      this.themeService.loadTheme();
+    } catch (error) {
+      console.error('Falha ao carregar as preferências:', error);
+    }
   }
 
+  /**
+   * Atualiza as preferências do utilizador.
+   * @param newPreferences - Novas preferências a serem aplicadas.
+   * Atualiza o localStorage e aplica ou remove o modo escuro no DOM.
+   */
   updatePreferences(newPreferences: Partial<UserPreferences>): void {
-    const current = this.preferencesSubject.value;
-    const updated = { ...current, ...newPreferences };
-    this.preferencesSubject.next(updated);
-    localStorage.setItem('darkMode', JSON.stringify(updated.darkMode));
-    localStorage.setItem('language', updated.language);
+    try {
+      const current = this.preferencesSubject.value;
+      const updated = { ...current, ...newPreferences };
+
+      this.preferencesSubject.next(updated);
+
+      localStorage.setItem(this.DARK_MODE_KEY, JSON.stringify(updated.darkMode));
+      localStorage.setItem(this.LANGUAGE_KEY, updated.language);
+
+      this.themeService.toggleDarkMode();
+    } catch (error) {
+      console.error('Falha ao atualizar as preferências:', error);
+    }
   }
+
 }

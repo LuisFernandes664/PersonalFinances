@@ -1,5 +1,6 @@
-// Importa fontes e reset global
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@import 'variables';
 
 * {
   padding: 0;
@@ -15,4 +16,24 @@ body {
   font-family: 'Poppins', sans-serif;
   background-color: var(--body-color);
   color: var(--text-color);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: var(--primary-color);
+  }
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: background $transition-fast, transform $transition-fast;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }

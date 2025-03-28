@@ -2,7 +2,7 @@
 // Variáveis Globais
 // ==================================================
 
-// Cores, espaçamentos, transições, etc.
+// Cores principais
 $primary-color: #695CFE;
 $primary-light: #F6F5FF;
 $text-color-default: #707070;
@@ -10,14 +10,17 @@ $body-color: #E4E9F7;
 $sidebar-color: #FFF;
 $card-bg: #ffffff;
 
+// Espaçamentos
 $spacing-sm: 5px;
 $spacing-md: 10px;
 $spacing-lg: 15px;
 $padding: 20px;
 
+// Bordas e sombras
 $border-radius: 12px;
 $box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 
+// Transições
 $transition-fast: 0.3s ease-in-out;
 $transition-medium: 0.4s ease-in-out;
 $transition-slow: 0.5s ease-in-out;
