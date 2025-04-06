@@ -34,13 +34,13 @@ namespace PersonalFinances.Server.Controllers
             return Ok(APIResponse<IEnumerable<GoalModel>>.SuccessResponse(goals, "Metas obtidas com sucesso."));
         }
 
-        //[HttpGet("categories")]
-        //public async Task<IActionResult> GetCategories()
-        //{
-        //    var categories = await _service.GetCategoriesAsync() ?? new List<System.Web.Mvc.SelectListItem>();
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var categories = await _service.GetCategoriesAsync() ?? new List<System.Web.Mvc.SelectListItem>();
 
-        //    return Ok(APIResponse<IEnumerable<System.Web.Mvc.SelectListItem>>.SuccessResponse(categories, "Categorias obtidas com sucesso."));
-        //}
+            return Ok(APIResponse<IEnumerable<System.Web.Mvc.SelectListItem>>.SuccessResponse(categories, "Categorias obtidas com sucesso."));
+        }
 
 
         /// <summary>

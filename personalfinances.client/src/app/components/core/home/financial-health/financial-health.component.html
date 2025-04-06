@@ -1,0 +1,141 @@
+<div class="financial-health-container">
+  <div class="page-header">
+    <h1>Saúde Financeira</h1>
+    <button mat-raised-button color="primary" (click)="recalculateFinancialHealth()" [disabled]="isLoading">
+      <mat-icon>refresh</mat-icon> Recalcular
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div class="health-content" *ngIf="!isLoading && financialHealth">
+    <!-- Pontuação Geral -->
+    <div class="overall-score-section">
+      <div class="score-container">
+        <div class="score-circle"
+             [style.background]="'conic-gradient(' + getScoreColor(financialHealth.overallScore) + ' ' + financialHealth.overallScore + '%, #e0e0e0 0%)'">
+          <div class="score-value">
+            <span class="score-number">{{ financialHealth.overallScore }}</span>
+            <span class="score-percent">%</span>
+          </div>
+          <div class="score-label">{{ getScoreLabel(financialHealth.overallScore) }}</div>
+        </div>
+      </div>
+
+      <div class="score-info">
+        <h2>Sua Saúde Financeira Geral</h2>
+        <p>Esta pontuação reflete o estado geral de suas finanças baseado em vários fatores, incluindo poupança, despesas, dívidas e aderência ao orçamento.</p>
+        <p>Última análise: {{ formatDate(financialHealth.calculatedAt) }}</p>
+
+        <button mat-button color="primary" (click)="toggleHistory()">
+          <mat-icon>{{ showHistory ? 'visibility_off' : 'visibility' }}</mat-icon>
+          {{ showHistory ? 'Ocultar Histórico' : 'Ver Histórico' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Detalhe das pontuações por categoria -->
+    <div class="score-categories">
+      <div class="score-category-item">
+        <div class="category-header">
+          <h3>Poupança</h3>
+          <div class="category-score" [style.background-color]="getScoreColor(financialHealth.savingsScore)">
+            {{ financialHealth.savingsScore }}%
+          </div>
+        </div>
+        <p>Avalia se você está economizando o suficiente para emergências e objetivos de longo prazo.</p>
+      </div>
+
+      <div class="score-category-item">
+        <div class="category-header">
+          <h3>Despesas</h3>
+          <div class="category-score" [style.background-color]="getScoreColor(financialHealth.spendingScore)">
+            {{ financialHealth.spendingScore }}%
+          </div>
+        </div>
+        <p>Analisa seus padrões de gastos em relação à sua renda disponível.</p>
+      </div>
+
+      <div class="score-category-item">
+        <div class="category-header">
+          <h3>Dívidas</h3>
+          <div class="category-score" [style.background-color]="getScoreColor(financialHealth.debtScore)">
+            {{ financialHealth.debtScore }}%
+          </div>
+        </div>
+        <p>Avalia o nível de endividamento e sua capacidade de pagamento.</p>
+      </div>
+
+      <div class="score-category-item">
+        <div class="category-header">
+          <h3>Orçamento</h3>
+          <div class="category-score" [style.background-color]="getScoreColor(financialHealth.budgetAdherenceScore)">
+            {{ financialHealth.budgetAdherenceScore }}%
+          </div>
+        </div>
+        <p>Mede sua capacidade de seguir um orçamento planejado.</p>
+      </div>
+    </div>
+
+    <!-- Histórico de Saúde Financeira -->
+    <div class="history-section" *ngIf="showHistory && chartData.length > 0">
+      <h2>Histórico de Saúde Financeira</h2>
+      <div class="chart-container">
+        <apx-chart
+          [series]="chartData"
+          [chart]="chartOptions.chart"
+          [xaxis]="chartOptions.xaxis"
+          [yaxis]="chartOptions.yaxis"
+          [colors]="chartOptions.colors"
+          [dataLabels]="chartOptions.dataLabels"
+          [stroke]="chartOptions.stroke"
+          [tooltip]="chartOptions.tooltip"
+          [legend]="chartOptions.legend">
+        </apx-chart>
+      </div>
+    </div>
+
+    <!-- Recomendações -->
+    <div class="recommendations-section">
+      <h2>Recomendações para Melhorar sua Saúde Financeira</h2>
+
+      <div class="empty-recommendations" *ngIf="!financialHealth.recommendations || financialHealth.recommendations.length === 0">
+        <mat-icon>thumb_up</mat-icon>
+        <p>Não há recomendações no momento. Continue com o bom trabalho!</p>
+      </div>
+
+      <mat-accordion *ngIf="financialHealth.recommendations && financialHealth.recommendations.length > 0">
+        <mat-expansion-panel *ngFor="let recommendation of financialHealth.recommendations">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ recommendation.category }}
+            </mat-panel-title>
+            <mat-panel-description>
+              <span class="priority-badge" [style.background-color]="getPriorityColor(recommendation.priorityLevel)">
+                Prioridade {{ getPriorityLabel(recommendation.priorityLevel) }}
+              </span>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div class="recommendation-content">
+            <p><strong>{{ recommendation.description }}</strong></p>
+            <p>{{ recommendation.actionItem }}</p>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && !financialHealth">
+    <mat-icon>pie_chart</mat-icon>
+    <h3>Análise de Saúde Financeira Indisponível</h3>
+    <p>Dados suficientes ainda não foram coletados para analisar sua saúde financeira. Continue utilizando o aplicativo para receber insights personalizados.</p>
+    <button mat-raised-button color="primary" (click)="recalculateFinancialHealth()">
+      Tentar Analisar Agora
+    </button>
+  </div>
+</div>

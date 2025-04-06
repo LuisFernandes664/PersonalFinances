@@ -1,4 +1,7 @@
-// Importa os ficheiros parciales na ordem correta
+// Importar tema pré-construído do Angular Material
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+// Importar seus estilos personalizados
 @import './assets/styles/variables';
 @import './assets/styles/mixins';
 @import './assets/styles/themes';
@@ -20,3 +23,193 @@
   --card-shadow-color: rgba(255, 255, 255, 0.1);
 }
 
+// Estilos globais
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// Estilos específicos para componentes Material
+.mat-mdc-card {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.mat-mdc-toolbar {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+// Transição suave para toggle de tema
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+// Inputs
+.mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+
+  .mat-mdc-input-element {
+    color: var(--text-color);
+    background-color: var(--input-bg);
+  }
+
+  .mat-mdc-form-field-hint {
+    color: var(--secondary-text-color);
+  }
+
+  .mat-form-field-label {
+    color: var(--secondary-text-color);
+  }
+}
+
+// No modo escuro
+.dark-theme {
+  .mat-mdc-form-field {
+    .mat-mdc-input-element {
+      color: var(--text-color);
+      background-color: var(--input-bg);
+    }
+
+    .mdc-line-ripple::before {
+      border-bottom-color: rgba(255, 255, 255, 0.42);
+    }
+
+    &.mat-focused .mdc-line-ripple::after {
+      border-bottom-color: var(--primary-color);
+    }
+  }
+}
+
+// Botões
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-flat-button {
+  border-radius: 4px;
+
+  &.mat-primary {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  &.mat-accent {
+    background-color: var(--accent-color);
+  }
+}
+
+.dark-theme {
+  .mat-mdc-outlined-button:not(.mat-primary) {
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.87);
+  }
+}
+
+// Select
+.mat-mdc-select {
+  .mat-mdc-select-value {
+    color: var(--text-color);
+  }
+
+  .mat-mdc-select-arrow {
+    color: var(--secondary-text-color);
+  }
+}
+
+.dark-theme {
+  .mat-mdc-select-panel {
+    background: var(--card-bg-color);
+
+    .mat-mdc-option {
+      color: var(--text-color);
+
+      &:hover:not(.mat-option-disabled) {
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      &.mat-selected:not(.mat-option-disabled) {
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+// Checkbox e Radio
+.mat-mdc-checkbox, .mat-mdc-radio-button {
+  .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+  .mdc-radio__native-control:enabled:checked ~ .mdc-radio__background {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+  }
+}
+
+// Sliders
+.mat-mdc-slider {
+  .mdc-slider__track--active {
+    background-color: var(--primary-color);
+  }
+
+  .mdc-slider__thumb {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+  }
+}
+
+// Cards
+.mat-mdc-card {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+
+  .mat-mdc-card-subtitle {
+    color: var(--secondary-text-color);
+  }
+}
+
+// Dialogs
+.mat-mdc-dialog-container {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+
+  .mat-mdc-dialog-title {
+    color: var(--text-color);
+  }
+
+  .mat-mdc-dialog-content {
+    color: var(--text-color);
+  }
+}
+
+// Tables
+.mat-mdc-table {
+  background-color: var(--card-bg-color);
+
+  .mat-mdc-header-cell {
+    color: var(--secondary-text-color);
+    font-weight: 500;
+  }
+
+  .mat-mdc-cell {
+    color: var(--text-color);
+  }
+
+  .mat-mdc-row:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.dark-theme {
+  .mat-mdc-table {
+    .mat-mdc-row:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+  }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

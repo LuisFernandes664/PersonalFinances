@@ -11,7 +11,6 @@ import { DashboardComponent } from './components/core/home/dashboard/dashboard.c
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { AuthInterceptor } from './interceptors/auth-interceptor.service';
 import { PreferencesService } from './services/preferences.service';
 import { RouterModule } from '@angular/router';
@@ -19,7 +18,7 @@ import { NotificationsComponent } from './components/shared/notifications/notifi
 import { LoaderComponent } from './components/shared/loader/loader.component';
 import { AuthModule } from './components/public/auth/auth.module';
 import { PublicModule } from './components/public/public.module';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/dialog';
 import { HomeModule } from './components/core/home.module';
 import { DashboardModule } from './components/core/home/dashboard/dashboard.module';
 
@@ -69,7 +68,7 @@ export function loadPreferencesFactory(preferencesService: PreferencesService) {
     MatDialogModule
   ],
   providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    // { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
     {
       provide: HTTP_INTERCEPTORS,

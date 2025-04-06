@@ -1,0 +1,114 @@
+<div class="tags-container">
+  <div class="page-header">
+    <h1>Gerenciar Tags</h1>
+    <button mat-raised-button color="primary" (click)="showAddTagForm()" *ngIf="!showCreateForm">
+      <mat-icon>add</mat-icon> Nova Tag
+    </button>
+  </div>
+
+  <!-- Formulário de Busca -->
+  <div class="search-container" [formGroup]="searchForm">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar Tags</mat-label>
+      <input matInput formControlName="searchTerm" placeholder="Digite para filtrar...">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <!-- Formulário de Criação de Tag -->
+  <div class="create-tag-form" *ngIf="showCreateForm">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Nova Tag</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="createTagForm" (ngSubmit)="createTag()">
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome da Tag</mat-label>
+              <input matInput formControlName="name" maxlength="30" placeholder="Ex: Lazer, Essencial, Investimento">
+              <mat-hint align="end">{{ createTagForm.get('name')?.value?.length || 0 }}/30</mat-hint>
+              <mat-error *ngIf="createTagForm.get('name')?.hasError('required')">
+                Nome é obrigatório
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-label class="color-label">Cor da Tag</mat-label>
+            <div class="color-picker">
+              <div class="selected-color" [style.background-color]="createTagForm.get('color')?.value">
+                <span [style.color]="getTextColor(createTagForm.get('color')?.value)">
+                  {{ createTagForm.get('name')?.value || 'Tag' }}
+                </span>
+              </div>
+
+              <div class="color-options">
+                <div *ngFor="let color of predefinedColors"
+                     class="color-option"
+                     [style.background-color]="color"
+                     [class.selected]="color === createTagForm.get('color')?.value"
+                     (click)="createTagForm.patchValue({color: color})">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" mat-button (click)="cancelAddTag()">Cancelar</button>
+            <button type="submit" mat-raised-button color="primary" [disabled]="createTagForm.invalid || isLoading">
+              <mat-icon>add</mat-icon> Criar Tag
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <!-- Lista de Tags -->
+  <div class="tags-list" *ngIf="!isLoading">
+    <div class="empty-state" *ngIf="tags.length === 0">
+      <mat-icon>label</mat-icon>
+      <h3>Nenhuma tag encontrada</h3>
+      <p>Crie tags para melhor organizar e categorizar suas transações financeiras.</p>
+      <button mat-raised-button color="primary" (click)="showAddTagForm()">Criar Tag</button>
+    </div>
+
+    <div class="tags-grid" *ngIf="tags.length > 0">
+      <mat-card class="tag-card" *ngFor="let tag of tags | tagFilter: searchForm.get('searchTerm')?.value"
+                (click)="openTagDetails(tag)">
+        <div class="tag-header" [style.background-color]="tag.color">
+          <span class="tag-name" [style.color]="getTextColor(tag.color)">{{ tag.name }}</span>
+        </div>
+
+        <div class="tag-content">
+          <div class="tag-stats">
+            <div class="stat">
+              <span class="label">Transações</span>
+              <span class="value">12</span> <!-- Este valor deve vir do serviço -->
+            </div>
+            <div class="stat">
+              <span class="label">Total</span>
+              <span class="value">€1,250.00</span> <!-- Este valor deve vir do serviço -->
+            </div>
+          </div>
+        </div>
+
+        <mat-card-actions align="end">
+          <button mat-icon-button matTooltip="Editar" (click)="$event.stopPropagation(); openTagDetails(tag)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Excluir" color="warn" (click)="$event.stopPropagation(); deleteTag(tag.stampEntity)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

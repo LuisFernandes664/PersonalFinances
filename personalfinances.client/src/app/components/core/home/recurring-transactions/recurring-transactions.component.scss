@@ -1,0 +1,163 @@
+.recurring-transactions-container {
+  padding: 24px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.8rem;
+  }
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  mat-form-field {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  mat-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    &.inactive {
+      opacity: 0.6;
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+  }
+}
+
+.income-avatar, .expense-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  mat-icon {
+    color: white;
+  }
+}
+
+.income-avatar {
+  background-color: #4caf50;
+}
+
+.expense-avatar {
+  background-color: #f44336;
+}
+
+.income-amount {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.expense-amount {
+  color: #f44336;
+  font-weight: 500;
+}
+
+.recurrence-badge {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 12px;
+}
+
+.transaction-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+
+  .label {
+    font-size: 0.85rem;
+    color: var(--text-color);
+    opacity: 0.7;
+  }
+
+  .value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+}
+
+// Empty state
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  background-color: var(--card-bg-color);
+  border-radius: 12px;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: var(--primary-color);
+    opacity: 0.5;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    color: var(--text-color);
+  }
+
+  p {
+    margin: 0 0 24px;
+    color: var(--text-color);
+    opacity: 0.7;
+    max-width: 400px;
+  }
+}

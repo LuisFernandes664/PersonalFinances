@@ -1,0 +1,64 @@
+<div class="calendar-container">
+  <div class="page-header">
+    <h1>Calendário Financeiro</h1>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="createEvent()">
+        <mat-icon>add</mat-icon> Novo Evento
+      </button>
+      <button mat-raised-button color="accent" (click)="syncFinancialEvents()">
+        <mat-icon>sync</mat-icon> Sincronizar Eventos Financeiros
+      </button>
+    </div>
+  </div>
+
+  <!-- View Toggle -->
+  <div class="view-toggle">
+    <mat-button-toggle-group [value]="selectedViewType">
+      <mat-button-toggle value="month" (click)="changeView('month')">
+        <mat-icon>calendar_view_month</mat-icon> Mês
+      </mat-button-toggle>
+      <mat-button-toggle value="week" (click)="changeView('week')">
+        <mat-icon>calendar_view_week</mat-icon> Semana
+      </mat-button-toggle>
+      <mat-button-toggle value="day" (click)="changeView('day')">
+        <mat-icon>calendar_view_day</mat-icon> Dia
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <!-- Calendar -->
+  <div class="calendar-wrapper">
+    <div class="loading-overlay" *ngIf="isLoading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+  </div>
+
+  <!-- Legend -->
+  <div class="calendar-legend">
+    <h3>Legenda</h3>
+    <div class="legend-items">
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #2196f3;"></div>
+        <span>Eventos Pessoais</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #4caf50;"></div>
+        <span>Pagamentos Recorrentes</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #f44336;"></div>
+        <span>Vencimentos de Contas</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #ff9800;"></div>
+        <span>Metas Financeiras</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #9c27b0;"></div>
+        <span>Orçamentos</span>
+      </div>
+    </div>
+  </div>
+</div>

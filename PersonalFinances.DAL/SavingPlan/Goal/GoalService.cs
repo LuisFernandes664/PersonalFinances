@@ -2,6 +2,7 @@
 using PersonalFinances.BLL.Interfaces.SavingPlan.Goal;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace PersonalFinances.BLL.Services.SavingPlan.Goal
 {
@@ -15,7 +16,7 @@ namespace PersonalFinances.BLL.Services.SavingPlan.Goal
 
         public async Task<IEnumerable<GoalModel>> GetGoalsByUserAsync(string userId) => await _repository.GetGoalsByUserAsync(userId);
 
-        //public async Task<IEnumerable<SelectListItem>> GetCategoriesAsync() => await _repository.GetCategoriesAsync();
+        public async Task<IEnumerable<SelectListItem>> GetCategoriesAsync() => await _repository.GetCategoriesAsync();
         
         public async Task<GoalModel> GetGoalByIdAsync(string goalId) => await _repository.GetGoalByIdAsync(goalId);
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace PersonalFinances.DAL.SavingPlan.Goal
 {
@@ -43,23 +44,23 @@ namespace PersonalFinances.DAL.SavingPlan.Goal
             return goal;
         }
 
-        //public async Task<IEnumerable<SelectListItem>> GetCategoriesAsync()
-        //{
-        //    var categories = new List<SelectListItem>();
-        //    var query = "SELECT stamp_entity, name FROM Categories WHERE type = 'goal'";
+        public async Task<IEnumerable<SelectListItem>> GetCategoriesAsync()
+        {
+            var categories = new List<SelectListItem>();
+            var query = "SELECT stamp_entity, name FROM Categories WHERE type = 'goal'";
 
-        //    var result = await SQLHelper.ExecuteQueryAsync(query);
-        //    foreach (DataRow row in result.Rows)
-        //    {
-        //        categories.Add(new SelectListItem
-        //        {
-        //            Text = row["name"].ToString(),
-        //            Value = row["stamp_entity"].ToString()
-        //        });
-        //    }
+            var result = await SQLHelper.ExecuteQueryAsync(query);
+            foreach (DataRow row in result.Rows)
+            {
+                categories.Add(new SelectListItem
+                {
+                    Text = row["name"].ToString(),
+                    Value = row["stamp_entity"].ToString()
+                });
+            }
 
-        //    return categories;
-        //}
+            return categories;
+        }
 
         public async Task<decimal> GetAccumulatedAmountByGoal(string goalId)
         {
@@ -76,16 +77,23 @@ namespace PersonalFinances.DAL.SavingPlan.Goal
 
         public async Task<decimal> GetGoalProgressPercentage(string goalId)
         {
-            var query = @"SELECT (COALESCE(SUM(amount), 0) / g.valor_alvo) * 100
-                  FROM Transactions t
-                  JOIN Goals g ON t.reference_id = g.stamp_entity
-                  WHERE t.reference_id = @goalId 
-                  AND t.reference_type = 'Goal'";
+            var query = @"
+                SELECT 
+                    CASE 
+                        WHEN g.valor_alvo = 0 THEN 0 
+                        ELSE 0 -- No transactions linked yet
+                    END AS progress
+                FROM Goals g
+                WHERE g.stamp_entity = @goalId";
 
-            var parameters = new List<SqlParameter> { new("@goalId", goalId) };
+            var parameters = new List<SqlParameter> { new SqlParameter("@goalId", goalId) };
             var result = await SQLHelper.ExecuteScalarAsync(query, parameters);
 
-            return result != null ? Convert.ToDecimal(result) : 0;
+            if (result != null && result["progress"] != DBNull.Value)
+            {
+                return Convert.ToDecimal(result["progress"]);
+            }
+            return 0;
         }
 
         public async Task CreateGoalAsync(GoalModel goal)

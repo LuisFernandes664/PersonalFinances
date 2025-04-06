@@ -1,0 +1,111 @@
+<div class="receipts-container">
+  <div class="page-header">
+    <h1>Gestão de Recibos</h1>
+
+    <!-- Botão de Upload -->
+    <div class="upload-container">
+      <input type="file" #receiptUpload (change)="uploadReceipt($event)" hidden>
+      <button mat-raised-button color="primary" (click)="triggerFileUpload()">
+        <mat-icon>upload</mat-icon> Enviar Recibo
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros e Busca -->
+  <div class="filters-container">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar Recibos</mat-label>
+      <input matInput (input)="onSearch($event)" [value]="searchTerm" placeholder="Buscar por comerciante...">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <mat-button-toggle-group multiple>
+        <mat-button-toggle [checked]="filterOptions.processedOnly"
+                          (change)="filterOptions.processedOnly = !filterOptions.processedOnly; applyFilters()">
+          Processados
+        </mat-button-toggle>
+        <mat-button-toggle [checked]="filterOptions.linkedOnly"
+                          (change)="filterOptions.linkedOnly = !filterOptions.linkedOnly; applyFilters()">
+          Vinculados
+        </mat-button-toggle>
+        <mat-button-toggle [checked]="filterOptions.unlinkedOnly"
+                          (change)="filterOptions.unlinkedOnly = !filterOptions.unlinkedOnly; applyFilters()">
+          Não Vinculados
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Ordenar por</mat-label>
+        <mat-select [(value)]="filterOptions.sortBy" (selectionChange)="applyFilters()">
+          <mat-option value="date">Data (Recente)</mat-option>
+          <mat-option value="merchant">Comerciante (A-Z)</mat-option>
+          <mat-option value="amount">Valor (Maior)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-button color="warn" (click)="resetFilters()">
+        <mat-icon>clear</mat-icon> Limpar Filtros
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <!-- Lista de Recibos -->
+  <div class="receipts-list" *ngIf="!isLoading">
+    <div class="empty-state" *ngIf="filteredReceipts.length === 0">
+      <mat-icon>receipt</mat-icon>
+      <h3>Nenhum recibo encontrado</h3>
+      <p>Envie um recibo para começar a rastrear suas despesas com comprovantes digitais.</p>
+      <button mat-raised-button color="primary" (click)="triggerFileInputClick()">
+        Enviar Recibo
+      </button>
+    </div>
+
+    <div class="receipt-grid" *ngIf="filteredReceipts.length > 0">
+      <mat-card class="receipt-card" *ngFor="let receipt of filteredReceipts" [class.linked]="receipt.transactionId">
+        <mat-card-header>
+          <div mat-card-avatar class="receipt-avatar">
+            <mat-icon>{{ receipt.transactionId ? 'receipt_long' : 'receipt' }}</mat-icon>
+          </div>
+          <mat-card-title>{{ receipt.merchantName }}</mat-card-title>
+          <mat-card-subtitle>{{ formatDate(receipt.receiptDate) }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="amount">{{ formatCurrency(receipt.totalAmount) }}</div>
+
+          <div class="status-badges">
+            <span class="status-badge"
+                 [ngClass]="receipt.isProcessed ? 'processed' : 'unprocessed'">
+              {{ receipt.isProcessed ? 'Processado' : 'Não Processado' }}
+            </span>
+
+            <span class="status-badge"
+                 [ngClass]="receipt.transactionId ? 'linked' : 'unlinked'">
+              {{ receipt.transactionId ? 'Vinculado' : 'Não Vinculado' }}
+            </span>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="openReceiptDetail(receipt)">
+            <mat-icon>visibility</mat-icon> Visualizar
+          </button>
+
+          <button mat-button *ngIf="!receipt.isProcessed" (click)="processReceipt(receipt.stampEntity)">
+            <mat-icon>settings</mat-icon> Processar
+          </button>
+
+          <button mat-button *ngIf="!receipt.transactionId" (click)="openLinkTransactionDialog(receipt)">
+            <mat-icon>link</mat-icon> Vincular
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

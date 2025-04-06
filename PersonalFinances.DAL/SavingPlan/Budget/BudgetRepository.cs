@@ -1,4 +1,5 @@
-﻿using PersonalFinances.BLL.Entities.Models.SavingPlan;
+﻿using PersonalFinances.BLL.Entities.Models.Analytics;
+using PersonalFinances.BLL.Entities.Models.SavingPlan;
 using PersonalFinances.BLL.Interfaces.SavingPlan.Budget;
 using PersonalFinances.DAL.Helpers;
 using System;
@@ -147,5 +148,50 @@ namespace PersonalFinances.DAL.SavingPlan.Budget
             await SQLHelper.ExecuteNonQueryAsync(query, parameters);
         }
 
+        public async Task<List<HistoricalSpendingModel>> GetHistoricalSpendingByCategory(string categoryId, int months)
+        {
+            var result = new List<HistoricalSpendingModel>();
+            var query = @"
+                SELECT 
+                    DATEFROMPARTS(YEAR(t.date), MONTH(t.date), 1) as MonthDate,
+                    SUM(ABS(t.amount)) as TotalAmount
+                FROM Transactions t
+                JOIN Budgets b ON t.reference_id = b.stamp_entity AND t.reference_type = 'Budget'
+                WHERE b.category_id = @categoryId
+                    AND t.date >= DATEADD(month, -@months, GETDATE())
+                GROUP BY YEAR(t.date), MONTH(t.date)
+                ORDER BY YEAR(t.date), MONTH(t.date)";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@categoryId", categoryId),
+                new SqlParameter("@months", months)
+            };
+
+            var dataTable = await SQLHelper.ExecuteQueryAsync(query, parameters);
+
+            foreach (System.Data.DataRow row in dataTable.Rows)
+            {
+                result.Add(new PersonalFinances.BLL.Entities.Models.Analytics.HistoricalSpendingModel
+                {
+                    Month = Convert.ToDateTime(row["MonthDate"]),
+                    Amount = Convert.ToDecimal(row["TotalAmount"])
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<string> GetCategoryNameById(string categoryId)
+        {
+            var query = "SELECT name FROM Categories WHERE stamp_entity = @categoryId";
+            var parameters = new List<SqlParameter> { new SqlParameter("@categoryId", categoryId) };
+
+            var result = await SQLHelper.ExecuteScalarAsync(query, parameters);
+
+            return result != null && result.Table.Columns.Contains("name")
+                ? result["name"].ToString()
+                : "Categoria desconhecida";
+        }
     }
 }

@@ -1,0 +1,110 @@
+<div class="tag-details-dialog">
+  <div class="dialog-header" [style.background-color]="data.tag.color">
+    <h2 mat-dialog-title [style.color]="getTextColor(data.tag.color)">
+      {{ isEditMode ? 'Editar Tag' : data.tag.name }}
+    </h2>
+    <button mat-icon-button class="close-button" (click)="onClose()" [style.color]="getTextColor(data.tag.color)">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <!-- Formulário de edição -->
+    <div class="edit-form" *ngIf="isEditMode">
+      <form [formGroup]="tagForm">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome da Tag</mat-label>
+            <input matInput formControlName="name" maxlength="30">
+            <mat-hint align="end">{{ tagForm.get('name')?.value?.length || 0 }}/30</mat-hint>
+            <mat-error *ngIf="tagForm.get('name')?.hasError('required')">
+              Nome é obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-label class="color-label">Cor da Tag</mat-label>
+          <div class="color-picker">
+            <div class="selected-color" [style.background-color]="tagForm.get('color')?.value">
+              <span [style.color]="getTextColor(tagForm.get('color')?.value)">
+                {{ tagForm.get('name')?.value || data.tag.name }}
+              </span>
+            </div>
+
+            <div class="color-options">
+              <div *ngFor="let color of predefinedColors"
+                   class="color-option"
+                   [style.background-color]="color"
+                   [class.selected]="color === tagForm.get('color')?.value"
+                   (click)="tagForm.patchValue({color: color})">
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Visualização dos detalhes -->
+    <div class="tag-info" *ngIf="!isEditMode">
+      <div class="tag-preview" [style.background-color]="data.tag.color">
+        <span [style.color]="getTextColor(data.tag.color)">{{ data.tag.name }}</span>
+      </div>
+
+      <div class="tag-stats">
+        <div class="stat-item">
+          <div class="stat-label">Transações</div>
+          <div class="stat-value">{{ taggedTransactions.length }}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Total</div>
+          <div class="stat-value">{{ getFormattedTotal() }}</div>
+        </div>
+      </div>
+
+      <!-- Lista de transações com esta tag -->
+      <div class="tagged-transactions">
+        <h3>Transações com esta Tag</h3>
+
+        <div class="loading-spinner" *ngIf="isLoading">
+          <mat-spinner diameter="30"></mat-spinner>
+        </div>
+
+        <div class="empty-state" *ngIf="!isLoading && taggedTransactions.length === 0">
+          <mat-icon>info</mat-icon>
+          <p>Nenhuma transação encontrada com esta tag.</p>
+        </div>
+
+        <mat-list *ngIf="!isLoading && taggedTransactions.length > 0">
+          <mat-list-item *ngFor="let transaction of taggedTransactions">
+            <div matListItemTitle>{{ transaction.description }}</div>
+            <div matListItemLine>{{ formatDate(transaction.date) }}</div>
+            <div matListItemMeta [ngClass]="{'income': transaction.amount > 0, 'expense': transaction.amount < 0}">
+              {{ formatAmount(transaction.amount) }}
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-button color="warn" (click)="deleteTag()" *ngIf="!isEditMode">
+      <mat-icon>delete</mat-icon> Excluir
+    </button>
+
+    <span class="spacer"></span>
+
+    <button mat-button (click)="toggleEditMode()" *ngIf="!isEditMode">
+      <mat-icon>edit</mat-icon> Editar
+    </button>
+
+    <button mat-button (click)="toggleEditMode()" *ngIf="isEditMode">
+      Cancelar
+    </button>
+
+    <button mat-raised-button color="primary" (click)="saveChanges()" *ngIf="isEditMode" [disabled]="tagForm.invalid">
+      Salvar
+    </button>
+  </div>
+</div>

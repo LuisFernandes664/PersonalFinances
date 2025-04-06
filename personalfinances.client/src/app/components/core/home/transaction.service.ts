@@ -104,4 +104,9 @@ export class TransactionService {
     return this.totals$;
   }
 
+  getTransactionByStampEntityAsync(transactionId: string): Observable<Transaction> {
+    return this.http.get<APIResponse<Transaction>>(`${this.transactionsApiUrl}/stamp/${transactionId}`)
+      .pipe(map(response => response.data));
+  }
+
 }

@@ -1,0 +1,698 @@
+// Estilos personalizados para componentes Angular Material
+@import 'variables';
+
+
+// === Estilos globais para Material ===
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-flat-button {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  border-radius: 12px;
+  transition: all $transition-fast;
+}
+
+// === Inputs, Form Fields e Seletores ===
+.mat-mdc-form-field {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 16px;
+
+  .mat-mdc-text-field-wrapper {
+    background-color: var(--mat-input-bg);
+    border-radius: 12px;
+  }
+
+  .mat-mdc-form-field-flex {
+    border-radius: 12px;
+  }
+
+  .mdc-text-field--outlined .mdc-notched-outline__leading,
+  .mdc-text-field--outlined .mdc-notched-outline__trailing,
+  .mdc-text-field--outlined .mdc-notched-outline__notch {
+    border-color: var(--mat-border);
+  }
+
+  .mat-mdc-form-field-label {
+    color: var(--mat-text-secondary);
+  }
+
+  .mat-mdc-select-value,
+  .mat-mdc-select-arrow,
+  .mat-mdc-input-element {
+    color: var(--mat-text);
+  }
+
+  .mat-mdc-form-field-hint,
+  .mat-mdc-form-field-error {
+    font-size: 12px;
+  }
+
+  &.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__notch {
+      border-color: var(--mat-primary) !important;
+    }
+
+    .mat-mdc-form-field-label {
+      color: var(--mat-primary);
+    }
+  }
+}
+
+// === Cards ===
+.mat-mdc-card {
+  background-color: var(--mat-card-bg);
+  color: var(--mat-text);
+  border-radius: 12px;
+  box-shadow: var(--mat-shadow);
+  transition: box-shadow $transition-fast, transform $transition-fast;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .mat-mdc-card-title {
+    color: var(--mat-text);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+  }
+
+  .mat-mdc-card-subtitle {
+    color: var(--mat-text-secondary);
+  }
+
+  .mat-mdc-card-content {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--mat-text);
+  }
+
+  .mat-mdc-card-actions {
+    padding: 8px 16px;
+    border-top: 1px solid var(--mat-border);
+  }
+}
+
+// === Tabs ===
+.mat-mdc-tab-group {
+  font-family: 'Poppins', sans-serif;
+
+  .mat-mdc-tab-header {
+    border-bottom: 1px solid var(--mat-border);
+  }
+
+  .mat-mdc-tab {
+    min-width: 100px;
+    padding: 0 24px;
+    color: var(--mat-text-secondary);
+    opacity: 0.7;
+
+    &.mdc-tab--active {
+      color: var(--mat-primary);
+      opacity: 1;
+    }
+
+    .mdc-tab-indicator__content--underline {
+      border-color: var(--mat-primary);
+    }
+
+    .mdc-tab__text-label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  .mat-mdc-tab-body-content {
+    padding: 20px 0;
+  }
+}
+
+// === Tables ===
+.mat-mdc-table {
+  background-color: var(--mat-card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+
+  .mat-mdc-header-row {
+    background-color: var(--mat-primary-light);
+    min-height: 56px;
+  }
+
+  .mat-mdc-header-cell {
+    color: var(--mat-text);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0 16px;
+  }
+
+  .mat-mdc-cell {
+    color: var(--mat-text);
+    font-size: 14px;
+    padding: 0 16px;
+  }
+
+  .mat-mdc-row {
+    min-height: 48px;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: var(--mat-hover);
+    }
+
+    &:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  .dark & .mat-mdc-row:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+}
+
+// === Buttons ===
+.mat-mdc-button.mat-primary,
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary {
+  background-color: var(--mat-primary);
+  color: white;
+
+  &:hover {
+    background-color: darken(#695CFE, 5%);
+    box-shadow: 0 4px 8px rgba(105, 92, 254, 0.3);
+  }
+
+  .dark & {
+    &:hover {
+      background-color: lighten(#4a90e2, 5%);
+      box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+    }
+  }
+}
+
+// Outlined buttons
+.mat-mdc-outlined-button {
+  border-color: var(--mat-border);
+  color: var(--mat-text);
+
+  &.mat-primary {
+    color: var(--mat-primary);
+    border-color: var(--mat-primary);
+  }
+
+  &:hover {
+    background-color: var(--mat-hover);
+  }
+}
+
+// Stroked buttons
+.mat-mdc-stroked-button {
+  border: 1px solid var(--mat-border);
+
+  &.mat-primary {
+    border-color: var(--mat-primary);
+    color: var(--mat-primary);
+  }
+}
+
+// === Dialogs ===
+.mat-mdc-dialog-container {
+  .mdc-dialog__surface {
+    background-color: var(--mat-card-bg);
+    color: var(--mat-text);
+    border-radius: 12px;
+    box-shadow: var(--mat-shadow);
+    padding: 24px;
+  }
+
+  .mat-mdc-dialog-title {
+    color: var(--mat-text);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  .mat-mdc-dialog-content {
+    color: var(--mat-text);
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 20px 24px;
+    max-height: 65vh;
+  }
+
+  .mat-mdc-dialog-actions {
+    padding: 8px 24px 24px;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+.cdk-overlay-dark-backdrop {
+  background: rgba(0, 0, 0, 0.32);
+}
+
+// === Menu ===
+.mat-mdc-menu-panel {
+  background-color: var(--mat-card-bg);
+  border-radius: 12px;
+  min-width: 112px;
+  max-width: 280px;
+  overflow: auto;
+  box-shadow: var(--mat-shadow);
+
+  .mat-mdc-menu-content {
+    padding: 8px 0;
+  }
+
+  .mat-mdc-menu-item {
+    color: var(--mat-text);
+    font-size: 14px;
+    height: 48px;
+    padding: 0 16px;
+
+    &:hover:not([disabled]) {
+      background-color: var(--mat-hover);
+    }
+
+    &.mat-mdc-menu-item-highlighted {
+      background-color: var(--mat-hover);
+    }
+
+    .mat-icon {
+      color: var(--mat-text-secondary);
+      margin-right: 16px;
+    }
+  }
+}
+
+// === Snackbar/Toast ===
+.mat-mdc-snack-bar-container {
+  &.success-snackbar {
+    --mdc-snackbar-container-color: #43a047;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+
+  &.error-snackbar {
+    --mdc-snackbar-container-color: #d32f2f;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+
+  &.info-snackbar {
+    --mdc-snackbar-container-color: #1976d2;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+
+  &.warning-snackbar {
+    --mdc-snackbar-container-color: #ffa000;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+
+  .mat-simple-snackbar {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+  }
+}
+
+// === Checkboxes & Radio Buttons ===
+.mat-mdc-checkbox,
+.mat-mdc-radio-button {
+  font-family: 'Poppins', sans-serif;
+
+  .mdc-checkbox__background,
+  .mdc-radio__background {
+    border-color: var(--mat-text-secondary);
+  }
+
+  .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background,
+  .mdc-radio__native-control:enabled:checked ~ .mdc-radio__background {
+    border-color: var(--mat-primary);
+    background-color: var(--mat-primary);
+  }
+
+  .mdc-checkbox__native-control:enabled:checked:focus ~ .mdc-checkbox__background,
+  .mdc-radio__native-control:enabled:checked:focus ~ .mdc-radio__background {
+    border-color: var(--mat-primary);
+  }
+}
+
+// === Sliders ===
+.mat-mdc-slider {
+  --mdc-slider-handle-color: var(--mat-primary);
+  --mdc-slider-focus-handle-color: var(--mat-primary);
+  --mdc-slider-active-track-color: var(--mat-primary);
+  --mdc-slider-inactive-track-color: var(--mat-border);
+  --mat-mdc-slider-ripple-color: var(--mat-ripple);
+
+  width: 100%;
+}
+
+// === Datepicker ===
+.mat-datepicker-content {
+  background-color: var(--mat-card-bg);
+  color: var(--mat-text);
+  border-radius: 12px;
+  box-shadow: var(--mat-shadow);
+
+  .mat-calendar {
+    background-color: var(--mat-card-bg);
+
+    .mat-calendar-body-cell-content {
+      color: var(--mat-text);
+    }
+
+    .mat-calendar-body-selected {
+      background-color: var(--mat-primary);
+      color: white;
+    }
+
+    .mat-calendar-arrow {
+      border-top-color: var(--mat-text);
+    }
+
+    .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+      border-color: var(--mat-primary);
+    }
+
+    .mat-calendar-table-header,
+    .mat-calendar-body-label {
+      color: var(--mat-text-secondary);
+    }
+  }
+}
+
+// === Progress indicators ===
+.mat-mdc-progress-spinner,
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: var(--mat-primary);
+  --mdc-linear-progress-track-color: rgba(0, 0, 0, 0.1);
+
+  .dark & {
+    --mdc-linear-progress-track-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+// === Divider ===
+.mat-divider {
+  border-top-color: var(--mat-border);
+}
+
+// === Tooltips ===
+.mat-mdc-tooltip {
+  background-color: rgba(97, 97, 97, 0.9);
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+// === Chips ===
+.mat-mdc-chip {
+  background-color: var(--mat-primary-light);
+  color: var(--mat-text);
+  font-family: 'Poppins', sans-serif;
+
+  &.mat-primary {
+    background-color: var(--mat-primary);
+    color: white;
+  }
+
+  &.mat-accent {
+    background-color: var(--mat-accent);
+    color: white;
+  }
+
+  &.mat-warn {
+    background-color: var(--mat-warn);
+    color: white;
+  }
+}
+
+// === Paginator ===
+.mat-mdc-paginator {
+  background-color: transparent;
+  color: var(--mat-text);
+  font-family: 'Poppins', sans-serif;
+
+  .mat-mdc-paginator-container {
+    min-height: 56px;
+  }
+
+  .mat-mdc-paginator-range-label,
+  .mat-mdc-paginator-page-size-label {
+    color: var(--mat-text-secondary);
+  }
+
+  .mat-mdc-icon-button {
+    color: var(--mat-text);
+
+    &[disabled] {
+      color: var(--mat-text-secondary);
+      opacity: 0.5;
+    }
+  }
+}
+
+// === Expansão (Accordion) ===
+.mat-accordion {
+  .mat-expansion-panel {
+    background-color: var(--mat-card-bg);
+    color: var(--mat-text);
+    box-shadow: var(--mat-shadow);
+    border-radius: $border-radius !important;
+    margin-bottom: 12px;
+
+    &:not(.mat-expanded) {
+      border-bottom-left-radius: $border-radius !important;
+      border-bottom-right-radius: $border-radius !important;
+    }
+
+    .mat-expansion-panel-header {
+      font-family: 'Poppins', sans-serif;
+      min-height: 54px;
+      padding: 0 24px;
+
+      .mat-expansion-panel-header-title {
+        color: var(--mat-text);
+        font-weight: 500;
+      }
+
+      .mat-expansion-panel-header-description {
+        color: var(--mat-text-secondary);
+      }
+
+      &.mat-expanded {
+        background-color: var(--mat-primary-light);
+
+        .dark & {
+          background-color: rgba(74, 144, 226, 0.1);
+        }
+      }
+    }
+
+    .mat-expansion-panel-body {
+      padding: 0 24px 16px;
+    }
+  }
+}
+
+// === Stepper ===
+.mat-stepper-horizontal, .mat-stepper-vertical {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--mat-card-bg);
+  border-radius: 12px;
+
+  .mat-step-header {
+    &.mat-active {
+      .mat-step-label {
+        color: var(--mat-primary);
+      }
+
+      .mat-step-icon {
+        background-color: var(--mat-primary);
+      }
+    }
+
+    .mat-step-icon {
+      background-color: var(--mat-text-secondary);
+    }
+
+    .mat-step-label {
+      color: var(--mat-text);
+    }
+  }
+
+  .mat-stepper-horizontal-line {
+    border-top-color: var(--mat-border);
+  }
+}
+
+// === Botões de Ícone ===
+.mat-mdc-icon-button {
+  color: var(--mat-text);
+
+  &:hover {
+    background-color: var(--mat-hover);
+  }
+}
+
+// === Badge ===
+.mat-badge-content {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+
+  &.mat-badge-accent {
+    background-color: var(--mat-accent);
+    color: white;
+  }
+
+  &.mat-badge-warn {
+    background-color: var(--mat-warn);
+    color: white;
+  }
+}
+
+// === Autocomplete ===
+.mat-mdc-autocomplete-panel {
+  background-color: var(--mat-card-bg);
+  color: var(--mat-text);
+  border-radius: 0 0 $border-radius $border-radius;
+
+  .mat-mdc-option {
+    font-family: 'Poppins', sans-serif;
+    color: var(--mat-text);
+
+    &:hover:not(.mat-mdc-option-disabled) {
+      background-color: var(--mat-hover);
+    }
+
+    &.mat-mdc-option-active {
+      background-color: var(--mat-hover);
+    }
+  }
+}
+
+// Estilos específicos para aplicação de finanças
+.transaction-table {
+  .income-amount {
+    color: var(--success);
+    font-weight: 500;
+  }
+
+  .expense-amount {
+    color: var(--error);
+    font-weight: 500;
+  }
+
+  .transaction-date {
+    color: var(--mat-text-secondary);
+    font-size: 12px;
+  }
+
+  .transaction-status {
+    &.confirmed {
+      color: var(--success);
+    }
+
+    &.pending {
+      color: var(--warning);
+    }
+
+    &.cancelled {
+      color: var(--error);
+    }
+  }
+}
+
+// Ajustes para formulários da aplicação
+.transaction-form, .budget-form, .goal-form {
+  .form-section {
+    margin-bottom: 24px;
+
+    &-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      color: var(--mat-text);
+      border-bottom: 1px solid var(--mat-border);
+      padding-bottom: 8px;
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .form-field {
+      flex: 1;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 24px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Estilos para dashboard de finanças
+.finance-card {
+  padding: 24px;
+  height: 100%;
+
+  .card-value {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 12px 0;
+  }
+
+  .card-title {
+    font-size: 16px;
+    color: var(--mat-text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .card-footer {
+    margin-top: 12px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+
+    .trend-icon {
+      margin-right: 8px;
+    }
+
+    .positive-trend {
+      color: var(--success);
+    }
+
+    .negative-trend {
+      color: var(--error);
+    }
+  }
+}

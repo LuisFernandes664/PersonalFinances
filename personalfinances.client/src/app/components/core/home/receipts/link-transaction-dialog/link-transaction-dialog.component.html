@@ -1,0 +1,62 @@
+<div class="link-transaction-dialog">
+  <h2 mat-dialog-title>Vincular Recibo a uma Transação</h2>
+
+  <div mat-dialog-content>
+    <div class="receipt-info">
+      <div class="receipt-card">
+        <h3>Informações do Recibo</h3>
+        <div class="receipt-details">
+          <div class="info-row">
+            <span class="label">Comerciante:</span>
+            <span class="value">{{ data.receipt.merchantName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Valor:</span>
+            <span class="value">{{ formatAmount(data.receipt.totalAmount) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Data:</span>
+            <span class="value">{{ formatDate(data.receipt.receiptDate?.toString()) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar Transações</mat-label>
+        <input matInput [formControl]="searchControl" placeholder="Digite para buscar por descrição ou destinatário...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="transactions-list">
+      <div class="loading-spinner" *ngIf="isLoading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <div class="empty-state" *ngIf="!isLoading && filteredTransactions.length === 0">
+        <mat-icon>info</mat-icon>
+        <p>Nenhuma transação encontrada que corresponda ao valor e à data do recibo.</p>
+        <p>Tente buscar por descrição ou destinatário.</p>
+      </div>
+
+      <mat-list *ngIf="!isLoading && filteredTransactions.length > 0">
+        <mat-list-item *ngFor="let transaction of filteredTransactions"
+                      [class.selected]="selectedTransaction?.stampEntity === transaction.stampEntity"
+                      (click)="selectTransaction(transaction)">
+          <div matListItemTitle>{{ transaction.description }}</div>
+          <div matListItemLine>{{ formatDate(transaction.date) }} | {{ transaction.paymentMethod }}</div>
+          <div matListItemMeta>{{ formatAmount(transaction.amount) }}</div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" [disabled]="!selectedTransaction" (click)="onLink()">
+      Vincular Transação
+    </button>
+  </div>
+</div>

@@ -1,4 +1,5 @@
-﻿using PersonalFinances.BLL.Entities.Models.SavingPlan;
+﻿using PersonalFinances.BLL.Entities.Models.Analytics;
+using PersonalFinances.BLL.Entities.Models.SavingPlan;
 
 namespace PersonalFinances.BLL.Interfaces.SavingPlan.Budget
 {
@@ -14,6 +15,11 @@ namespace PersonalFinances.BLL.Interfaces.SavingPlan.Budget
         Task AddBudgetHistoryAsync(string budgetId, string transactionId, decimal valorGasto);
 
         Task UpdateBudgetSpentAmount(string budgetId);
+
+        Task<BudgetAnalyticsModel> GetBudgetAnalyticsAsync(string budgetId);
+        Task<IEnumerable<BudgetCategoryAnalyticsModel>> GetCategoryAnalyticsAsync(string userId);
+        Task<BudgetForecastModel> GetBudgetForecastAsync(string budgetId, int monthsAhead);
+
 
     }
 }

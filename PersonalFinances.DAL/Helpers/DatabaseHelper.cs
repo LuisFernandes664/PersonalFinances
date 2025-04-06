@@ -38,6 +38,14 @@ namespace PersonalFinances.DAL.Helpers
                     }
 
                     await PopulateCategoriesAsync(dbContext.Connection, dbContext.Transaction);
+
+                    // Adicionar coluna default_currency na tabela Users
+                    await AddColumnIfNotExistsAsync(dbContext.Connection, "Users", "default_currency", "NVARCHAR(10) DEFAULT 'EUR'", dbContext.Transaction);
+                    // Adicionar colunas de moeda na tabela Transactions
+                    await AddColumnIfNotExistsAsync(dbContext.Connection, "Transactions", "currency", "NVARCHAR(10) DEFAULT 'EUR'", dbContext.Transaction);
+                    await AddColumnIfNotExistsAsync(dbContext.Connection, "Transactions", "original_amount", "DECIMAL(18,2) NULL", dbContext.Transaction);
+                    await AddColumnIfNotExistsAsync(dbContext.Connection, "Transactions", "exchange_rate", "DECIMAL(18,8) DEFAULT 1", dbContext.Transaction);
+
                     dbContext.Commit();
                     successLogs.ForEach(logMessage => Logger.WriteLog(logMessage, LogStatus.Success));
                 }
@@ -190,7 +198,153 @@ namespace PersonalFinances.DAL.Helpers
                         { "valor_atual", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
                         { "data_registro", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
                     }
+                },
+                // Tabela de Transações Recorrentes
+                new TableDefinition
+                {
+                    TableName = "RecurringTransactions",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "user_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "description", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "amount", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = false } },
+                        { "category", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "payment_method", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "recipient", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "recurrence_type", new ColumnDefinition { DataType = "INT", IsPrimaryKey = false, IsNullable = false } },
+                        { "recurrence_interval", new ColumnDefinition { DataType = "INT", IsPrimaryKey = false, IsNullable = false } },
+                        { "start_date", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = false } },
+                        { "end_date", new ColumnDefinition { DataType = "DATE", IsPrimaryKey = false, IsNullable = true } },
+                        { "is_active", new ColumnDefinition { DataType = "BIT", IsPrimaryKey = false, IsNullable = false, DefaultValue = "1" } },
+                        { "last_processed_date", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = true } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                        { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
+                },
+        
+                // Tabela de Tags
+                new TableDefinition
+                {
+                    TableName = "Tags",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "user_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "name", new ColumnDefinition { DataType = "NVARCHAR(100)", IsPrimaryKey = false, IsNullable = false } },
+                        { "color", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, DefaultValue = "'#3498db'" } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                        { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
+                },
+        
+                // Tabela de Relação entre Transações e Tags
+                new TableDefinition
+                {
+                    TableName = "TransactionTags",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "transaction_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, IsForeignKey = true, ForeignKeyTable = "Transactions", ForeignKeyColumn = "stamp_entity" } },
+                        { "tag_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, IsForeignKey = true, ForeignKeyTable = "Tags", ForeignKeyColumn = "stamp_entity" } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
+                },
+        
+                // Tabela de Saúde Financeira
+                new TableDefinition
+                {
+                    TableName = "FinancialHealth",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "user_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "overall_score", new ColumnDefinition { DataType = "INT", IsPrimaryKey = false, IsNullable = false } },
+                        { "savings_score", new ColumnDefinition { DataType = "INT", IsPrimaryKey = false, IsNullable = false } },
+                        { "spending_score", new ColumnDefinition { DataType = "INT", IsPrimaryKey = false, IsNullable = false } },
+                        { "debt_score", new ColumnDefinition { DataType = "INT", IsPrimaryKey = false, IsNullable = false } },
+                        { "budget_adherence_score", new ColumnDefinition { DataType = "INT", IsPrimaryKey = false, IsNullable = false } },
+                        { "calculated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                        { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
+                },
+        
+                // Tabela de Recomendações de Saúde Financeira
+                new TableDefinition
+                {
+                    TableName = "FinancialHealthRecommendations",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "health_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, IsForeignKey = true, ForeignKeyTable = "FinancialHealth", ForeignKeyColumn = "stamp_entity" } },
+                        { "category", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "description", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "action_item", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "priority_level", new ColumnDefinition { DataType = "INT", IsPrimaryKey = false, IsNullable = false } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
+                },
+        
+                // Tabela de Recibos
+                new TableDefinition
+                {
+                    TableName = "Receipts",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "user_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "image_path", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "merchant_name", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = true } },
+                        { "total_amount", new ColumnDefinition { DataType = "DECIMAL(18,2)", IsPrimaryKey = false, IsNullable = true } },
+                        { "receipt_date", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = true } },
+                        { "transaction_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = true } },
+                        { "is_processed", new ColumnDefinition { DataType = "BIT", IsPrimaryKey = false, IsNullable = false, DefaultValue = "0" } },
+                        { "processing_status", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, DefaultValue = "'Pending'" } },
+                        { "error_message", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = true } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                        { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
+                },
+        
+                // Tabela de Conversões de Moeda
+                new TableDefinition
+                {
+                    TableName = "CurrencyConversions",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "from_currency", new ColumnDefinition { DataType = "NVARCHAR(10)", IsPrimaryKey = false, IsNullable = false } },
+                        { "to_currency", new ColumnDefinition { DataType = "NVARCHAR(10)", IsPrimaryKey = false, IsNullable = false } },
+                        { "rate", new ColumnDefinition { DataType = "DECIMAL(18,8)", IsPrimaryKey = false, IsNullable = false } },
+                        { "fetched_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
+                },
+        
+                // Tabela de Eventos do Calendário
+                new TableDefinition
+                {
+                    TableName = "CalendarEvents",
+                    Columns = new Dictionary<string, ColumnDefinition>
+                    {
+                        { "stamp_entity", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = true, IsNullable = false, DefaultValue = "NEWID()" } },
+                        { "user_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "title", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = false } },
+                        { "description", new ColumnDefinition { DataType = "NVARCHAR(MAX)", IsPrimaryKey = false, IsNullable = true } },
+                        { "start_date", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false } },
+                        { "end_date", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = true } },
+                        { "is_all_day", new ColumnDefinition { DataType = "BIT", IsPrimaryKey = false, IsNullable = false, DefaultValue = "1" } },
+                        { "event_type", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false } },
+                        { "related_entity_id", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = true } },
+                        { "color", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, DefaultValue = "'#3498db'" } },
+                        { "is_recurring", new ColumnDefinition { DataType = "BIT", IsPrimaryKey = false, IsNullable = false, DefaultValue = "0" } },
+                        { "recurrence_rule", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = true } },
+                        { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                        { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                    }
                 }
+
             };
         }
 

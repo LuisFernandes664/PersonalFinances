@@ -1,0 +1,107 @@
+<div class="receipt-detail-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>Detalhes do Recibo</h2>
+    <button mat-icon-button class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <div class="dialog-content">
+      <!-- Preview do Recibo -->
+      <div class="receipt-preview">
+        <img [src]="getImagePath(data.receipt.imagePath)" alt="Recibo">
+      </div>
+
+      <!-- Informações do Recibo -->
+      <div class="receipt-info">
+        <div class="receipt-section">
+          <h3>Informações Gerais</h3>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Comerciante</span>
+              <span class="value">{{ data.receipt.merchantName }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Valor Total</span>
+              <span class="value">{{ formatAmount(data.receipt.totalAmount) }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Data</span>
+              <span class="value">{{ formatDate(data.receipt.receiptDate) }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Status de Processamento</span>
+              <span class="value status" [ngClass]="data.receipt.isProcessed ? 'processed' : 'pending'">
+                {{ data.receipt.isProcessed ? 'Processado' : 'Não Processado' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações da Transação Vinculada -->
+        <div class="receipt-section" *ngIf="data.receipt.transactionId">
+          <h3>Transação Vinculada</h3>
+
+          <div class="loading-spinner" *ngIf="isLoading">
+            <mat-spinner diameter="30"></mat-spinner>
+          </div>
+
+          <div class="transaction-details" *ngIf="linkedTransaction && !isLoading">
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">Descrição</span>
+                <span class="value">{{ linkedTransaction.description }}</span>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Valor</span>
+                <span class="value" [ngClass]="{'income': linkedTransaction.amount > 0, 'expense': linkedTransaction.amount < 0}">
+                  {{ formatAmount(linkedTransaction.amount) }}
+                </span>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Categoria</span>
+                <span class="value">{{ linkedTransaction.category }}</span>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Método de Pagamento</span>
+                <span class="value">{{ linkedTransaction.paymentMethod }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="no-transaction" *ngIf="!linkedTransaction && !isLoading">
+            <p>Não foi possível carregar os detalhes da transação vinculada.</p>
+          </div>
+        </div>
+
+        <!-- Mensagem para Recibos Não Vinculados -->
+        <div class="receipt-section" *ngIf="!data.receipt.transactionId">
+          <div class="unlinked-message">
+            <mat-icon>link_off</mat-icon>
+            <p>Este recibo não está vinculado a nenhuma transação.</p>
+          </div>
+        </div>
+
+        <!-- Status de Erro (se houver) -->
+        <div class="receipt-section error-section" *ngIf="data.receipt.errorMessage">
+          <h3>Mensagem de Erro</h3>
+          <div class="error-message">
+            {{ data.receipt.errorMessage }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Fechar</button>
+  </div>
+</div>

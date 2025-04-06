@@ -1,0 +1,200 @@
+.calendar-container {
+  padding: 24px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.8rem;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+    }
+  }
+}
+
+.view-toggle {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: flex-end;
+
+  mat-button-toggle-group {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.calendar-wrapper {
+  position: relative;
+  background-color: var(--card-bg-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 24px;
+
+  // Estilos personalizados para o FullCalendar
+  ::ng-deep {
+    .fc {
+      font-family: 'Poppins', sans-serif;
+
+      .fc-toolbar-title {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--text-color);
+      }
+
+      .fc-button-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+
+        &:hover, &:active, &:focus {
+          background-color: darken(#2196f3, 10%);
+          border-color: darken(#2196f3, 10%);
+        }
+      }
+
+      .fc-day-today {
+        background-color: rgba(33, 150, 243, 0.1);
+      }
+
+      .fc-daygrid-day-number,
+      .fc-col-header-cell-cushion {
+        color: var(--text-color);
+      }
+
+      .fc-event {
+        cursor: pointer;
+        border-radius: 4px;
+        padding: 2px 4px;
+        font-size: 0.85rem;
+
+        &:hover {
+          transform: scale(1.02);
+        }
+      }
+
+      .fc-day {
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.03);
+        }
+      }
+
+      .fc-theme-standard .fc-scrollgrid {
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .fc-theme-standard td, .fc-theme-standard th {
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    border-radius: 12px;
+  }
+}
+
+.calendar-legend {
+  background-color: var(--card-bg-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 16px;
+    color: var(--text-color);
+    font-weight: 500;
+  }
+
+  .legend-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-right: 16px;
+      margin-bottom: 8px;
+
+      .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        margin-right: 8px;
+      }
+
+      span {
+        font-size: 14px;
+        color: var(--text-color);
+      }
+    }
+  }
+}
+
+// Temas escuros
+:host-context(.dark) {
+  .calendar-wrapper .loading-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  ::ng-deep {
+    .fc {
+      .fc-day {
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.05);
+        }
+      }
+
+      .fc-theme-standard .fc-scrollgrid,
+      .fc-theme-standard td,
+      .fc-theme-standard th {
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+}
+
+// Media queries
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .view-toggle {
+    justify-content: flex-start;
+  }
+
+  .legend-items {
+    flex-direction: column;
+  }
+}

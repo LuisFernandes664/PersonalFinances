@@ -33,6 +33,11 @@ namespace PersonalFinances.BLL.Entities.Models.SavingPlan
         /// </summary>
         public DateTime DataFim { get; set; }
 
+        public decimal PercentUsed { get; set; }
+        public decimal ProjectedEndAmount { get; set; }
+        public bool IsOverBudget { get; set; }
+        public decimal AverageDailySpending { get; set; }
+
         public BudgetModel() : base() { 
             UserId = string.Empty;
             CategoryId = string.Empty;

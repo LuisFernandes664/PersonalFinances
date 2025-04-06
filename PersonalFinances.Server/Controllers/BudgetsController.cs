@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PersonalFinances.BLL.Entities;
+using PersonalFinances.BLL.Entities.Models.Analytics;
 using PersonalFinances.BLL.Entities.Models.SavingPlan;
 using PersonalFinances.BLL.Entities.Models.Transaction;
 using PersonalFinances.BLL.Interfaces.SavingPlan.Budget;
@@ -58,6 +59,20 @@ namespace PersonalFinances.Server.Controllers
         {
             await _service.DeleteBudgetAsync(stampEntity);
             return Ok(APIResponse<object>.SuccessResponse(null, "Orçamento removido com sucesso."));
+        }
+
+        [HttpGet("{budgetId}/analytics")]
+        public async Task<IActionResult> GetBudgetAnalytics(string budgetId)
+        {
+            var analytics = await _service.GetBudgetAnalyticsAsync(budgetId);
+            return Ok(APIResponse<BudgetAnalyticsModel>.SuccessResponse(analytics, "Análise de orçamento obtida com sucesso."));
+        }
+
+        [HttpGet("{budgetId}/forecast")]
+        public async Task<IActionResult> GetBudgetForecast(string budgetId, [FromQuery] int months = 3)
+        {
+            var forecast = await _service.GetBudgetForecastAsync(budgetId, months);
+            return Ok(APIResponse<BudgetForecastModel>.SuccessResponse(forecast, "Previsão de orçamento calculada com sucesso."));
         }
     }
 

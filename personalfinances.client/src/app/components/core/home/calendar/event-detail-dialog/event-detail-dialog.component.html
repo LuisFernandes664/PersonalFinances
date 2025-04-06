@@ -1,0 +1,182 @@
+<div class="event-detail-dialog">
+  <div class="dialog-header" [style.background-color]="data.event.color">
+    <h2 mat-dialog-title [style.color]="'white'">
+      {{ isEditMode ? 'Editar Evento' : data.event.title }}
+    </h2>
+    <button mat-icon-button class="close-button" (click)="onCancel()" [style.color]="'white'">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <form [formGroup]="eventForm">
+      <!-- Modo de Edição -->
+      <div class="edit-form" *ngIf="isEditMode">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="title" placeholder="Digite o título do evento" required>
+            <mat-error *ngIf="eventForm.get('title')?.hasError('required')">
+              Título é obrigatório
+            </mat-error>
+            <mat-error *ngIf="eventForm.get('title')?.hasError('maxlength')">
+              Título muito longo (máximo 100 caracteres)
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput formControlName="description" placeholder="Descrição (opcional)" rows="3"></textarea>
+            <mat-error *ngIf="eventForm.get('description')?.hasError('maxlength')">
+              Descrição muito longa (máximo 500 caracteres)
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row date-container">
+          <mat-slide-toggle formControlName="isAllDay" color="primary">Dia Inteiro</mat-slide-toggle>
+        </div>
+
+        <div class="form-row date-pickers">
+          <mat-form-field appearance="outline">
+            <mat-label>Data Inicial</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate" required>
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+            <mat-error *ngIf="eventForm.get('startDate')?.hasError('required')">
+              Data inicial é obrigatória
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" *ngIf="!eventForm.get('isAllDay')?.value">
+            <mat-label>Data Final</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de Evento</mat-label>
+            <mat-select formControlName="eventType" required>
+              <mat-option *ngFor="let type of eventTypes" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <div class="color-preview" [style.background-color]="eventForm.get('color')?.value">
+            <span class="color-label">{{ getEventTypeLabel(eventForm.get('eventType')?.value) }}</span>
+          </div>
+        </div>
+
+        <div class="form-row recurrence-container">
+          <mat-slide-toggle formControlName="isRecurring" color="primary">Evento Recorrente</mat-slide-toggle>
+        </div>
+
+        <div class="form-row" *ngIf="eventForm.get('isRecurring')?.value">
+          <mat-form-field appearance="outline">
+            <mat-label>Regra de Recorrência</mat-label>
+            <mat-select formControlName="recurrenceRule">
+              <mat-option value="FREQ=DAILY">Diariamente</mat-option>
+              <mat-option value="FREQ=WEEKLY">Semanalmente</mat-option>
+              <mat-option value="FREQ=MONTHLY">Mensalmente</mat-option>
+              <mat-option value="FREQ=YEARLY">Anualmente</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Modo de Visualização -->
+      <div class="view-details" *ngIf="!isEditMode">
+        <div class="event-preview" [style.background-color]="data.event.color">
+          <span class="event-type-badge">{{ getEventTypeLabel(data.event.eventType) }}</span>
+        </div>
+
+        <div class="detail-section">
+          <h3>Detalhes do Evento</h3>
+
+          <div class="detail-row">
+            <span class="label">Descrição</span>
+            <span class="value">{{ data.event.description || 'Sem descrição' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Data</span>
+            <span class="value">
+              {{ formatDate(data.event.startDate) }}
+              <ng-container *ngIf="!data.event.isAllDay && data.event.endDate">
+                até {{ formatDate(data.event.endDate) }}
+              </ng-container>
+            </span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Dia Inteiro</span>
+            <span class="value">{{ data.event.isAllDay ? 'Sim' : 'Não' }}</span>
+          </div>
+
+          <div class="detail-row" *ngIf="data.event.isRecurring">
+            <span class="label">Recorrência</span>
+            <span class="value">
+              {{ data.event.recurrenceRule === 'FREQ=DAILY' ? 'Diariamente' :
+                 data.event.recurrenceRule === 'FREQ=WEEKLY' ? 'Semanalmente' :
+                 data.event.recurrenceRule === 'FREQ=MONTHLY' ? 'Mensalmente' :
+                 data.event.recurrenceRule === 'FREQ=YEARLY' ? 'Anualmente' : 'Personalizado' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Se houver um ID de entidade relacionada, mostrar informações adicionais -->
+        <div class="related-section" *ngIf="data.event.relatedEntityId">
+          <h3>Entidade Relacionada</h3>
+
+          <div class="related-info">
+            <mat-icon>{{
+              data.event.eventType === 'recurring_payment' ? 'payments' :
+              data.event.eventType === 'bill_due' ? 'receipt' :
+              data.event.eventType === 'goal' ? 'flag' :
+              data.event.eventType === 'budget' ? 'account_balance_wallet' : 'link'
+            }}</mat-icon>
+            <span>
+              {{
+                data.event.eventType === 'recurring_payment' ? 'Transação Recorrente' :
+                data.event.eventType === 'bill_due' ? 'Vencimento de Conta' :
+                data.event.eventType === 'goal' ? 'Meta Financeira' :
+                data.event.eventType === 'budget' ? 'Orçamento' : 'Entidade Vinculada'
+              }}
+            </span>
+            <button mat-button color="primary">
+              <mat-icon>open_in_new</mat-icon> Ver Detalhes
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-button color="warn" (click)="onDelete()" *ngIf="!isEditMode">
+      <mat-icon>delete</mat-icon> Excluir
+    </button>
+
+    <span class="spacer"></span>
+
+    <button mat-button (click)="toggleEditMode()" *ngIf="!isEditMode">
+      <mat-icon>edit</mat-icon> Editar
+    </button>
+
+    <button mat-button (click)="toggleEditMode()" *ngIf="isEditMode">
+      Cancelar
+    </button>
+
+    <button mat-raised-button color="primary" (click)="onSave()" *ngIf="isEditMode" [disabled]="eventForm.invalid">
+      Salvar
+    </button>
+  </div>
+</div>

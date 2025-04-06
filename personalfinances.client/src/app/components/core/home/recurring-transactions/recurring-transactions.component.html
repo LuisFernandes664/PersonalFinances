@@ -1,0 +1,107 @@
+<div class="recurring-transactions-container">
+  <div class="page-header">
+    <h1>Transações Recorrentes</h1>
+    <button mat-raised-button color="primary" (click)="openNewTransactionDialog()">
+      <mat-icon>add</mat-icon> Nova Transação Recorrente
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-container" [formGroup]="filterForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="active">
+        <mat-option [value]="true">Ativas</mat-option>
+        <mat-option [value]="false">Inativas</mat-option>
+        <mat-option [value]="null">Todas</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Categoria</mat-label>
+      <mat-select formControlName="category">
+        <mat-option value="all">Todas</mat-option>
+        <mat-option value="income">Receitas</mat-option>
+        <mat-option value="expense">Despesas</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Recorrência</mat-label>
+      <mat-select formControlName="recurrenceType">
+        <mat-option value="all">Todas</mat-option>
+        <mat-option *ngFor="let type of recurrenceTypes" [value]="type.value">
+          {{ type.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <!-- Lista de Transações Recorrentes -->
+  <div class="transactions-list" *ngIf="!isLoading">
+    <div class="empty-state" *ngIf="filteredTransactions.length === 0">
+      <mat-icon>event_repeat</mat-icon>
+      <h3>Nenhuma transação recorrente encontrada</h3>
+      <p>Crie uma nova transação recorrente para automatizar seus registros financeiros.</p>
+      <button mat-raised-button color="primary" (click)="openNewTransactionDialog()">Criar Transação Recorrente</button>
+    </div>
+
+    <mat-card *ngFor="let transaction of filteredTransactions" [class.inactive]="!transaction.isActive">
+      <mat-card-header>
+        <div mat-card-avatar [ngClass]="{'income-avatar': transaction.category === 'income', 'expense-avatar': transaction.category === 'expense'}">
+          <mat-icon>{{ transaction.category === 'income' ? 'trending_up' : 'trending_down' }}</mat-icon>
+        </div>
+        <mat-card-title>{{ transaction.description }}</mat-card-title>
+        <mat-card-subtitle>
+          <span [ngClass]="{'income-amount': transaction.category === 'income', 'expense-amount': transaction.category === 'expense'}">
+            {{ transaction.amount | currency:'EUR':'symbol':'1.2-2' }}
+          </span>
+          <span class="recurrence-badge">{{ getRecurrenceTypeLabel(transaction.recurrenceType) }}</span>
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="transaction-details">
+          <div class="detail-item">
+            <span class="label">Método de Pagamento:</span>
+            <span class="value">{{ transaction.paymentMethod }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Destinatário:</span>
+            <span class="value">{{ transaction.recipient }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Início:</span>
+            <span class="value">{{ getFormattedDate(transaction.startDate) }}</span>
+          </div>
+          <div class="detail-item" *ngIf="transaction.endDate">
+            <span class="label">Fim:</span>
+            <span class="value">{{ getFormattedDate(transaction.endDate) }}</span>
+          </div>
+          <div class="detail-item" *ngIf="transaction.lastProcessedDate">
+            <span class="label">Último Processamento:</span>
+            <span class="value">{{ getFormattedDate(transaction.lastProcessedDate) }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button (click)="openEditDialog(transaction)">
+          <mat-icon>edit</mat-icon> Editar
+        </button>
+        <button mat-button (click)="toggleTransactionStatus(transaction)">
+          <mat-icon>{{ transaction.isActive ? 'pause' : 'play_arrow' }}</mat-icon>
+          {{ transaction.isActive ? 'Desativar' : 'Ativar' }}
+        </button>
+        <button mat-button color="warn" (click)="deleteRecurringTransaction(transaction.stampEntity)">
+          <mat-icon>delete</mat-icon> Excluir
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
