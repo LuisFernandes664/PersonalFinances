@@ -4,13 +4,15 @@
 @import 'mixins';
 @import 'themes';
 @import 'global';
+@import 'dark-mode-enhancements';
 
 // Aplica o tema padrão (claro) ao :root
 :root {
   @include theme-styles($light-theme);
+  background-color: var(--body-color);
+  color: var(--text-color);
   --card-bg-color: var(--card-bg);
   --card-shadow-color: rgba(0, 0, 0, 0.05);
-  --body-color: $body-color;
 }
 
 // Estilos para o modo escuro

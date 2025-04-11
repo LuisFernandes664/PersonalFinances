@@ -1,113 +1,119 @@
-<h2 mat-dialog-title>
-  {{ isEditing ? 'Editar Transação Recorrente' : 'Nova Transação Recorrente' }}
-</h2>
 
-<form [formGroup]="recurringTransactionForm" (ngSubmit)="onSubmit()">
-  <div mat-dialog-content>
-    <div class="form-row">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Descrição</mat-label>
-        <input matInput formControlName="description" placeholder="Ex: Netflix, Salário, Aluguel" required>
-        <mat-error *ngIf="recurringTransactionForm.get('description')?.hasError('required')">
-          Descrição é obrigatória
-        </mat-error>
-      </mat-form-field>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <h2 mat-dialog-title>
+        {{ isEditing ? 'Editar Transação Recorrente' : 'Nova Transação Recorrente' }}
+      </h2>
+      <button class="close-button" (click)="onCancel()">✖</button>
     </div>
 
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Valor</mat-label>
-        <input matInput type="number" formControlName="amount" placeholder="0.00" min="0.01" step="0.01" required>
-        <span matPrefix>€&nbsp;</span>
-        <mat-error *ngIf="recurringTransactionForm.get('amount')?.hasError('required')">
-          Valor é obrigatório
-        </mat-error>
-        <mat-error *ngIf="recurringTransactionForm.get('amount')?.hasError('min')">
-          Valor deve ser maior que zero
-        </mat-error>
-      </mat-form-field>
+    <form [formGroup]="recurringTransactionForm" (ngSubmit)="onSubmit()">
+      <div mat-dialog-content class="dialog-content">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descrição</mat-label>
+            <input matInput formControlName="description" placeholder="Ex: Netflix, Salário, Aluguel" required>
+            <mat-error *ngIf="recurringTransactionForm.get('description')?.hasError('required')">
+              Descrição é obrigatória
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Categoria</mat-label>
-        <mat-select formControlName="category" required>
-          <mat-option value="income">Receita</mat-option>
-          <mat-option value="expense">Despesa</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Valor</mat-label>
+            <input matInput type="number" formControlName="amount" placeholder="0.00" min="0.01" step="0.01" required>
+            <span matPrefix style="padding-left: 10px;">€&nbsp;</span>
+            <mat-error *ngIf="recurringTransactionForm.get('amount')?.hasError('required')">
+              Valor é obrigatório
+            </mat-error>
+            <mat-error *ngIf="recurringTransactionForm.get('amount')?.hasError('min')">
+              Valor deve ser maior que zero
+            </mat-error>
+          </mat-form-field>
 
-    <div class="form-row">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Método de Pagamento</mat-label>
-        <mat-select formControlName="paymentMethod" required>
-          <mat-option *ngFor="let method of paymentMethods" [value]="method.value">
-            {{ method.text }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Categoria</mat-label>
+            <mat-select formControlName="category" required>
+              <mat-option value="income">Receita</mat-option>
+              <mat-option value="expense">Despesa</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-    <div class="form-row">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Destinatário</mat-label>
-        <input matInput formControlName="recipient" placeholder="Ex: Netflix, Empresa XYZ">
-      </mat-form-field>
-    </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Método de Pagamento</mat-label>
+            <mat-select formControlName="paymentMethod" required>
+              <mat-option *ngFor="let method of paymentMethods" [value]="method.value">
+                {{ method.text }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-    <div class="recurrence-section">
-      <h3>Configuração de Recorrência</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Destinatário</mat-label>
+            <input matInput formControlName="recipient" placeholder="Ex: Netflix, Empresa XYZ">
+          </mat-form-field>
+        </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline">
-          <mat-label>Tipo</mat-label>
-          <mat-select formControlName="recurrenceType" required>
-            <mat-option *ngFor="let type of recurrenceTypes" [value]="type.value">
-              {{ type.label }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div class="recurrence-section">
+          <h3>Configuração de Recorrência</h3>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Intervalo</mat-label>
-          <input matInput type="number" formControlName="recurrenceInterval" min="1" step="1" required>
-          <mat-error *ngIf="recurringTransactionForm.get('recurrenceInterval')?.hasError('min')">
-            Intervalo deve ser pelo menos 1
-          </mat-error>
-        </mat-form-field>
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo</mat-label>
+              <mat-select formControlName="recurrenceType" required>
+                <mat-option *ngFor="let type of recurrenceTypes" [value]="type.value">
+                  {{ type.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Intervalo</mat-label>
+              <input matInput type="number" formControlName="recurrenceInterval" min="1" step="1" required>
+              <mat-error *ngIf="recurringTransactionForm.get('recurrenceInterval')?.hasError('min')">
+                Intervalo deve ser pelo menos 1
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="recurrence-preview">
+            {{ getRecurrenceDescription() }}
+          </div>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Data de Início</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" required>
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Data de Término (opcional)</mat-label>
+            <input matInput [matDatepicker]="endDatePicker" formControlName="endDate">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-slide-toggle formControlName="isActive" color="primary">
+            Transação Ativa
+          </mat-slide-toggle>
+        </div>
       </div>
 
-      <div class="recurrence-preview">
-        {{ getRecurrenceDescription() }}
+      <div mat-dialog-actions class="dialog-footer">
+        <button type="button" mat-button (click)="onCancel()">Cancelar</button>
+        <button type="submit" mat-raised-button color="primary" [disabled]="recurringTransactionForm.invalid">
+          {{ isEditing ? 'Atualizar' : 'Criar' }}
+        </button>
       </div>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Data de Início</mat-label>
-        <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" required>
-        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #startDatePicker></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Data de Término (opcional)</mat-label>
-        <input matInput [matDatepicker]="endDatePicker" formControlName="endDate">
-        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #endDatePicker></mat-datepicker>
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-slide-toggle formControlName="isActive" color="primary">
-        Transação Ativa
-      </mat-slide-toggle>
-    </div>
+    </form>
   </div>
-
-  <div mat-dialog-actions>
-    <button type="button" mat-button (click)="onCancel()">Cancelar</button>
-    <button type="submit" mat-raised-button color="primary" [disabled]="recurringTransactionForm.invalid">
-      {{ isEditing ? 'Atualizar' : 'Criar' }}
-    </button>
-  </div>
-</form>

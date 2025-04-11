@@ -1,4 +1,10 @@
-<app-sidebar></app-sidebar>
-<div class="allContainer">
-  <router-outlet></router-outlet>
+<div class="container-layout">
+  <div class="sidebar-container">
+    <app-sidebar (sidebarToggled)="onSidebarToggle($event)"></app-sidebar>
+  </div>
+  <div class="allContainer" [class.sidebar-closed]="isSidebarClosed">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>

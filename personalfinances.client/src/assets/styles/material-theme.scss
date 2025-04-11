@@ -21,8 +21,19 @@
   margin-bottom: 16px;
 
   .mat-mdc-text-field-wrapper {
+    background-color: var(--card-bg-color) !important;
     background-color: var(--mat-input-bg);
     border-radius: 12px;
+  }
+
+  mat-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: var(--text-color);
+  }
+
+  input {
+    color: var(--mat-secondary) !important;
   }
 
   .mat-mdc-form-field-flex {
@@ -36,13 +47,13 @@
   }
 
   .mat-mdc-form-field-label {
-    color: var(--mat-text-secondary);
+    color: var(--text-color);
   }
 
   .mat-mdc-select-value,
   .mat-mdc-select-arrow,
   .mat-mdc-input-element {
-    color: var(--mat-text);
+    color: var(--text-color) !important;
   }
 
   .mat-mdc-form-field-hint,
@@ -50,17 +61,48 @@
     font-size: 12px;
   }
 
+  .mat-mdc-form-field-required-marker {
+    color: var(--text-color);
+  }
+
+  .mdc-icon-button {
+    color: var(--text-color);
+  }
+
   &.mat-focused {
-    .mdc-notched-outline__leading,
-    .mdc-notched-outline__trailing,
-    .mdc-notched-outline__notch {
-      border-color: var(--mat-primary) !important;
-    }
+
 
     .mat-mdc-form-field-label {
       color: var(--mat-primary);
     }
   }
+}
+
+.mat-select-panel {
+  background-color: var(--mat-card-bg);
+  border-radius: 12px;
+
+  .mat-option {
+    color: var(--mat-text);
+    font-family: 'Poppins', sans-serif;
+
+    &:hover:not(.mat-option-disabled) {
+      background-color: var(--mat-hover);
+    }
+
+    &.mat-selected:not(.mat-option-disabled) {
+      color: var(--mat-primary);
+    }
+  }
+}
+
+.mat-select-value-text {
+  color: var(--mat-text) !important;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mat-select-arrow {
+  color: var(--text-color) !important;
 }
 
 // === Cards ===
@@ -345,6 +387,84 @@
   }
 }
 
+// === Toggle Switches ===
+.mat-mdc-slide-toggle {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 16px;
+
+  .mdc-form-field {
+    color: var(--text-color) !important;
+    font-size: 14px;
+  }
+
+  .mdc-switch {
+    color: var(--text-color) !important;
+
+    .mdc-switch__track {
+      background-color: var(--mat-border) !important;
+      border-radius: 12px;
+    }
+
+    .mdc-switch__handle-track {
+      .mdc-switch__handle {
+        background-color: var(--card-bg-color) !important;
+      }
+    }
+
+    &.mdc-switch--selected {
+      .mdc-switch__track {
+        background-color: var(--mat-primary) !important;
+        opacity: 0.5;
+      }
+
+      .mdc-switch__handle {
+        background-color: var(--mat-primary) !important;
+      }
+    }
+  }
+
+  &:hover {
+    .mdc-switch:not(.mdc-switch--selected) {
+      .mdc-switch__track {
+        background-color: var(--mat-border) !important;
+        opacity: 0.8;
+      }
+    }
+  }
+
+  &.mat-mdc-slide-toggle-focused {
+    .mdc-switch {
+      .mdc-switch__track {
+        border-color: var(--mat-primary);
+      }
+    }
+  }
+
+  // Estado desabilitado
+  &.mat-mdc-slide-toggle-disabled {
+    opacity: 0.6;
+
+    .mdc-form-field {
+      color: var(--text-color) !important;
+      opacity: 0.6;
+    }
+
+    .mdc-switch__track {
+      background-color: var(--mat-border) !important;
+      opacity: 0.5;
+    }
+  }
+
+  .mat-mdc-slide-toggle-ripple {
+    color: var(--mat-primary);
+  }
+
+  .mdc-form-field-label {
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
 // === Sliders ===
 .mat-mdc-slider {
   --mdc-slider-handle-color: var(--mat-primary);
@@ -356,7 +476,7 @@
   width: 100%;
 }
 
-// === Datepicker ===
+// === Datepicker (melhorado) ===
 .mat-datepicker-content {
   background-color: var(--mat-card-bg);
   color: var(--mat-text);
@@ -368,6 +488,7 @@
 
     .mat-calendar-body-cell-content {
       color: var(--mat-text);
+      font-family: 'Poppins', sans-serif;
     }
 
     .mat-calendar-body-selected {
@@ -376,7 +497,7 @@
     }
 
     .mat-calendar-arrow {
-      border-top-color: var(--mat-text);
+      fill: var(--mat-text);
     }
 
     .mat-calendar-body-today:not(.mat-calendar-body-selected) {
@@ -385,8 +506,44 @@
 
     .mat-calendar-table-header,
     .mat-calendar-body-label {
-      color: var(--mat-text-secondary);
+      color: var(--mat-text-secondary) !important;
+      font-family: 'Poppins', sans-serif;
     }
+
+    .mat-calendar-table-header tr th {
+      color: var(--mat-text-secondary) !important;
+    }
+
+    // Ícones do calendário
+    .mat-calendar-previous-button,
+    .mat-calendar-next-button {
+      fill: var(--mat-text);
+    }
+
+    .mat-calendar-period-button {
+      color: var(--mat-text);
+      font-family: 'Poppins', sans-serif;
+    }
+  }
+
+  // Botões do datepicker
+  .mat-datepicker-actions {
+    padding: 8px;
+    border-top: 1px solid var(--mat-border);
+
+    .mat-button-wrapper {
+      color: var(--mat-primary);
+      font-family: 'Poppins', sans-serif;
+    }
+  }
+}
+
+// Ícone de calendário no input
+.mat-datepicker-toggle {
+  color: var(--text-color) !important;
+
+  &.mat-datepicker-toggle-active {
+    color: var(--mat-primary) !important;
   }
 }
 

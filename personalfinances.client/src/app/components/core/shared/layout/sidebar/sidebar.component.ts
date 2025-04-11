@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../public/auth/auth.service';
 import { ThemeService } from '../../../../../services/theme.service';
@@ -13,6 +13,8 @@ export class SidebarComponent {
   isSidebarClosed = true;
   isDarkMode = this.themeService.isDarkMode();
 
+  @Output() sidebarToggled = new EventEmitter<boolean>();
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -26,6 +28,7 @@ export class SidebarComponent {
 
   toggleSidebar(): void {
     this.isSidebarClosed = !this.isSidebarClosed;
+    this.sidebarToggled.emit(this.isSidebarClosed);
   }
 
   toggleDarkMode(): void {

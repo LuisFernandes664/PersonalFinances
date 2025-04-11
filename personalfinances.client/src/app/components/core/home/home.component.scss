@@ -151,3 +151,27 @@ td.altera-apaga{
 
 
 
+
+.allContainer {
+  flex: 1;
+  overflow-y: auto;
+  margin-left: 250px;
+  transition: margin-left 0.9s ease;
+}
+
+.allContainer.sidebar-closed {
+  margin-left: 88px;
+}
+
+
+/* Para telas pequenas */
+@media (max-width: 768px) {
+  .allContainer {
+    margin-left: 0;
+    padding: 8px;
+  }
+
+  .allContainer.sidebar-closed {
+    margin-left: 0;
+  }
+}
