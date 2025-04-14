@@ -152,7 +152,7 @@ namespace PersonalFinances.BLL.Services.Analytics
 
         public async Task SaveFinancialHealthAsync(FinancialHealthModel healthModel)
         {
-            // Salvar o modelo principal
+            // Guardar o modelo principal
             var query = @"
                 INSERT INTO FinancialHealth (
                     stamp_entity, user_id, overall_score, savings_score, spending_score,
@@ -178,7 +178,7 @@ namespace PersonalFinances.BLL.Services.Analytics
 
             await SQLHelper.ExecuteNonQueryAsync(query, parameters);
 
-            // Salvar as recomendações
+            // Guardar as recomendações
             foreach (var recommendation in healthModel.Recommendations)
             {
                 var recQuery = @"
@@ -268,7 +268,7 @@ namespace PersonalFinances.BLL.Services.Analytics
                     totalExpenses += amount;
 
                     // Categorizar como essencial ou discricionário (isso precisaria ser personalizado)
-                    if (transaction.Description.Contains("aluguel") ||
+                    if (transaction.Description.Contains("aluguel") || transaction.Description.Contains("aluguer") ||
                         transaction.Description.Contains("mercado") ||
                         transaction.Description.Contains("água") ||
                         transaction.Description.Contains("luz") ||
@@ -340,8 +340,8 @@ namespace PersonalFinances.BLL.Services.Analytics
                 recommendations.Add(new FinancialHealthRecommendation
                 {
                     Category = "Budget",
-                    Description = "Você está gastando além do seu orçamento em algumas categorias",
-                    ActionItem = "Revise seus orçamentos mensais e ajuste-os para valores mais realistas",
+                    Description = "Você está a gastar além do seu orçamento em algumas categorias",
+                    ActionItem = "Verifique seus orçamentos mensais e ajuste-os para valores mais realistas",
                     PriorityLevel = 2
                 });
             }

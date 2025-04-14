@@ -9,4 +9,7 @@ export interface Receipt {
   isProcessed: boolean;
   processingStatus: string;
   errorMessage?: string;
+  imageBase64?: string;
+  contentType?: string;
+
 }

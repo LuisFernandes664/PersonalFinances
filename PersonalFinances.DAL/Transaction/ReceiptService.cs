@@ -35,38 +35,56 @@ namespace PersonalFinances.DAL.Transaction
 
         public async Task<ReceiptModel> UploadReceiptAsync(string userId, IFormFile receiptImage)
         {
-            // Gerar nome de arquivo único
+            if (receiptImage == null || receiptImage.Length == 0)
+                throw new ArgumentException("Arquivo não fornecido");
+
+            // Gera nome e caminho do arquivo
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(receiptImage.FileName)}";
             var filePath = Path.Combine(_uploadFolder, fileName);
 
-            // Salvar arquivo físico
+            // Garante que a pasta existe
+            if (!Directory.Exists(_uploadFolder))
+                Directory.CreateDirectory(_uploadFolder);
+
+            // Salva fisicamente
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await receiptImage.CopyToAsync(fileStream);
             }
 
-            // Criar registro no banco de dados
+            // Cria recibo
             var receipt = new ReceiptModel
             {
                 StampEntity = Guid.NewGuid().ToString(),
                 UserId = userId,
-                ImagePath = fileName,
-                MerchantName = string.Empty, // Será preenchido após processamento OCR
+                MerchantName = "Pendente",
+                TotalAmount = 0,
                 ReceiptDate = DateTime.Now,
                 IsProcessed = false,
                 ProcessingStatus = "Pending",
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                ImagePath = fileName
             };
 
-            // Salvar no banco de dados
+            // Codifica imagem em Base64
+            using (var memoryStream = new MemoryStream())
+            {
+                await receiptImage.CopyToAsync(memoryStream);
+                byte[] fileBytes = memoryStream.ToArray();
+                receipt.ImageBase64 = Convert.ToBase64String(fileBytes);
+                receipt.ContentType = receiptImage.ContentType;
+            }
+
             var query = @"
                 INSERT INTO Receipts (
                     stamp_entity, user_id, image_path, merchant_name, total_amount, receipt_date,
-                    transaction_id, is_processed, processing_status, error_message, created_at, updated_at
+                    transaction_id, is_processed, processing_status, error_message,
+                    image_base64, content_type, created_at, updated_at
                 ) VALUES (
                     @stampEntity, @userId, @imagePath, @merchantName, @totalAmount, @receiptDate,
-                    @transactionId, @isProcessed, @processingStatus, @errorMessage, @createdAt, @updatedAt
+                    @transactionId, @isProcessed, @processingStatus, @errorMessage,
+                    @imageBase64, @contentType, @createdAt, @updatedAt
                 )";
 
             var parameters = new List<SqlParameter>
@@ -81,6 +99,8 @@ namespace PersonalFinances.DAL.Transaction
                 new SqlParameter("@isProcessed", receipt.IsProcessed),
                 new SqlParameter("@processingStatus", receipt.ProcessingStatus),
                 new SqlParameter("@errorMessage", receipt.ErrorMessage ?? (object)DBNull.Value),
+                new SqlParameter("@imageBase64", receipt.ImageBase64 ?? (object)DBNull.Value),
+                new SqlParameter("@contentType", receipt.ContentType ?? (object)DBNull.Value),
                 new SqlParameter("@createdAt", receipt.CreatedAt),
                 new SqlParameter("@updatedAt", receipt.UpdatedAt)
             };
@@ -89,6 +109,7 @@ namespace PersonalFinances.DAL.Transaction
 
             return receipt;
         }
+
 
         public async Task<ReceiptModel> GetReceiptByIdAsync(string receiptId)
         {

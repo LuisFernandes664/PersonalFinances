@@ -10,8 +10,9 @@
   <div class="search-container" [formGroup]="searchForm">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Buscar Tags</mat-label>
-      <input matInput formControlName="searchTerm" placeholder="Digite para filtrar...">
+      <input matInput formControlName="searchTerm" placeholder="Digite para filtrar por nome...">
       <mat-icon matSuffix>search</mat-icon>
+      <mat-hint>Filtre suas tags para encontrar rapidamente</mat-hint>
     </mat-form-field>
   </div>
 
@@ -19,7 +20,7 @@
   <div class="create-tag-form" *ngIf="showCreateForm">
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Nova Tag</mat-card-title>
+        <mat-card-title>Criar Nova Tag</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
@@ -28,6 +29,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Nome da Tag</mat-label>
               <input matInput formControlName="name" maxlength="30" placeholder="Ex: Lazer, Essencial, Investimento">
+              <mat-icon matPrefix>label</mat-icon>
               <mat-hint align="end">{{ createTagForm.get('name')?.value?.length || 0 }}/30</mat-hint>
               <mat-error *ngIf="createTagForm.get('name')?.hasError('required')">
                 Nome é obrigatório
@@ -36,11 +38,11 @@
           </div>
 
           <div class="form-row">
-            <mat-label class="color-label">Cor da Tag</mat-label>
+            <mat-label class="color-label">Selecione uma cor para sua tag</mat-label>
             <div class="color-picker">
               <div class="selected-color" [style.background-color]="createTagForm.get('color')?.value">
                 <span [style.color]="getTextColor(createTagForm.get('color')?.value)">
-                  {{ createTagForm.get('name')?.value || 'Tag' }}
+                  {{ createTagForm.get('name')?.value || 'Pré-visualização da Tag' }}
                 </span>
               </div>
 
@@ -68,16 +70,18 @@
 
   <!-- Loading Spinner -->
   <div class="loading-container" *ngIf="isLoading">
-    <mat-spinner diameter="40"></mat-spinner>
+    <mat-spinner color="accent" diameter="48"></mat-spinner>
   </div>
 
   <!-- Lista de Tags -->
   <div class="tags-list" *ngIf="!isLoading">
     <div class="empty-state" *ngIf="tags.length === 0">
-      <mat-icon>label</mat-icon>
+      <mat-icon>label_off</mat-icon>
       <h3>Nenhuma tag encontrada</h3>
-      <p>Crie tags para melhor organizar e categorizar suas transações financeiras.</p>
-      <button mat-raised-button color="primary" (click)="showAddTagForm()">Criar Tag</button>
+      <p>As tags ajudam você a organizar e categorizar suas transações financeiras para uma melhor análise. Crie sua primeira tag para começar a organizar suas finanças.</p>
+      <button mat-raised-button color="primary" (click)="showAddTagForm()">
+        <mat-icon>add</mat-icon> Criar Primeira Tag
+      </button>
     </div>
 
     <div class="tags-grid" *ngIf="tags.length > 0">
@@ -91,20 +95,25 @@
           <div class="tag-stats">
             <div class="stat">
               <span class="label">Transações</span>
-              <span class="value">12</span> <!-- Este valor deve vir do serviço -->
+              <ng-container *ngIf="!getMetricForTag(tag)?.isLoading; else loadingIndicator">
+                <span class="value">{{ getMetricForTag(tag)?.transactionCount || 0 }}</span>
+              </ng-container>
             </div>
             <div class="stat">
               <span class="label">Total</span>
-              <span class="value">€1,250.00</span> <!-- Este valor deve vir do serviço -->
+              <ng-container *ngIf="!getMetricForTag(tag)?.isLoading; else loadingIndicator">
+                <span class="value">{{ formatCurrency(getMetricForTag(tag)?.totalAmount || 0) }}</span>
+              </ng-container>
             </div>
           </div>
         </div>
 
         <mat-card-actions align="end">
-          <button mat-icon-button matTooltip="Editar" (click)="$event.stopPropagation(); openTagDetails(tag)">
+          <button mat-icon-button matTooltip="Editar Tag" (click)="$event.stopPropagation(); openTagDetails(tag)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Excluir" color="warn" (click)="$event.stopPropagation(); deleteTag(tag.stampEntity)">
+          <button mat-icon-button matTooltip="Excluir Tag" color="warn"
+                  (click)="$event.stopPropagation(); deleteTag(tag.stampEntity)">
             <mat-icon>delete</mat-icon>
           </button>
         </mat-card-actions>
@@ -112,3 +121,10 @@
     </div>
   </div>
 </div>
+
+<!-- Template para indicador de carregamento -->
+<ng-template #loadingIndicator>
+  <div class="loading-state">
+    <mat-spinner diameter="16" color="accent"></mat-spinner>
+  </div>
+</ng-template>

@@ -6,7 +6,7 @@
     <div class="upload-container">
       <input type="file" #receiptUpload (change)="uploadReceipt($event)" hidden>
       <button mat-raised-button color="primary" (click)="triggerFileUpload()">
-        <mat-icon>upload</mat-icon> Enviar Recibo
+        <mat-icon>upload_file</mat-icon> Enviar Recibo
       </button>
     </div>
   </div>
@@ -15,23 +15,26 @@
   <div class="filters-container">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Buscar Recibos</mat-label>
-      <input matInput (input)="onSearch($event)" [value]="searchTerm" placeholder="Buscar por comerciante...">
-      <mat-icon matSuffix>search</mat-icon>
+      <input matInput (input)="onSearch($event)" [value]="searchTerm" placeholder="Pesquisar por comerciante, valor, data...">
+      <mat-icon matPrefix>search</mat-icon>
+      <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Limpar" (click)="searchTerm=''; applyFilters()">
+        <mat-icon>close</mat-icon>
+      </button>
     </mat-form-field>
 
     <div class="filter-actions">
       <mat-button-toggle-group multiple>
         <mat-button-toggle [checked]="filterOptions.processedOnly"
                           (change)="filterOptions.processedOnly = !filterOptions.processedOnly; applyFilters()">
-          Processados
+          <mat-icon>check_circle</mat-icon> Processados
         </mat-button-toggle>
         <mat-button-toggle [checked]="filterOptions.linkedOnly"
                           (change)="filterOptions.linkedOnly = !filterOptions.linkedOnly; applyFilters()">
-          Vinculados
+          <mat-icon>link</mat-icon> Vinculados
         </mat-button-toggle>
         <mat-button-toggle [checked]="filterOptions.unlinkedOnly"
                           (change)="filterOptions.unlinkedOnly = !filterOptions.unlinkedOnly; applyFilters()">
-          Não Vinculados
+          <mat-icon>link_off</mat-icon> Não Vinculados
         </mat-button-toggle>
       </mat-button-toggle-group>
 
@@ -42,26 +45,28 @@
           <mat-option value="merchant">Comerciante (A-Z)</mat-option>
           <mat-option value="amount">Valor (Maior)</mat-option>
         </mat-select>
+        <mat-icon matPrefix>sort</mat-icon>
       </mat-form-field>
 
-      <button mat-button color="warn" (click)="resetFilters()">
-        <mat-icon>clear</mat-icon> Limpar Filtros
+      <button mat-stroked-button color="warn" (click)="resetFilters()" [disabled]="!searchTerm && !filterOptions.processedOnly && !filterOptions.linkedOnly && !filterOptions.unlinkedOnly && filterOptions.sortBy === 'date'">
+        <mat-icon>refresh</mat-icon> Limpar Filtros
       </button>
     </div>
   </div>
 
   <!-- Loading spinner -->
   <div class="loading-container" *ngIf="isLoading">
-    <mat-spinner diameter="40"></mat-spinner>
+    <mat-spinner diameter="50"></mat-spinner>
   </div>
 
   <!-- Lista de Recibos -->
   <div class="receipts-list" *ngIf="!isLoading">
     <div class="empty-state" *ngIf="filteredReceipts.length === 0">
-      <mat-icon>receipt</mat-icon>
+      <mat-icon>receipt_long</mat-icon>
       <h3>Nenhum recibo encontrado</h3>
-      <p>Envie um recibo para começar a rastrear suas despesas com comprovantes digitais.</p>
+      <p>Envie um recibo para começar a rastrear suas despesas com comprovantes digitais ou ajuste os filtros de pesquisa.</p>
       <button mat-raised-button color="primary" (click)="triggerFileInputClick()">
+        <!-- <mat-icon>upload_file</mat-icon>  -->
         Enviar Recibo
       </button>
     </div>
@@ -72,9 +77,14 @@
           <div mat-card-avatar class="receipt-avatar">
             <mat-icon>{{ receipt.transactionId ? 'receipt_long' : 'receipt' }}</mat-icon>
           </div>
-          <mat-card-title>{{ receipt.merchantName }}</mat-card-title>
+          <mat-card-title>{{ receipt.merchantName || 'Comerciante Desconhecido' }}</mat-card-title>
           <mat-card-subtitle>{{ formatDate(receipt.receiptDate) }}</mat-card-subtitle>
         </mat-card-header>
+
+        <!-- Adiciona uma prévia da imagem do recibo -->
+        <div class="receipt-image-preview"
+          [style.background-image]="getImageUrl(receipt)">
+        </div>
 
         <mat-card-content>
           <div class="amount">{{ formatCurrency(receipt.totalAmount) }}</div>

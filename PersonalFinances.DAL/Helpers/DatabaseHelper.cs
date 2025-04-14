@@ -303,7 +303,9 @@ namespace PersonalFinances.DAL.Helpers
                         { "processing_status", new ColumnDefinition { DataType = "NVARCHAR(50)", IsPrimaryKey = false, IsNullable = false, DefaultValue = "'Pending'" } },
                         { "error_message", new ColumnDefinition { DataType = "NVARCHAR(255)", IsPrimaryKey = false, IsNullable = true } },
                         { "created_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
-                        { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } }
+                        { "updated_at", new ColumnDefinition { DataType = "DATETIME", IsPrimaryKey = false, IsNullable = false, DefaultValue = "GETDATE()" } },
+                        { "image_base64", new ColumnDefinition { DataType = "NVARCHAR(MAX)", IsPrimaryKey = false, IsNullable = true } },
+                        { "content_type", new ColumnDefinition { DataType = "NVARCHAR(100)", IsPrimaryKey = false, IsNullable = true } }
                     }
                 },
         

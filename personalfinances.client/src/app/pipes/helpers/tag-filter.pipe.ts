@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Tag } from '../../components/core/home/models/tag.model';
+import { Tag } from '../../components/core/home/tags/tag.model';
 
 @Pipe({
   name: 'tagFilter'

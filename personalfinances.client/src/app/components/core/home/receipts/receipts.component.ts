@@ -202,4 +202,14 @@ export class ReceiptsComponent implements OnInit {
   triggerFileInputClick(): void {
     this.receiptUpload.nativeElement.click();
   }
+
+  getImageUrl(receipt: Receipt): string {
+    if (receipt.imageBase64 && receipt.contentType) {
+      return `url(data:${receipt.contentType};base64,${receipt.imageBase64})`;
+    } else if (receipt.imagePath) {
+      return `url(/assets/receipt-previews/${receipt.imagePath})`;
+    } else {
+      return 'url(/assets/images/receipt-placeholder.jpg)';
+    }
+  }
 }

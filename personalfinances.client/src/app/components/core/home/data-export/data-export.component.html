@@ -5,7 +5,7 @@
 
   <!-- Loading Spinner -->
   <div class="loading-overlay" *ngIf="isLoading">
-    <mat-spinner diameter="40"></mat-spinner>
+    <mat-spinner color="accent" diameter="48"></mat-spinner>
   </div>
 
   <div class="content-grid">
@@ -13,29 +13,31 @@
     <mat-card class="export-section">
       <mat-card-header>
         <mat-card-title>Exportar Dados</mat-card-title>
-        <mat-card-subtitle>Exporte seus dados financeiros para análise externa</mat-card-subtitle>
+        <mat-card-subtitle>Exporte seus dados financeiros para análise externa ou backup</mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
         <form [formGroup]="exportForm" (ngSubmit)="exportData()">
           <div class="form-row">
             <mat-form-field appearance="outline">
-              <mat-label>Formato</mat-label>
+              <mat-label>Formato de Exportação</mat-label>
               <mat-select formControlName="format">
                 <mat-option value="csv">CSV (para Excel, Google Sheets)</mat-option>
-                <mat-option value="excel">Excel</mat-option>
+                <mat-option value="excel">Excel (XLSX)</mat-option>
                 <mat-option value="report">Relatório PDF</mat-option>
               </mat-select>
+              <mat-hint>Escolha o formato que melhor atende às suas necessidades</mat-hint>
             </mat-form-field>
           </div>
 
-          <div class="date-range-container" *ngIf="exportForm.get('format')?.value !== 'report'">
+          <div class="date-range-container">
             <div class="form-row date-pickers">
               <mat-form-field appearance="outline">
                 <mat-label>Data Inicial</mat-label>
                 <input matInput [matDatepicker]="startPicker" formControlName="startDate" [min]="minDate" [max]="maxDate">
                 <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
                 <mat-datepicker #startPicker></mat-datepicker>
+                <mat-hint>Início do período de dados</mat-hint>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
@@ -43,6 +45,7 @@
                 <input matInput [matDatepicker]="endPicker" formControlName="endDate" [min]="minDate" [max]="maxDate">
                 <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
                 <mat-datepicker #endPicker></mat-datepicker>
+                <mat-hint>Fim do período de dados</mat-hint>
               </mat-form-field>
             </div>
           </div>
@@ -56,22 +59,7 @@
                     {{ type.label }}
                   </mat-option>
                 </mat-select>
-              </mat-form-field>
-            </div>
-
-            <div class="form-row date-pickers">
-              <mat-form-field appearance="outline">
-                <mat-label>Data Inicial</mat-label>
-                <input matInput [matDatepicker]="reportStartPicker" formControlName="startDate" [min]="minDate" [max]="maxDate">
-                <mat-datepicker-toggle matSuffix [for]="reportStartPicker"></mat-datepicker-toggle>
-                <mat-datepicker #reportStartPicker></mat-datepicker>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Data Final</mat-label>
-                <input matInput [matDatepicker]="reportEndPicker" formControlName="endDate" [min]="minDate" [max]="maxDate">
-                <mat-datepicker-toggle matSuffix [for]="reportEndPicker"></mat-datepicker-toggle>
-                <mat-datepicker #reportEndPicker></mat-datepicker>
+                <mat-hint>Selecione o tipo de relatório que deseja gerar</mat-hint>
               </mat-form-field>
             </div>
           </div>
@@ -79,13 +67,18 @@
           <div class="export-preview">
             <div class="preview-card">
               <div class="preview-icon">
-                <mat-icon>{{ exportForm.get('format')?.value === 'csv' ? 'table_chart' :
-                             exportForm.get('format')?.value === 'excel' ? 'grid_on' : 'description' }}</mat-icon>
+                <mat-icon>{{
+                  exportForm.get('format')?.value === 'csv' ? 'table_chart' :
+                  exportForm.get('format')?.value === 'excel' ? 'grid_on' :
+                  'description'
+                }}</mat-icon>
               </div>
               <div class="preview-content">
-                <h3>{{ exportForm.get('format')?.value === 'csv' ? 'Arquivo CSV' :
-                       exportForm.get('format')?.value === 'excel' ? 'Arquivo Excel' :
-                       'Relatório ' + getReportTypeLabel(exportForm.get('reportType')?.value) }}</h3>
+                <h3>{{
+                  exportForm.get('format')?.value === 'csv' ? 'Arquivo CSV' :
+                  exportForm.get('format')?.value === 'excel' ? 'Arquivo Excel' :
+                  'Relatório ' + getReportTypeLabel(exportForm.get('reportType')?.value)
+                }}</h3>
                 <p>Período: {{ exportForm.get('startDate')?.value | date:'dd/MM/yyyy' }} a {{ exportForm.get('endDate')?.value | date:'dd/MM/yyyy' }}</p>
               </div>
             </div>
@@ -109,18 +102,18 @@
 
       <mat-card-content>
         <div class="import-instructions">
-          <h3>Instruções para Importação</h3>
+          <h3>Como importar suas transações</h3>
           <ol>
-            <li>Prepare um arquivo CSV com suas transações</li>
-            <li>Certifique-se de incluir as colunas: <strong>data, descrição, valor, categoria, método de pagamento</strong></li>
-            <li>Use o sinal negativo (-) para despesas</li>
-            <li>Utilize o formato de data <strong>DD/MM/AAAA</strong></li>
+            <li>Prepare um arquivo CSV com suas transações financeiras</li>
+            <li>Verifique se o arquivo inclui as colunas: <strong>Data, Descrição, Valor, Categoria, Método de Pagamento</strong></li>
+            <li>Use o sinal negativo (-) para representar despesas</li>
+            <li>Utilize o formato de data <strong>DD/MM/AAAA</strong> para compatibilidade</li>
           </ol>
 
           <div class="template-download">
-            <p>Não sabe como formatar? Baixe nosso modelo:</p>
-            <button mat-button color="primary">
-              <mat-icon>file_download</mat-icon> Baixar Modelo CSV
+            <p>Primeira vez a importar? Faça o download do nosso modelo:</p>
+            <button mat-stroked-button color="primary">
+              <mat-icon>file_download</mat-icon> Download Modelo CSV
             </button>
           </div>
         </div>
@@ -135,7 +128,7 @@
 
         <div class="import-success" *ngIf="importSuccess">
           <mat-icon>check_circle</mat-icon>
-          <p>Importação concluída com sucesso!</p>
+          <p>Importação concluída com sucesso! Seus dados foram adicionados ao sistema.</p>
         </div>
       </mat-card-content>
     </mat-card>

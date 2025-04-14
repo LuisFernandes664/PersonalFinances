@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Tag } from '../models/tag.model';
+import { Tag } from './tag.model';
 import { Transaction } from '../models/transaction.model';
 import { APIResponse } from '../../../../models/api-response.model';
 import { environment } from '../../../../../environments/environment';

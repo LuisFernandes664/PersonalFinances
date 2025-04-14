@@ -1,5 +1,12 @@
 .event-detail-dialog {
-  max-width: 600px;
+  position: relative;
+  max-width: 500px;
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 1000;
 }
 
 .dialog-header {

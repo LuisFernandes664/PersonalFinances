@@ -47,11 +47,21 @@
     <div class="empty-state" *ngIf="filteredTransactions.length === 0">
       <mat-icon>event_repeat</mat-icon>
       <h3>Nenhuma transação recorrente encontrada</h3>
-      <p>Crie uma nova transação recorrente para automatizar seus registros financeiros.</p>
+      <p>Crie uma nova transação recorrente para automatizar seus registros financeiros e ter um melhor controle das suas receitas e despesas regulares.</p>
       <button mat-raised-button color="primary" (click)="openNewTransactionDialog()">Criar Transação Recorrente</button>
     </div>
 
-    <mat-card *ngFor="let transaction of filteredTransactions" [class.inactive]="!transaction.isActive">
+    <mat-card *ngFor="let transaction of filteredTransactions"
+              [class.inactive]="!transaction.isActive"
+              [class.income]="transaction.category === 'income'"
+              [class.expense]="transaction.category === 'expense'">
+
+      <!-- Status indicator -->
+      <div class="status-indicator" [class.active]="transaction.isActive" [class.inactive]="!transaction.isActive">
+        <mat-icon>{{ transaction.isActive ? 'check_circle' : 'pause_circle' }}</mat-icon>
+        {{ transaction.isActive ? 'Ativa' : 'Inativa' }}
+      </div>
+
       <mat-card-header>
         <div mat-card-avatar [ngClass]="{'income-avatar': transaction.category === 'income', 'expense-avatar': transaction.category === 'expense'}">
           <mat-icon>{{ transaction.category === 'income' ? 'trending_up' : 'trending_down' }}</mat-icon>
@@ -68,39 +78,45 @@
       <mat-card-content>
         <div class="transaction-details">
           <div class="detail-item">
-            <span class="label">Método de Pagamento:</span>
+            <span class="label">Método de Pagamento</span>
             <span class="value">{{ transaction.paymentMethod }}</span>
           </div>
           <div class="detail-item">
-            <span class="label">Destinatário:</span>
+            <span class="label">Destinatário</span>
             <span class="value">{{ transaction.recipient }}</span>
           </div>
           <div class="detail-item">
-            <span class="label">Início:</span>
+            <span class="label">Data de Início</span>
             <span class="value">{{ getFormattedDate(transaction.startDate) }}</span>
           </div>
-          <div class="detail-item" *ngIf="transaction.endDate">
-            <span class="label">Fim:</span>
-            <span class="value">{{ getFormattedDate(transaction.endDate) }}</span>
+          <div class="detail-item">
+            <span class="label">Data de Término</span>
+            <span class="value">{{ transaction.endDate ? getFormattedDate(transaction.endDate) : 'Sem data final' }}</span>
           </div>
-          <div class="detail-item" *ngIf="transaction.lastProcessedDate">
-            <span class="label">Último Processamento:</span>
-            <span class="value">{{ getFormattedDate(transaction.lastProcessedDate) }}</span>
+          <div class="detail-item">
+            <span class="label">Último Processamento</span>
+            <span class="value">{{ transaction.lastProcessedDate ? getFormattedDate(transaction.lastProcessedDate) : 'Nunca processado' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Intervalo</span>
+            <span class="value">{{ transaction.recurrenceInterval }} {{ transaction.recurrenceInterval > 1 ? getRecurrenceTypeLabel(transaction.recurrenceType) + 's' : getRecurrenceTypeLabel(transaction.recurrenceType) }}</span>
           </div>
         </div>
       </mat-card-content>
 
       <mat-card-actions>
-        <button mat-button (click)="openEditDialog(transaction)">
-          <mat-icon>edit</mat-icon> Editar
-        </button>
-        <button mat-button (click)="toggleTransactionStatus(transaction)">
-          <mat-icon>{{ transaction.isActive ? 'pause' : 'play_arrow' }}</mat-icon>
-          {{ transaction.isActive ? 'Desativar' : 'Ativar' }}
-        </button>
-        <button mat-button color="warn" (click)="deleteRecurringTransaction(transaction.stampEntity)">
-          <mat-icon>delete</mat-icon> Excluir
-        </button>
+        <div class="action-buttons">
+          <button mat-stroked-button (click)="openEditDialog(transaction)">
+            <mat-icon>edit</mat-icon> Editar
+          </button>
+          <button mat-stroked-button (click)="toggleTransactionStatus(transaction)">
+            <mat-icon>{{ transaction.isActive ? 'pause' : 'play_arrow' }}</mat-icon>
+            {{ transaction.isActive ? 'Desativar' : 'Ativar' }}
+          </button>
+          <button mat-stroked-button color="warn" (click)="deleteRecurringTransaction(transaction.stampEntity)">
+            <mat-icon>delete</mat-icon> Excluir
+          </button>
+        </div>
       </mat-card-actions>
     </mat-card>
   </div>

@@ -10,8 +10,15 @@
     <div class="dialog-content">
       <!-- Preview do Recibo -->
       <div class="receipt-preview">
-        <img [src]="getImagePath(data.receipt.imagePath)" alt="Recibo">
+        <img *ngIf="data.receipt.imageBase64; else fromPath"
+             [src]="'data:' + data.receipt.contentType + ';base64,' + data.receipt.imageBase64"
+             alt="Recibo">
+        <ng-template #fromPath>
+          <img [src]="getImagePath(data.receipt.imagePath)" alt="Recibo">
+        </ng-template>
       </div>
+
+
 
       <!-- Informações do Recibo -->
       <div class="receipt-info">

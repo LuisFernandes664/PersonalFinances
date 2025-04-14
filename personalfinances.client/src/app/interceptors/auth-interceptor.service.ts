@@ -17,13 +17,30 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const token = this.authService.getToken();
 
-    const authReq = token
-      ? req.clone({ setHeaders: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } })
-      : req;
+    // Verifica se a requisição contém FormData (upload de arquivo)
+    const isFormData = req.body instanceof FormData;
+
+    let authReq = req;
+
+    if (token) {
+      // Se for FormData, apenas adicione o token de autenticação, sem alterar o Content-Type
+      if (isFormData) {
+        authReq = req.clone({
+          setHeaders: { Authorization: `Bearer ${token}` }
+        });
+      } else {
+        // Para outras requisições, mantenha o comportamento atual
+        authReq = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+      }
+    }
 
     return next.handle(authReq).pipe(
       finalize(() => this.loadingService.hide())
     );
   }
-
 }

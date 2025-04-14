@@ -16,6 +16,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Título</mat-label>
             <input matInput formControlName="title" placeholder="Digite o título do evento" required>
+            <mat-icon matPrefix>title</mat-icon>
             <mat-error *ngIf="eventForm.get('title')?.hasError('required')">
               Título é obrigatório
             </mat-error>
@@ -29,6 +30,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Descrição</mat-label>
             <textarea matInput formControlName="description" placeholder="Descrição (opcional)" rows="3"></textarea>
+            <mat-icon matPrefix>description</mat-icon>
             <mat-error *ngIf="eventForm.get('description')?.hasError('maxlength')">
               Descrição muito longa (máximo 500 caracteres)
             </mat-error>
@@ -36,7 +38,10 @@
         </div>
 
         <div class="form-row date-container">
-          <mat-slide-toggle formControlName="isAllDay" color="primary">Dia Inteiro</mat-slide-toggle>
+          <mat-slide-toggle formControlName="isAllDay" color="primary">
+            <span>Dia Inteiro</span>
+            <mat-icon>event</mat-icon>
+          </mat-slide-toggle>
         </div>
 
         <div class="form-row date-pickers">
@@ -63,9 +68,13 @@
             <mat-label>Tipo de Evento</mat-label>
             <mat-select formControlName="eventType" required>
               <mat-option *ngFor="let type of eventTypes" [value]="type.value">
-                {{ type.label }}
+                <span class="event-type-option">
+                  <span class="color-dot" [style.background-color]="type.color"></span>
+                  {{ type.label }}
+                </span>
               </mat-option>
             </mat-select>
+            <mat-icon matPrefix>category</mat-icon>
           </mat-form-field>
         </div>
 
@@ -76,7 +85,10 @@
         </div>
 
         <div class="form-row recurrence-container">
-          <mat-slide-toggle formControlName="isRecurring" color="primary">Evento Recorrente</mat-slide-toggle>
+          <mat-slide-toggle formControlName="isRecurring" color="primary">
+            <span>Evento Recorrente</span>
+            <mat-icon>repeat</mat-icon>
+          </mat-slide-toggle>
         </div>
 
         <div class="form-row" *ngIf="eventForm.get('isRecurring')?.value">
@@ -88,6 +100,7 @@
               <mat-option value="FREQ=MONTHLY">Mensalmente</mat-option>
               <mat-option value="FREQ=YEARLY">Anualmente</mat-option>
             </mat-select>
+            <mat-icon matPrefix>update</mat-icon>
           </mat-form-field>
         </div>
       </div>
@@ -160,23 +173,23 @@
     </form>
   </div>
 
-  <div mat-dialog-actions>
-    <button mat-button color="warn" (click)="onDelete()" *ngIf="!isEditMode">
+  <mat-dialog-actions>
+    <button mat-stroked-button color="warn" (click)="onDelete()" *ngIf="!isEditMode">
       <mat-icon>delete</mat-icon> Excluir
     </button>
 
     <span class="spacer"></span>
 
-    <button mat-button (click)="toggleEditMode()" *ngIf="!isEditMode">
+    <button mat-stroked-button (click)="toggleEditMode()" *ngIf="!isEditMode">
       <mat-icon>edit</mat-icon> Editar
     </button>
 
-    <button mat-button (click)="toggleEditMode()" *ngIf="isEditMode">
-      Cancelar
+    <button mat-stroked-button (click)="toggleEditMode()" *ngIf="isEditMode">
+      <mat-icon>cancel</mat-icon> Cancelar
     </button>
 
     <button mat-raised-button color="primary" (click)="onSave()" *ngIf="isEditMode" [disabled]="eventForm.invalid">
-      Salvar
+      <mat-icon>save</mat-icon> Salvar
     </button>
-  </div>
+  </mat-dialog-actions>
 </div>

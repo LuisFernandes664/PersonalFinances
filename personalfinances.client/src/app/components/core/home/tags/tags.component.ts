@@ -1,10 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { TagService } from '../services/tag.service';
 import { NotificationService } from '../../../shared/notifications/notification.service';
-import { Tag } from '../models/tag.model';
 import { TagDetailsDialogComponent } from './tag-details-dialog/tag-details-dialog.component';
+import { forkJoin, of } from 'rxjs';
+import { catchError, finalize, map } from 'rxjs/operators';
+import { Tag } from './tag.model';
+import { TagService } from './tag.service';
+
+// Interface para armazenar as métricas de tag separadamente
+interface TagMetrics {
+  tagId: string;
+  transactionCount: number;
+  totalAmount: number;
+  isLoading: boolean;
+}
 
 @Component({
   selector: 'app-tags',
@@ -13,6 +23,7 @@ import { TagDetailsDialogComponent } from './tag-details-dialog/tag-details-dial
 })
 export class TagsComponent implements OnInit {
   tags: Tag[] = [];
+  tagMetrics: TagMetrics[] = []; // Armazena métricas separadamente
   isLoading: boolean = false;
   searchForm: FormGroup;
   createTagForm: FormGroup;
@@ -56,7 +67,19 @@ export class TagsComponent implements OnInit {
     this.tagService.getTags().subscribe(
       response => {
         this.tags = response.data;
+
+        // Inicializa as métricas para cada tag
+        this.tagMetrics = this.tags.map(tag => ({
+          tagId: tag.stampEntity,
+          transactionCount: 0,
+          totalAmount: 0,
+          isLoading: true
+        }));
+
         this.isLoading = false;
+
+        // Após carregar as tags, busca as métricas para cada uma
+        this.loadTagMetrics();
       },
       error => {
         this.notificationService.showToast('error', 'Erro ao carregar tags. Por favor, tente novamente.');
@@ -64,6 +87,42 @@ export class TagsComponent implements OnInit {
         console.error('Erro ao carregar tags:', error);
       }
     );
+  }
+
+  // Método para obter métricas de uma tag específica
+  getMetricForTag(tag: Tag): TagMetrics | undefined {
+    return this.tagMetrics.find(metric => metric.tagId === tag.stampEntity);
+  }
+
+  // Método para carregar métricas de cada tag
+  loadTagMetrics(): void {
+    this.tagMetrics.forEach(metric => {
+      metric.isLoading = true;
+
+      this.tagService.getTransactionsByTag(metric.tagId).pipe(
+        catchError(error => {
+          console.error(`Erro ao carregar transações para tag ${metric.tagId}:`, error);
+          return of({ data: [], success: false, message: 'Erro ao carregar transações' });
+        }),
+        finalize(() => {
+          metric.isLoading = false;
+        })
+      ).subscribe(response => {
+        if (response && response.data) {
+          // Define o contador de transações
+          metric.transactionCount = response.data.length;
+
+          // Calcula o total de transações
+          metric.totalAmount = response.data.reduce((total, transaction) => {
+            // Verifique se a transação tem a propriedade amount
+            if (transaction && typeof transaction.amount === 'number') {
+              return total + transaction.amount;
+            }
+            return total;
+          }, 0);
+        }
+      });
+    });
   }
 
   filterTags(searchTerm: string): void {
@@ -154,6 +213,16 @@ export class TagsComponent implements OnInit {
         console.error('Erro ao excluir tag:', error);
       }
     );
+  }
+
+  // Formatar valor para exibição de moeda
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat('pt-PT', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(value);
   }
 
   // Helper para verificar contraste e definir texto branco ou preto dependendo da cor de fundo

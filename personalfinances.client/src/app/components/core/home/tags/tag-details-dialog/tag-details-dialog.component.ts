@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Transaction } from '../../models/transaction.model';
-import { TagService } from '../../services/tag.service';
+import { TagService } from '../tag.service';
 import { NotificationService } from '../../../../shared/notifications/notification.service';
-import { Tag } from '../../models/tag.model';
+import { Tag } from '../tag.model';
 
 @Component({
   selector: 'app-tag-details-dialog',
