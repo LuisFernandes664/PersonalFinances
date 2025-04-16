@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TransactionService } from '../transaction.service';
 import { RecurrenceType, RecurringTransaction } from '../models/recurring-transaction.model';
 import { SelectListItem } from '../../../../models/select-list-item.model';
-import { RecurringTransactionService } from '../services/recurring-transaction.service';
+import { RecurringTransactionService } from './recurring-transaction.service';
 import { NotificationService } from '../../../shared/notifications/notification.service';
 import { RecurringTransactionDialogComponent } from './recurring-transaction-dialog/recurring-transaction-dialog.component';
 

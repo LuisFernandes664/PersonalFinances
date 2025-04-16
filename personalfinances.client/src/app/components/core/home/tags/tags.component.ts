@@ -7,6 +7,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, finalize, map } from 'rxjs/operators';
 import { Tag } from './tag.model';
 import { TagService } from './tag.service';
+import { Transaction } from '../models/transaction.model';
 
 // Interface para armazenar as métricas de tag separadamente
 interface TagMetrics {
@@ -112,13 +113,13 @@ export class TagsComponent implements OnInit {
           // Define o contador de transações
           metric.transactionCount = response.data.length;
 
-          // Calcula o total de transações
-          metric.totalAmount = response.data.reduce((total, transaction) => {
+          // Calcula o total de transações - Corrigido aqui
+          metric.totalAmount = (response.data as Transaction[]).reduce((sum: number, transaction: Transaction) => {
             // Verifique se a transação tem a propriedade amount
             if (transaction && typeof transaction.amount === 'number') {
-              return total + transaction.amount;
+              return sum + transaction.amount;
             }
-            return total;
+            return sum;
           }, 0);
         }
       });

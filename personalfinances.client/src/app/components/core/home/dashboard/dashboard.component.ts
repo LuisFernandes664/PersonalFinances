@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TransactionService } from '../transaction.service';
 import { Transaction } from '../models/transaction.model';
+import { MatDialog } from '@angular/material/dialog';
+import { TransactionDialogComponent } from './transaction-dialog/transaction-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,9 +21,35 @@ export class DashboardComponent {
     totalBalance: 0
   };
 
-  constructor(private transactionService: TransactionService) { }
+  constructor(private transactionService: TransactionService, private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.loadTransactions();
+  }
+
+  openModal() {
+    this.showModal = true;
+
+    const dialogRef = this.dialog.open(TransactionDialogComponent, {
+      width: '600px',
+      disableClose: true,
+      data: { isEdit: false }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Transação adicionada com sucesso
+        // result contém a transação criada
+        console.log('Nova transação:', result);
+
+        // Atualizar a lista de transações ou fazer outra ação
+        this.loadTransactions();
+      }
+    });
+
+  }
+
+  loadTransactions() {
     this.transactionService.transactions$.subscribe(data => {
       this.transactions = data;
     });
@@ -35,18 +63,27 @@ export class DashboardComponent {
     });
   }
 
-  openModal() {
-    this.showModal = true;
-  }
-
   closeModal() {
     this.showModal = false;
     this.editingIndex = null;
   }
 
-  editTransaction(index: number) {
-    this.editingIndex = index;
-    this.showModal = true;
+  editTransaction(transaction: Transaction) {
+    const dialogRef = this.dialog.open(TransactionDialogComponent, {
+      width: '500px',
+      disableClose: true,
+      data: {
+        isEdit: true,
+        transaction: transaction
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Transação atualizada com sucesso
+        this.loadTransactions();
+      }
+    });
   }
 
   deleteTransaction(index: number) {

@@ -1,0 +1,162 @@
+<div class="content">
+
+  <h2 mat-dialog-title [class.edit-mode]="data.isEdit">{{ formTitle }}</h2>
+
+  <mat-dialog-content class="transaction-dialog-content">
+    <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Tipo de transação: Receita ou Despesa -->
+      <div class="transaction-type-selector">
+        <mat-button-toggle-group formControlName="category" aria-label="Tipo de Transação">
+          <mat-button-toggle value="expense">
+            <mat-icon>arrow_downward</mat-icon>
+            <span>Despesa</span>
+          </mat-button-toggle>
+          <mat-button-toggle value="income">
+            <mat-icon>arrow_upward</mat-icon>
+            <span>Receita</span>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Seção com os principais campos -->
+      <div class="form-section">
+        <!-- Valor e Descrição numa mesma linha -->
+        <div class="form-row amount-description-row">
+          <!-- Campo de valor com formatação -->
+          <mat-form-field appearance="outline" class="amount-field" [class]="getAmountClass()">
+            <mat-label>Valor</mat-label>
+            <span matPrefix>€&nbsp;</span>
+            <input matInput type="number" formControlName="amount" placeholder="0,00">
+            <mat-error *ngIf="transactionForm.get('amount')?.hasError('required')">
+              Valor é obrigatório
+            </mat-error>
+            <mat-error *ngIf="transactionForm.get('amount')?.hasError('pattern')">
+              Formato inválido
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Campo de descrição -->
+          <mat-form-field appearance="outline" class="description-field">
+            <mat-label>Descrição</mat-label>
+            <input matInput formControlName="description" placeholder="Ex: Mercado, Restaurante, Salário...">
+            <mat-error *ngIf="transactionForm.get('description')?.hasError('required')">
+              Descrição é obrigatória
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Data da transação e status -->
+        <div class="form-row date-status-row">
+          <!-- Campo de data -->
+          <mat-form-field appearance="outline" class="date-field">
+            <mat-label>Data</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="transactionForm.get('date')?.hasError('required')">
+              Data é obrigatória
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Status da transação -->
+          <mat-form-field appearance="outline" class="status-field">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let status of transactionStatuses" [value]="status.value" [class]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Categoria/Subcategoria -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Categoria</mat-label>
+            <mat-select formControlName="subcategory">
+              <mat-option *ngFor="let subcat of getSubcategories()" [value]="subcat">
+                {{ subcat }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="transactionForm.get('subcategory')?.hasError('required')">
+              Selecione uma categoria
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <h3 class="section-title">Detalhes adicionais</h3>
+      <mat-divider></mat-divider>
+
+      <!-- Detalhes adicionais -->
+      <div class="form-section additional-details">
+        <!-- Método de pagamento -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Método de Pagamento</mat-label>
+            <mat-select formControlName="paymentMethod">
+              <mat-option *ngFor="let method of paymentMethods" [value]="method.value">
+                {{ method.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Destinatário -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Destinatário/Pagador</mat-label>
+            <input matInput formControlName="recipient" placeholder="Nome da empresa ou pessoa">
+          </mat-form-field>
+        </div>
+
+        <!-- Vinculação a orçamento ou meta -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Vincular a</mat-label>
+            <mat-select formControlName="referenceId">
+              <mat-option [value]="">Nenhum</mat-option>
+
+              <mat-optgroup label="Orçamentos" *ngIf="transactionService.budgets?.length">
+                <mat-option *ngFor="let budget of transactionService.budgets" [value]="budget.id">
+                  {{ budget.name || budget.valor_orcado }} (Orçamento)
+                </mat-option>
+              </mat-optgroup>
+
+              <mat-optgroup label="Metas" *ngIf="transactionService.goals?.length">
+                <mat-option *ngFor="let goal of transactionService.goals" [value]="goal.id">
+                  {{ goal.descricao }} (Meta)
+                </mat-option>
+              </mat-optgroup>
+            </mat-select>
+            <mat-hint *ngIf="transactionForm.get('referenceId')?.value">
+              Esta transação será vinculada a um {{ transactionForm.get('referenceId')?.value.includes('budget') ? 'orçamento' : 'meta' }}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Notas -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Notas</mat-label>
+            <textarea matInput formControlName="notes" placeholder="Observações adicionais" rows="3"></textarea>
+            <mat-hint>Adicione informações extras que possam ajudar a identificar esta transação no futuro</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" cdkFocusInitial>
+      Cancelar
+    </button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="transactionForm.invalid || isSubmitting">
+      <mat-icon>{{ data.isEdit ? 'save' : 'add' }}</mat-icon>
+      {{ data.isEdit ? 'Atualizar' : 'Adicionar' }}
+      <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
+    </button>
+  </mat-dialog-actions>
+</div>
