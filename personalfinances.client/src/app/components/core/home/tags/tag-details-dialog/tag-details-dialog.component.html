@@ -78,7 +78,7 @@
         <mat-list *ngIf="!isLoading && taggedTransactions.length > 0">
           <mat-list-item *ngFor="let transaction of taggedTransactions">
             <div matListItemTitle>{{ transaction.description }}</div>
-            <div matListItemLine>{{ formatDate(transaction.date) }}</div>
+            <div matListItemLine>{{ formatDate(transaction.date.toString()) }}</div>
             <div matListItemMeta [ngClass]="{'income': transaction.amount > 0, 'expense': transaction.amount < 0}">
               {{ formatAmount(transaction.amount) }}
             </div>

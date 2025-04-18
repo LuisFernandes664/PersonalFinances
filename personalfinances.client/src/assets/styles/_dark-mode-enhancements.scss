@@ -159,6 +159,7 @@
   // Container do diálogo
   .mat-mdc-dialog-container {
     .mdc-dialog__surface {
+      padding: 0px;
       background-color: var(--mat-dialog-bg);
       border-radius: 10px;
       box-shadow: var(--mat-shadow-elevated);

@@ -38,6 +38,7 @@
     "jwt-decode": "^4.0.0",
     "material": "^0.9.23",
     "ng-apexcharts": "^1.13.0",
+    "ngx-toastr": "^19.0.0",
     "ngx-translate": "^0.0.1-security",
     "run-script-os": "*",
     "rxjs": "~7.8.0",

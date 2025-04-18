@@ -265,7 +265,8 @@
 // === Dialogs ===
 .mat-mdc-dialog-container {
   .mdc-dialog__surface {
-    background-color: var(--mat-card-bg);
+    padding: 0px;
+    // background-color: var(--mat-card-bg);
     color: var(--mat-text);
     border-radius: 12px;
     box-shadow: var(--mat-shadow);

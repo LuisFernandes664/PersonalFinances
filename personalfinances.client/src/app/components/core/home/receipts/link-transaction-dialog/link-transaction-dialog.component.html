@@ -46,7 +46,7 @@
                       [class.selected]="selectedTransaction?.stampEntity === transaction.stampEntity"
                       (click)="selectTransaction(transaction)">
           <div matListItemTitle>{{ transaction.description }}</div>
-          <div matListItemLine>{{ formatDate(transaction.date) }} | {{ transaction.paymentMethod }}</div>
+          <div matListItemLine>{{ formatDate(transaction.date.toString()) }} | {{ transaction.paymentMethod }}</div>
           <div matListItemMeta>{{ formatAmount(transaction.amount) }}</div>
         </mat-list-item>
       </mat-list>

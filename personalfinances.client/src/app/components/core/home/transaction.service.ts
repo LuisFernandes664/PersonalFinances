@@ -13,7 +13,7 @@ import { BudgetService } from './graphycs/budget/budget.service';
 export interface ChartSeries {
   name: string;
   data: number[];
-  categories?: string[]; // Opcional, já que parece vir na série
+  categories?: string[];
 }
 
 export interface ChartData {

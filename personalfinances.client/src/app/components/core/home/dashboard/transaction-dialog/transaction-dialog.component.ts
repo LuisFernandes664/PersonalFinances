@@ -1,8 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { finalize } from 'rxjs/operators';
 import { Transaction } from '../../models/transaction.model';
 import { TransactionService } from '../../transaction.service';
 import { ThemeService } from '../../../../../services/theme.service';
@@ -55,7 +53,6 @@ export class TransactionDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<TransactionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: TransactionDialogData,
     public transactionService: TransactionService,
-    private snackBar: MatSnackBar,
     private themeService: ThemeService
   ) {
     this.formTitle = data.isEdit ? 'Editar Transação' : 'Nova Transação';
@@ -71,8 +68,6 @@ export class TransactionDialogComponent implements OnInit {
       paymentMethod: ['bank_transfer', Validators.required],
       recipient: ['', Validators.maxLength(100)],
       status: ['confirmed', Validators.required],
-      referenceId: [''],
-      referenceType: [''],
       notes: ['', Validators.maxLength(500)]
     });
   }
@@ -80,14 +75,8 @@ export class TransactionDialogComponent implements OnInit {
   ngOnInit(): void {
     // Aplica a classe dark ao overlay do dialog se estiver no modo escuro
     if (this.isDarkMode) {
-      this.dialogRef.addPanelClass('dark-theme');
-    }
-
-    // Monitora alterações do tema
-    if (this.themeService.isDarkMode()) {
-      this.dialogRef.addPanelClass('dark-theme');
-    } else {
-      this.dialogRef.removePanelClass('dark-theme');
+      // Remove bordas coloridas no modo escuro e aplica estilos adequados
+      this.dialogRef.addPanelClass('dark-theme-dialog');
     }
 
     // Monitora alterações na categoria principal para atualizar subcategorias
@@ -120,12 +109,10 @@ export class TransactionDialogComponent implements OnInit {
       amount: Math.abs(transaction.amount), // Remover sinal negativo
       date: transactionDate,
       category: category,
-      subcategory: transaction.subcategory || this.getDefaultSubcategory(category),
+      // subcategory: transaction.subcategory || this.getDefaultSubcategory(category),
       paymentMethod: transaction.paymentMethod,
       recipient: transaction.recipient,
       status: transaction.status,
-      referenceId: transaction.referenceId || '',
-      referenceType: transaction.referenceType || '',
       notes: transaction.notes || ''
     });
   }
@@ -163,27 +150,8 @@ export class TransactionDialogComponent implements OnInit {
       // Prepara os dados do formulário
       const formData = this.prepareFormData();
 
-      // Usa o serviço apropriado baseado se é edição ou criação
-      const request = this.data.isEdit
-        ? this.transactionService.updateTransaction(this.data.transaction?.stampEntity || '', formData)
-        : this.transactionService.addTransaction(formData);
-
-      request.pipe(
-        finalize(() => this.isSubmitting = false)
-      ).subscribe({
-        next: (result) => {
-          const successMessage = this.data.isEdit
-            ? 'Transação atualizada com sucesso'
-            : 'Transação adicionada com sucesso';
-
-          this.showSnackbar(successMessage, 'success');
-          this.dialogRef.close(result);
-        },
-        error: (error) => {
-          console.error('Erro ao processar transação:', error);
-          this.showSnackbar('Erro ao processar a transação', 'error');
-        }
-      });
+      // Fecha o diálogo e retorna os dados
+      this.dialogRef.close(formData);
     } else {
       // Marca todos os campos como tocados para mostrar erros
       this.markFormGroupTouched(this.transactionForm);
@@ -201,16 +169,6 @@ export class TransactionDialogComponent implements OnInit {
       formValues.amount = Math.abs(formValues.amount);
     }
 
-    // Verifica e configura referências a orçamentos/metas
-    if (formValues.referenceId) {
-      const isBudget = this.transactionService.budgets.some(
-        b => b.id === formValues.referenceId
-      );
-      formValues.referenceType = isBudget ? 'Budget' : 'Goal';
-    } else {
-      formValues.referenceType = null;
-    }
-
     return formValues;
   }
 
@@ -224,19 +182,8 @@ export class TransactionDialogComponent implements OnInit {
     });
   }
 
-  // Exibe snackbar com mensagens ao utilizador
-  private showSnackbar(message: string, type: 'success' | 'error' | 'warning'): void {
-    this.snackBar.open(message, 'Fechar', {
-      duration: 4000,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      panelClass: [`${type}-snackbar`]
-    });
-  }
-
   // Método para cancelar e fechar o diálogo
   onCancel(): void {
     this.dialogRef.close();
   }
-
 }

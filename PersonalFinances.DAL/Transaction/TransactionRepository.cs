@@ -12,7 +12,7 @@ namespace PersonalFinances.DAL.Transaction
     {
         public async Task<IEnumerable<TransactionModel>> GetAllAsync(string userStamp)
         {
-            var query = "SELECT * FROM Transactions WHERE user_stamp = @userStamp";
+            var query = "SELECT * FROM Transactions WHERE user_stamp = @userStamp ORDER BY date desc";
             var parameters = new List<SqlParameter> { new("@userStamp", userStamp) };
 
             var result = await SQLHelper.ExecuteQueryAsync(query, parameters);
